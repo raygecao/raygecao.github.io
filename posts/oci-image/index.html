@@ -1,0 +1,738 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
+<title>OCI Image Format Spec探索与实践 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="OCI Image Format Spec探索与实践">
+<meta property="og:description" content="OCI Image Format定义了content addressable与location addressable结合的分层树状结构。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://raygecao.github.io/posts/oci-image/"><meta property="og:image" content="https://raygecao.github.io/posts/oci-image/featured-image.png"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-08-26T20:57:38+08:00">
+<meta property="article:modified_time" content="2021-08-26T20:57:38+08:00">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://raygecao.github.io/posts/oci-image/featured-image.png">
+<meta name=twitter:title content="OCI Image Format Spec探索与实践">
+<meta name=twitter:description content="OCI Image Format定义了content addressable与location addressable结合的分层树状结构。">
+<meta name=application-name content="拾遗之途">
+<meta name=apple-mobile-web-app-title content="拾遗之途">
+<meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/oci-image/><link rel=prev href=https://raygecao.github.io/posts/oci-distribution/><link rel=next href=https://raygecao.github.io/posts/oras/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"OCI Image Format Spec探索与实践","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/oci-image\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/oci-image\/featured-image.png","width":651,"height":430}],"genre":"posts","keywords":"container","wordcount":4200,"url":"https:\/\/raygecao.github.io\/posts\/oci-image\/","datePublished":"2021-08-26T20:57:38+08:00","dateModified":"2021-08-26T20:57:38+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</div>
+<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+取消
+</a>
+</div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a></div>
+</div>
+</header>
+<div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div>
+</div>
+<div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div>
+</div>
+<main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>目录</h2>
+<div class="toc-content always-active" id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animated flipInX">OCI Image Format Spec探索与实践</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-08-26>2021-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4200 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id=/posts/oci-image/ class=leancloud_visitors data-flag-title="OCI Image Format Spec探索与实践">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div>
+</div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/oci-image/featured-image.png data-srcset="/posts/oci-image/featured-image.png, /posts/oci-image/featured-image.png 1.5x, /posts/oci-image/featured-image.png 2x" data-sizes=auto alt=/posts/oci-image/featured-image.png title=/posts/oci-image/featured-image.png></div><div class="details toc" id=toc-static kept>
+<div class="details-summary toc-title">
+<span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#基本组成>基本组成</a></li>
+<li><a href=#content-descriptor>Content Descriptor</a>
+<ul>
+<li><a href=#属性描述>属性描述</a></li>
+</ul>
+</li>
+<li><a href=#image-manifest>Image Manifest</a>
+<ul>
+<li><a href=#mediatype>MediaType</a></li>
+<li><a href=#属性描述-1>属性描述</a></li>
+<li><a href=#实践探索>实践探索</a></li>
+</ul>
+</li>
+<li><a href=#image-index>Image Index</a>
+<ul>
+<li><a href=#mediatype-1>MediaType</a></li>
+<li><a href=#属性描述-2>属性描述</a></li>
+<li><a href=#实践探索-1>实践探索</a></li>
+</ul>
+</li>
+<li><a href=#filesystem-layer>Filesystem layer</a>
+<ul>
+<li><a href=#mediatype-2>MediaType</a></li>
+<li><a href=#实践探索-2>实践探索</a></li>
+</ul>
+</li>
+<li><a href=#configuration>Configuration</a>
+<ul>
+<li><a href=#mediatype-3>MediaType</a></li>
+<li><a href=#属性描述-3>属性描述</a></li>
+<li><a href=#实践探索-3>实践探索</a></li>
+</ul>
+</li>
+<li><a href=#image-layout>Image Layout</a>
+<ul>
+<li><a href=#结构组成>结构组成</a></li>
+<li><a href=#示例>示例</a></li>
+</ul>
+</li>
+<li><a href=#总结与延伸>总结与延伸</a></li>
+</ul>
+</nav></div>
+</div><div class=content id=content><p>OCI Image Format定义了content addressable与location addressable结合的分层树状结构。</p>
+<h2 id=基本组成>基本组成</h2>
+<ul>
+<li><strong>Image manifest</strong>：用于对镜像的内容寻址。</li>
+<li><strong>Image index</strong>：指向多个manifest的更高级别manifest，一般用于区分多平台。</li>
+<li><strong>Filesystem layers</strong>：用于描述容器文件系统内容变化。</li>
+<li><strong>Configuration</strong>：用于记录镜像配置及运行时信息等元信息。</li>
+</ul>
+<p>引用<a href=https://github.com/google/go-containerregistry/blob/v2/pkg/v1/remote/README.md target=_blank rel="noopener noreffer">go-containerregistry</a>项目中结构图来宏观描述一下上述组成的关系：</p>
+<figure><a class=lightgallery href=/posts/oci-image/remote.dot.svg title=/posts/oci-image/remote.dot.svg data-thumbnail=/posts/oci-image/remote.dot.svg data-sub-html="<h2>镜像层级结构</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=remote.dot.svg data-srcset="/posts/oci-image/remote.dot.svg, remote.dot.svg 1.5x, /posts/oci-image/remote.dot.svg 2x" data-sizes=auto alt=/posts/oci-image/remote.dot.svg height=200 width=500>
+</a><figcaption class=image-caption>镜像层级结构</figcaption>
+</figure>
+<p><a href=https://github.com/opencontainers/image-spec/blob/main/spec.md target=_blank rel="noopener noreffer">OCI Image Spec</a>中有更细化的描述：</p>
+<p><img class=lazyload src=/svg/loading.min.svg data-src=build-diagram.png data-srcset="/posts/oci-image/build-diagram.png, build-diagram.png 1.5x, /posts/oci-image/build-diagram.png 2x" data-sizes=auto alt=/posts/oci-image/build-diagram.png title=img></p>
+<h2 id=content-descriptor>Content Descriptor</h2>
+<p>Content descriptor用于描述对象内容的位置，组件内的descriptor可以描述当前组件对其他组件的引用关系，其应包含如下核心元素：</p>
+<ul>
+<li>内容的类型</li>
+<li>内容唯一标识</li>
+<li>内容的大小</li>
+</ul>
+<h3 id=属性描述>属性描述</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>mediaType</code></td>
+<td><code>string</code></td>
+<td>对象内容的类型</td>
+</tr>
+<tr>
+<td><code>digest</code></td>
+<td><code>string</code></td>
+<td>对象内容的唯一标识，常使用sha256算法加密</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>int64</code></td>
+<td>对象内容的字节数</td>
+</tr>
+<tr>
+<td><code>urls</code></td>
+<td><code>[]string</code></td>
+<td>对象可以被下载的url列表（optional）</td>
+</tr>
+<tr>
+<td><code>annotations</code></td>
+<td><code>map[string]string</code></td>
+<td>携带额外信息的键值对集合</td>
+</tr>
+</tbody>
+</table>
+<div class="details admonition info open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-info-circle fa-fw"></i>mediaType的作用<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><p><code>mediaType</code>用于唯一地标识当前blob的类型，通过此类型可以标准化对blob的处理。以containerd的<a href=https://github.com/containerd/containerd/blob/main/images/image.go#L329-L369 target=_blank rel="noopener noreffer">image.ChildrenHandler</a>获取当前descriptor所有直接子引用为例。可以看出对不同blob的处理依据就是<code>mediaType</code>。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=c1>// Children returns the immediate children of content described by the descriptor.
+</span><span class=c1></span><span class=kd>func</span> <span class=nf>Children</span><span class=p>(</span><span class=nx>ctx</span> <span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span> <span class=nx>provider</span> <span class=nx>content</span><span class=p>.</span><span class=nx>Provider</span><span class=p>,</span> <span class=nx>desc</span> <span class=nx>ocispec</span><span class=p>.</span><span class=nx>Descriptor</span><span class=p>)</span> <span class=p>([]</span><span class=nx>ocispec</span><span class=p>.</span><span class=nx>Descriptor</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+	<span class=kd>var</span> <span class=nx>descs</span> <span class=p>[]</span><span class=nx>ocispec</span><span class=p>.</span><span class=nx>Descriptor</span>
+	<span class=k>switch</span> <span class=nx>desc</span><span class=p>.</span><span class=nx>MediaType</span> <span class=p>{</span>
+	<span class=k>case</span> <span class=nx>MediaTypeDockerSchema2Manifest</span><span class=p>,</span> <span class=nx>ocispec</span><span class=p>.</span><span class=nx>MediaTypeImageManifest</span><span class=p>:</span>
+		<span class=nx>p</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>content</span><span class=p>.</span><span class=nf>ReadBlob</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span> <span class=nx>provider</span><span class=p>,</span> <span class=nx>desc</span><span class=p>)</span>
+		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+			<span class=k>return</span> <span class=kc>nil</span><span class=p>,</span> <span class=nx>err</span>
+		<span class=p>}</span>
+
+		<span class=c1>// TODO(stevvooe): We just assume oci manifest, for now. There may be
+</span><span class=c1></span>		<span class=c1>// subtle differences from the docker version.
+</span><span class=c1></span>		<span class=kd>var</span> <span class=nx>manifest</span> <span class=nx>ocispec</span><span class=p>.</span><span class=nx>Manifest</span>
+		<span class=k>if</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>json</span><span class=p>.</span><span class=nf>Unmarshal</span><span class=p>(</span><span class=nx>p</span><span class=p>,</span> <span class=o>&amp;</span><span class=nx>manifest</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+			<span class=k>return</span> <span class=kc>nil</span><span class=p>,</span> <span class=nx>err</span>
+		<span class=p>}</span>
+
+		<span class=nx>descs</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>descs</span><span class=p>,</span> <span class=nx>manifest</span><span class=p>.</span><span class=nx>Config</span><span class=p>)</span>
+		<span class=nx>descs</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>descs</span><span class=p>,</span> <span class=nx>manifest</span><span class=p>.</span><span class=nx>Layers</span><span class=o>...</span><span class=p>)</span>
+	<span class=k>case</span> <span class=nx>MediaTypeDockerSchema2ManifestList</span><span class=p>,</span> <span class=nx>ocispec</span><span class=p>.</span><span class=nx>MediaTypeImageIndex</span><span class=p>:</span>
+		<span class=nx>p</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>content</span><span class=p>.</span><span class=nf>ReadBlob</span><span class=p>(</span><span class=nx>ctx</span><span class=p>,</span> <span class=nx>provider</span><span class=p>,</span> <span class=nx>desc</span><span class=p>)</span>
+		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+			<span class=k>return</span> <span class=kc>nil</span><span class=p>,</span> <span class=nx>err</span>
+		<span class=p>}</span>
+
+		<span class=kd>var</span> <span class=nx>index</span> <span class=nx>ocispec</span><span class=p>.</span><span class=nx>Index</span>
+		<span class=k>if</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>json</span><span class=p>.</span><span class=nf>Unmarshal</span><span class=p>(</span><span class=nx>p</span><span class=p>,</span> <span class=o>&amp;</span><span class=nx>index</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+			<span class=k>return</span> <span class=kc>nil</span><span class=p>,</span> <span class=nx>err</span>
+		<span class=p>}</span>
+
+		<span class=nx>descs</span> <span class=p>=</span> <span class=nb>append</span><span class=p>(</span><span class=nx>descs</span><span class=p>,</span> <span class=nx>index</span><span class=p>.</span><span class=nx>Manifests</span><span class=o>...</span><span class=p>)</span>
+	<span class=k>default</span><span class=p>:</span>
+		<span class=k>if</span> <span class=nf>IsLayerType</span><span class=p>(</span><span class=nx>desc</span><span class=p>.</span><span class=nx>MediaType</span><span class=p>)</span> <span class=o>||</span> <span class=nf>IsKnownConfig</span><span class=p>(</span><span class=nx>desc</span><span class=p>.</span><span class=nx>MediaType</span><span class=p>)</span> <span class=p>{</span>
+			<span class=c1>// childless data types.
+</span><span class=c1></span>			<span class=k>return</span> <span class=kc>nil</span><span class=p>,</span> <span class=kc>nil</span>
+		<span class=p>}</span>
+		<span class=nx>log</span><span class=p>.</span><span class=nf>G</span><span class=p>(</span><span class=nx>ctx</span><span class=p>).</span><span class=nf>Debugf</span><span class=p>(</span><span class=s>&#34;encountered unknown type %v; children may not be fetched&#34;</span><span class=p>,</span> <span class=nx>desc</span><span class=p>.</span><span class=nx>MediaType</span><span class=p>)</span>
+	<span class=p>}</span>
+
+	<span class=k>return</span> <span class=nx>descs</span><span class=p>,</span> <span class=kc>nil</span>
+<span class=p>}</span>
+</code></pre></div></div>
+</div>
+</div>
+<h2 id=image-manifest>Image Manifest</h2>
+<p>Manifest用于定位镜像内容，可以认为是一个镜像的实际入口，包含一个特定platform下image所需的全部信息：</p>
+<ul>
+<li>若干个layers</li>
+<li>一个configuration</li>
+</ul>
+<h3 id=mediatype>MediaType</h3>
+<ul>
+<li><code>application/vnd.oci.image.manifest.v1+json</code> OCI Image Format Spec</li>
+<li><code>application/vnd.docker.distribution.manifest.v2+json</code> 兼容Docker Image Format Spec</li>
+</ul>
+<h3 id=属性描述-1>属性描述</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>schemaVersion</code></strong></td>
+<td><code>int</code></td>
+<td>指定manifest schema，为确保与旧版本docker兼容，此Spec下固定值为2</td>
+</tr>
+<tr>
+<td><strong><code>mediaType</code></strong></td>
+<td><code>string</code></td>
+<td>内容的类型</td>
+</tr>
+<tr>
+<td><strong><code>config</code></strong></td>
+<td><code>descriptor</code></td>
+<td>与容器运行时相关的配置信息</td>
+</tr>
+<tr>
+<td><strong><code>layers</code></strong></td>
+<td><code>[]descriptor</code></td>
+<td>用于构建镜像内文件系统布局，其中layers[0]描述base layer</td>
+</tr>
+<tr>
+<td><strong><code>annotations</code></strong></td>
+<td><code>map[string]string</code></td>
+<td>携带额外信息的键值对集合</td>
+</tr>
+</tbody>
+</table>
+<h3 id=实践探索>实践探索</h3>
+<p>以linux/amd64下的<code>ubuntu:21.04</code>为例，我们看一下其manifest:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+  <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
+  <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
+  <span class=nt>&#34;config&#34;</span><span class=p>:</span> <span class=p>{</span>
+    <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.container.image.v1+json&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>1462</span><span class=p>,</span>
+    <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:bf70ebd2c444440ae068c5ccea80e2087906a825ff1019a9f6d6cbb229e33481&#34;</span>
+  <span class=p>},</span>
+  <span class=nt>&#34;layers&#34;</span><span class=p>:</span> <span class=p>[</span>
+    <span class=p>{</span>
+      <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.image.rootfs.diff.tar.gzip&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>31837572</span><span class=p>,</span>
+      <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:4451f5c7eb7af74432585f5ebfbeb01bbfc87ec4a74dc93703bdd89330559cd1&#34;</span>
+    <span class=p>}</span>
+  <span class=p>]</span>
+<span class=p>}</span>
+</code></pre></div><p>可以看到，其mediaType为<code>application/vnd.docker.distribution.manifest.v2+json</code>，包含一个config blob与一个layer blob。</p>
+<h2 id=image-index>Image Index</h2>
+<p>Index又被称为fat manifest，manifest可以视为layer的索引，而index是在manifest上又加了一层的索引。有了index，这种两层树状结构变成了多层，提供了多描述符入口点。</p>
+<blockquote>
+<p>在docker image中，index的主要作用是区分多平台（OS/ORCH）。</p>
+</blockquote>
+<h3 id=mediatype-1>MediaType</h3>
+<ul>
+<li><code>application/vnd.oci.image.index.v1+json</code> OCI Image Format Spec</li>
+<li><code>application/vnd.docker.distribution.manifest.list.v2+json</code> 兼容Docker Image Format Spec</li>
+</ul>
+<h3 id=属性描述-2>属性描述</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>schemaVersion</code></strong></td>
+<td><code>int</code></td>
+<td>指定manifest schema，为确保与旧版本docker兼容，此spec下固定值为2</td>
+</tr>
+<tr>
+<td><strong><code>mediaType</code></strong></td>
+<td><code>string</code></td>
+<td>内容的类型</td>
+</tr>
+<tr>
+<td><strong><code>manifests</code></strong></td>
+<td><code>[]object</code></td>
+<td>描述运行时要求的最小集，主要是<strong>操作系统/架构</strong>等平台相关，列表中有多个manifest，提供平台相关的属性用以进行filter。</td>
+</tr>
+<tr>
+<td><strong><code>annotations</code></strong></td>
+<td><code>map[string]string</code></td>
+<td>携带额外信息的键值对集合</td>
+</tr>
+</tbody>
+</table>
+<h3 id=实践探索-1>实践探索</h3>
+<p>我们看一下dockerhub上ubuntu:21.04的index。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+   <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
+   <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.list.v2+json&#34;</span><span class=p>,</span>
+   <span class=nt>&#34;manifests&#34;</span><span class=p>:</span> <span class=p>[</span>
+      <span class=p>{</span>
+         <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>529</span><span class=p>,</span>
+         <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:ef8ee90cfa9cfc7c218586dea9daa6a8d1d191b3c73be143f4120fe140dae3d0&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;platform&#34;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;amd64&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;os&#34;</span><span class=p>:</span> <span class=s2>&#34;linux&#34;</span>
+         <span class=p>}</span>
+      <span class=p>},</span>
+      <span class=p>{</span>
+         <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>529</span><span class=p>,</span>
+         <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:b7de3b708ddbdb5ca7d0a6a81f6d9df450276fc4794174a7b7a3441b00281a61&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;platform&#34;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;arm&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;os&#34;</span><span class=p>:</span> <span class=s2>&#34;linux&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;variant&#34;</span><span class=p>:</span> <span class=s2>&#34;v7&#34;</span>
+         <span class=p>}</span>
+      <span class=p>},</span>
+      <span class=p>{</span>
+         <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>529</span><span class=p>,</span>
+         <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:ca763e1a382a5b23f91abaf1c36a84be33da2d657f45746112f28ae010571041&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;platform&#34;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;arm64&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;os&#34;</span><span class=p>:</span> <span class=s2>&#34;linux&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;variant&#34;</span><span class=p>:</span> <span class=s2>&#34;v8&#34;</span>
+         <span class=p>}</span>
+      <span class=p>},</span>
+      <span class=p>{</span>
+         <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>529</span><span class=p>,</span>
+         <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:54b3fc49fc1949bcedbafbf1f18393920545ba934331cf72176cb14087962879&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;platform&#34;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;ppc64le&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;os&#34;</span><span class=p>:</span> <span class=s2>&#34;linux&#34;</span>
+         <span class=p>}</span>
+      <span class=p>},</span>
+      <span class=p>{</span>
+         <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>529</span><span class=p>,</span>
+         <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:9c389f10c2b192dd01e87188c7cf1591dc830370046085190dd3ecfdaa1f2cfb&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;platform&#34;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;riscv64&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;os&#34;</span><span class=p>:</span> <span class=s2>&#34;linux&#34;</span>
+         <span class=p>}</span>
+      <span class=p>},</span>
+      <span class=p>{</span>
+         <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>529</span><span class=p>,</span>
+         <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:13532df2f7a272c2c973268db5264059be5ba9882962d30db3d86ca38db3a737&#34;</span><span class=p>,</span>
+         <span class=nt>&#34;platform&#34;</span><span class=p>:</span> <span class=p>{</span>
+            <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;s390x&#34;</span><span class=p>,</span>
+            <span class=nt>&#34;os&#34;</span><span class=p>:</span> <span class=s2>&#34;linux&#34;</span>
+         <span class=p>}</span>
+      <span class=p>}</span>
+   <span class=p>]</span>
+<span class=p>}</span>
+</code></pre></div><p>从中不难看出，该镜像提供了六种CPU架构下编译的ubuntu镜像，当某个client发出<code>docker pull</code>命令时，registry会index到对应的架构平台，找到合适的manifest。</p>
+<h2 id=filesystem-layer>Filesystem layer</h2>
+<p>Layer是镜像内文件系统的组成成分，每一层都都再描述一系列文件系统变化。</p>
+<h3 id=mediatype-2>MediaType</h3>
+<ul>
+<li><code>application/vnd.oci.image.layer.v1.tar+gzip</code> OCI Image Format Spec</li>
+<li><code>application/vnd.docker.image.rootfs.diff.tar.gzip</code> 兼容Docker Image Format Spec</li>
+</ul>
+<h3 id=实践探索-2>实践探索</h3>
+<p>我们copy出ubuntu:21.04的layer并解压，看一下base image的样式，tar内文件太多，仅列出前10行。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cp blobs/sha256/44/4451f5c7eb7af74432585f5ebfbeb01bbfc87ec4a74dc93703bdd89330559cd1/data ~/ubuntu.tar.gz <span class=o>&amp;&amp;</span> gzip -d ~/ubuntu.tar.gz -c <span class=p>|</span> tar tv <span class=p>|</span> head -10
+
+<span class=c1># output</span>
+lrwxrwxrwx 0/0               <span class=m>0</span> 2021-07-24 01:47 bin -&gt; usr/bin
+drwxr-xr-x 0/0               <span class=m>0</span> 2021-04-19 15:26 boot/
+drwxr-xr-x 0/0               <span class=m>0</span> 2021-07-24 01:50 dev/
+drwxr-xr-x 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/
+-rw------- 0/0               <span class=m>0</span> 2021-07-24 01:47 etc/.pwd.lock
+-rw-r--r-- 0/0            <span class=m>3028</span> 2021-07-24 01:47 etc/adduser.conf
+drwxr-xr-x 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/alternatives/
+-rw-r--r-- 0/0             <span class=m>100</span> 2021-04-14 18:32 etc/alternatives/README
+lrwxrwxrwx 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/alternatives/awk -&gt; /usr/bin/mawk
+lrwxrwxrwx 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/alternatives/nawk -&gt; /usr/bin/mawk
+</code></pre></div><div class="details admonition tip open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-lightbulb fa-fw"></i>技巧<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content>可以通过<code>... | awk '{print $6}' | awk -F/ '{print $1}'| sort | uniq</code> 对上述输出结果进行聚合获取第一层目录，结果可以看到就是标准的ubuntu文件系统。</div>
+</div>
+</div>
+<p>再探索一下filesystem changeset的内容，新创建一个镜像，修改镜像内的文件系统</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=k>FROM</span><span class=s> ubuntu:21.04</span><span class=err>
+</span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;hello world&#34;</span> &gt; /tmp/hello.txt<span class=err>
+</span><span class=err></span><span class=k>COPY</span> ccc .<span class=err>
+</span></code></pre></div><p>分别将第二层与第三层的内容拷贝出来并解压</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 略去拷贝过程</span>
+
+<span class=c1>######Layer2######</span>
+$ tar zxvf layer2.tar.gz
+tmp/
+tmp/hello.txt
+
+<span class=c1>######Layer3######</span>
+$ tar zxvf layer3.tar.gz
+ccc
+</code></pre></div><p>上述结果验证了之前踩过的一个坑：写Dockerfile构建镜像时，使用<code>COPY</code>将宿主机上的文件复制到镜像里时，如果源文件变化了，docker缓存会失效。之前误以为一个dockerfile中的一条语句对应一个layer，只要语句不变，layer就不变，就可以使用cache。此例清晰地描述出layer会与文件系统的changeset密切相关。</p>
+<h2 id=configuration>Configuration</h2>
+<p>用于描述镜像的一些元信息及容器运行时所需的信息。</p>
+<h3 id=mediatype-3>MediaType</h3>
+<ul>
+<li><code>application/vnd.oci.image.config.v1+json</code> OCI Image Format Spec</li>
+<li><code>application/vnd.docker.container.image.v1+json</code> 兼容Docker Image Format Spec</li>
+</ul>
+<h3 id=属性描述-3>属性描述</h3>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>类型</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>created</code></td>
+<td><code>string</code></td>
+<td>描述镜像创建日期</td>
+</tr>
+<tr>
+<td><code>author</code></td>
+<td><code>string</code></td>
+<td>描述镜像创建的作者</td>
+</tr>
+<tr>
+<td><code>architecture</code></td>
+<td><code>string</code></td>
+<td>描述编译镜像中二进制包的节点CPU架构</td>
+</tr>
+<tr>
+<td><code>os</code></td>
+<td><code>string</code></td>
+<td>描述构建镜像的节点的操作系统</td>
+</tr>
+<tr>
+<td><code>config</code></td>
+<td><code>object</code></td>
+<td>容器运行时所需要的执行参数（docker run中所能指定的参数），如Volumes，Env，ExposedPort等</td>
+</tr>
+<tr>
+<td><code>rootfs</code></td>
+<td><code>object</code></td>
+<td>描述image各层DiffID</td>
+</tr>
+<tr>
+<td><code>history</code></td>
+<td><code>object</code></td>
+<td>描述每一层的历史信息</td>
+</tr>
+</tbody>
+</table>
+<p>上述大部分属性可以通过<code>docker inspect [IMAGE]</code>获取到。</p>
+<div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw"></i>DiffID<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><p><code>DiffID</code>是layer未压缩时的tar包hash后的digest，可用于解压后内容验证。</p>
+<p>由于<code>DiffID</code>仅能描述某个layer的信息，无法描述整个layer布局的信息，因此又引入<code>ChainID</code>来校验image的布局，主要思想是引入与之前layer的相关性来生成对应layer的ID。从定义上看，第一层base layer的<code>DiffID</code>与<code>ChainID</code>一致。</p>
+</div>
+</div>
+</div>
+<h3 id=实践探索-3>实践探索</h3>
+<p>展示一下ubuntu:21.04的configuration，部分与container相关的字段超出此spec范围。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+  <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;amd64&#34;</span><span class=p>,</span>
+  <span class=nt>&#34;config&#34;</span><span class=p>:</span> <span class=p>{</span>
+    <span class=nt>&#34;Hostname&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;Domainname&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;User&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;AttachStdin&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;AttachStdout&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;AttachStderr&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;Tty&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;OpenStdin&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;StdinOnce&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;Env&#34;</span><span class=p>:</span> <span class=p>[</span>
+      <span class=s2>&#34;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#34;</span>
+    <span class=p>],</span>
+    <span class=nt>&#34;Cmd&#34;</span><span class=p>:</span> <span class=p>[</span>
+      <span class=s2>&#34;bash&#34;</span>
+    <span class=p>],</span>
+    <span class=nt>&#34;Image&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:2a1126c0612fcbe61f0acaa6b1f2caf3a156b31684219de8bbb763ee3e99940c&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;Volumes&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+    <span class=nt>&#34;WorkingDir&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;Entrypoint&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+    <span class=nt>&#34;OnBuild&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+    <span class=nt>&#34;Labels&#34;</span><span class=p>:</span> <span class=kc>null</span>
+  <span class=p>},</span>
+  <span class=nt>&#34;container&#34;</span><span class=p>:</span> <span class=s2>&#34;acac01451c096428e536623ecd3887aa7c79f8377ac8a94885b6ceae8971dfcf&#34;</span><span class=p>,</span>
+  <span class=nt>&#34;container_config&#34;</span><span class=p>:</span> <span class=p>{</span>
+    <span class=nt>&#34;Hostname&#34;</span><span class=p>:</span> <span class=s2>&#34;acac01451c09&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;Domainname&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;User&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;AttachStdin&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;AttachStdout&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;AttachStderr&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;Tty&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;OpenStdin&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;StdinOnce&#34;</span><span class=p>:</span> <span class=kc>false</span><span class=p>,</span>
+    <span class=nt>&#34;Env&#34;</span><span class=p>:</span> <span class=p>[</span>
+      <span class=s2>&#34;PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin&#34;</span>
+    <span class=p>],</span>
+    <span class=nt>&#34;Cmd&#34;</span><span class=p>:</span> <span class=p>[</span>
+      <span class=s2>&#34;/bin/sh&#34;</span><span class=p>,</span>
+      <span class=s2>&#34;-c&#34;</span><span class=p>,</span>
+      <span class=s2>&#34;#(nop) &#34;</span><span class=p>,</span>
+      <span class=s2>&#34;CMD [\&#34;bash\&#34;]&#34;</span>
+    <span class=p>],</span>
+    <span class=nt>&#34;Image&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:2a1126c0612fcbe61f0acaa6b1f2caf3a156b31684219de8bbb763ee3e99940c&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;Volumes&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+    <span class=nt>&#34;WorkingDir&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;Entrypoint&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+    <span class=nt>&#34;OnBuild&#34;</span><span class=p>:</span> <span class=kc>null</span><span class=p>,</span>
+    <span class=nt>&#34;Labels&#34;</span><span class=p>:</span> <span class=p>{}</span>
+  <span class=p>},</span>
+  <span class=nt>&#34;created&#34;</span><span class=p>:</span> <span class=s2>&#34;2021-07-26T21:21:54.791192114Z&#34;</span><span class=p>,</span>
+  <span class=nt>&#34;docker_version&#34;</span><span class=p>:</span> <span class=s2>&#34;20.10.7&#34;</span><span class=p>,</span>
+  <span class=nt>&#34;history&#34;</span><span class=p>:</span> <span class=p>[</span>
+    <span class=p>{</span>
+      <span class=nt>&#34;created&#34;</span><span class=p>:</span> <span class=s2>&#34;2021-07-26T21:21:54.424131139Z&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;created_by&#34;</span><span class=p>:</span> <span class=s2>&#34;/bin/sh -c #(nop) ADD file:6ae44786caae9af1c6b70dc9cc244e7d4e06fffc0696f68877527d69aa3fc735 in / &#34;</span>
+    <span class=p>},</span>
+    <span class=p>{</span>
+      <span class=nt>&#34;created&#34;</span><span class=p>:</span> <span class=s2>&#34;2021-07-26T21:21:54.791192114Z&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;created_by&#34;</span><span class=p>:</span> <span class=s2>&#34;/bin/sh -c #(nop)  CMD [\&#34;bash\&#34;]&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;empty_layer&#34;</span><span class=p>:</span> <span class=kc>true</span>
+    <span class=p>}</span>
+  <span class=p>],</span>
+  <span class=nt>&#34;os&#34;</span><span class=p>:</span> <span class=s2>&#34;linux&#34;</span><span class=p>,</span>
+  <span class=nt>&#34;rootfs&#34;</span><span class=p>:</span> <span class=p>{</span>
+    <span class=nt>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;layers&#34;</span><span class=p>,</span>
+    <span class=nt>&#34;diff_ids&#34;</span><span class=p>:</span> <span class=p>[</span>
+      <span class=s2>&#34;sha256:ce91b7d7ac5b2c288515e8eee3a83720d6855e7f1cf8dfa6e9b524453956175f&#34;</span>
+    <span class=p>]</span>
+  <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></div><h2 id=image-layout>Image Layout</h2>
+<p>用于描述OCI内容寻址（<strong>content-addressable</strong>）blob与位置寻址（<strong>location-addressable</strong>）reference的目录结构。</p>
+<div class="details admonition info open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-info-circle fa-fw"></i>content-addressable vs location-addressable<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><p>在<strong>location-addressed</strong>存储中，每个数据元素存储在特定的物理媒介中，并且它的（物理媒介）<strong>location</strong>会被记录下来以供后续访问。当想要访问到对应数据内容时，只需要在request中使用这个<strong>location</strong>即可。位置寻址不关心存储的具体内容是什么，只关心内容存储在什么位置，内容的大小多少（与盘空间占用相关），location所标识的内容可以被灵活地修改/覆盖/删除。</p>
+<p>与之相比，<strong>content-addressed</strong>存储通过与内容相关的唯一ID来定位，通过存储系统找到对应的内容。内容一旦发生变化，这个标识ID也会发生变化，即寻址地址也会发生变化。由于这个特点，一般的<strong>content-addressed</strong>系统不允许修改原有的内容，并且删除操作也会通过严格的策略进行控制。</p>
+<p>参考<a href=https://en.wikipedia.org/wiki/Content-addressable_storage#Content-addressed_vs._location-addressed target=_blank rel="noopener noreffer">wikipedia: Content-addressed vs. location-addressed</a></p>
+</div>
+</div>
+</div>
+<h3 id=结构组成>结构组成</h3>
+<ul>
+<li><strong>blobs目录</strong>：包含内容寻址的blob。
+<ul>
+<li>子目录是hash算法名称</li>
+<li>内容索引形式为<code>blobs/&lt;alg>/&lt;encoded></code></li>
+</ul>
+</li>
+<li><strong>oci-layout 文件</strong>：声明OCI image-layout的版本。</li>
+<li><strong>Index.json文件</strong>：image-layout中reference的入口点。
+<ul>
+<li>一般使用<code>org.opencontainers.image.ref.name</code> annotation声明引用。</li>
+<li>组织形式与image index形式十分相似。</li>
+</ul>
+</li>
+</ul>
+<h3 id=示例>示例</h3>
+<p>比较完善的示例是<a href=https://helm.sh/docs/topics/registries/ target=_blank rel="noopener noreffer">helm对OCI支持</a>，chart的发布支持OCI规范，实现上依赖于本地的OCI Image Layout与OCI registry做交互完成chart的发布。</p>
+<div class=mermaid id=id-1></div>
+<p>使用<code>save</code> cmd保存两个版本的chart。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ helm chart save mychart-0.1.0 myregistry:5000/mychart:v0.1.0
+
+ref:     myregistry:5000/mychart:v0.1.0
+digest:  dfec110f2b7aecb1d8604d64f7f32026b0af51aa1286627c6520ff2cf1576337
+size:    3.7 KiB
+name:    mychart
+version: 0.1.0
+v0.1.0: saved
+
+$ helm chart save mychart-0.2.0 myregistry:5000/mychart:v0.2.0
+
+ref:     myregistry:5000/mychart:v0.2.0
+digest:  fe45ba098c1f8bc61e19245c6123f47d7c51f78cec016834e2c0c26c28901e24
+size:    3.7 KiB
+name:    mychart
+version: 0.2.0
+v0.2.0: saved
+</code></pre></div><p>local OCI image layout的结构为：</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree ~/.cache/helm/registry/cache
+
+├── blobs
+│   └── sha256
+│       ├── 573f8b72a735d3f6e5919acb325d365aeddf69edee1e4840c59a5d741179da97
+│       ├── 65a07b841ece031e6d0ec5eb948eacb17aa6d7294cdeb01d5348e86242951487
+│       ├── 98ddb183b4658761a6e431fbbde4c6c15863b0c3597b74b519c67776830de282
+│       ├── dfec110f2b7aecb1d8604d64f7f32026b0af51aa1286627c6520ff2cf1576337
+│       ├── e76837ca35eb2e8f22ce8a78f14a1275511eafed58b76955b2ac7ddd0211c965
+│       └── fe45ba098c1f8bc61e19245c6123f47d7c51f78cec016834e2c0c26c28901e24
+├── index.json
+├── ingest
+└── oci-layout
+</code></pre></div><p>查看一下index.json中的内容<code>cat ~/.cache/helm/registry/cache/index.json | jq .</code></p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+  <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
+  <span class=nt>&#34;manifests&#34;</span><span class=p>:</span> <span class=p>[</span>
+    <span class=p>{</span>
+      <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.oci.image.manifest.v1+json&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:dfec110f2b7aecb1d8604d64f7f32026b0af51aa1286627c6520ff2cf1576337&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>322</span><span class=p>,</span>
+      <span class=nt>&#34;annotations&#34;</span><span class=p>:</span> <span class=p>{</span>
+        <span class=nt>&#34;org.opencontainers.image.ref.name&#34;</span><span class=p>:</span> <span class=s2>&#34;myregistry:5000/mychart:v0.1.0&#34;</span>
+      <span class=p>}</span>
+    <span class=p>},</span>
+    <span class=p>{</span>
+      <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.oci.image.manifest.v1+json&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;digest&#34;</span><span class=p>:</span> <span class=s2>&#34;sha256:fe45ba098c1f8bc61e19245c6123f47d7c51f78cec016834e2c0c26c28901e24&#34;</span><span class=p>,</span>
+      <span class=nt>&#34;size&#34;</span><span class=p>:</span> <span class=mi>322</span><span class=p>,</span>
+      <span class=nt>&#34;annotations&#34;</span><span class=p>:</span> <span class=p>{</span>
+        <span class=nt>&#34;org.opencontainers.image.ref.name&#34;</span><span class=p>:</span> <span class=s2>&#34;myregistry:5000/mychart:v0.2.0&#34;</span>
+      <span class=p>}</span>
+    <span class=p>}</span>
+  <span class=p>]</span>
+<span class=p>}</span>
+</code></pre></div><p>从<code>index.json</code>中很容易看出来通过descriptor中的digest与<code>org.opencontainers.image.ref.name</code> annotion将location（chart reference）与content（OCI manifest）关联了起来。</p>
+<h2 id=总结与延伸>总结与延伸</h2>
+<p>本文介绍了OCI Image Format Spec的组成，其对mediaType做了兼容，可以说是Docker Image Format Spec的一个超集。但OCI Image Format Spec要更通用些，体现在layer content可以更加多样，并且index不局限于一层。在此通用规范下可以做一些更cool的事情，比如<a href=https://github.com/opencontainers/artifacts target=_blank rel="noopener noreffer">OCI Artifacts</a>。</p>
+<p>此外，OCI Image Format Spec与<a href=https://github.com/opencontainers/runtime-spec target=_blank rel="noopener noreffer">OCI Runtime Spec</a>及<a href=https://github.com/opencontainers/distribution-spec target=_blank rel="noopener noreffer">OCI Distribution Spec</a>密切相关，比如image config如何转换成runtime bundle；image如何存储到registry。可见OCI Image Format Spec是OCI 规范中关键纽带。</p>
+<p>后续会写一篇文章来描述一个私有化交付下的应用打包方案，从中可以看到OCI Artifacts，OCI Image Format Spec与OCI Distribution结合起来释放的强大力量。</p></div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>更新于 2021-08-26</span>
+</div>
+<div class=post-info-license></div>
+</div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/container/>container</a></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/oci-distribution/ class=prev rel=prev title="OCI Distribution Spec探索与实践"><i class="fas fa-angle-left fa-fw"></i>OCI Distribution Spec探索与实践</a>
+<a href=/posts/oras/ class=next rel=next title=私有化交付下的应用打包方案>私有化交付下的应用打包方案<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+<div id=comments><div id=valine class=comment></div><noscript>
+Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
+</noscript></div></article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+<i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论>
+<i class="fas fa-comment fa-fw"></i>
+</a>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/mermaid/mermaid.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},data:{"id-1":"graph LR\nchart[helm chart]--save--\u003elocal[OCI Image Layout]\nlocal --push--\u003eregistry[OCI registry]\nregistry--pull--\u003elocal\nlocal --export--\u003echart"},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>
