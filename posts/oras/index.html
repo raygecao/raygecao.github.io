@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/oras/><link rel=prev href=https://raygecao.github.io/posts/oci-image/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"私有化交付下的应用打包方案","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/oras\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/oras\/featured-image.png","width":700,"height":373}],"genre":"posts","keywords":"container","wordcount":4620,"url":"https:\/\/raygecao.github.io\/posts\/oras\/","datePublished":"2021-08-26T20:58:05+08:00","dateModified":"2021-08-26T20:58:05+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/oras/><link rel=prev href=https://raygecao.github.io/posts/oci-image/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"私有化交付下的应用打包方案","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/oras\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/oras\/featured-image.png","width":700,"height":373}],"genre":"posts","keywords":"container","wordcount":5713,"url":"https:\/\/raygecao.github.io\/posts\/oras\/","datePublished":"2021-08-26T20:58:05+08:00","dateModified":"2021-08-26T20:58:05+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -86,8 +86,8 @@
 <div class="toc-content always-active" id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">私有化交付下的应用打包方案</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-08-26>2021-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4620 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;<span id=/posts/oras/ class=leancloud_visitors data-flag-title=私有化交付下的应用打包方案>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-08-26>2021-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5713 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;<span id=/posts/oras/ class=leancloud_visitors data-flag-title=私有化交付下的应用打包方案>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div>
 </div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/oras/featured-image.png data-srcset="/posts/oras/featured-image.png, /posts/oras/featured-image.png 1.5x, /posts/oras/featured-image.png 2x" data-sizes=auto alt=/posts/oras/featured-image.png title=/posts/oras/featured-image.png></div><div class="details toc" id=toc-static kept>
@@ -104,6 +104,7 @@
 <ul>
 <li><a href=#统一制品仓库>统一制品仓库</a></li>
 <li><a href=#公网发布中心改造>公网发布中心改造</a></li>
+<li><a href=#增量发布>增量发布</a></li>
 </ul>
 </li>
 <li><a href=#优化方案>优化方案</a>
@@ -120,7 +121,7 @@
 <li><a href=#下载bundle>下载bundle</a></li>
 <li><a href=#加载bundle>加载bundle</a></li>
 <li><a href=#多层结构>多层结构</a></li>
-<li><a href=#其他功能>其他功能</a></li>
+<li><a href=#补丁机制>补丁机制</a></li>
 </ul>
 </li>
 <li><a href=#总结>总结</a></li>
@@ -177,9 +178,27 @@
 <i class="icon fas fa-lightbulb fa-fw"></i>技巧<i class="details-icon fas fa-angle-right fa-fw"></i>
 </div>
 <div class=details-content>
-<div class=admonition-content>如果公网也是OCI registry，那么包的上传就有点类似于docker build，Dockerfile中没有发生变化时，对应产生的的layer都被cache住了，只有发生变化的部分需要build。上传也类似，只需要上传那些registry中缺少的layer blob即可，相当于增加了一层layer cache。</div>
+<div class=admonition-content>如果公网也是OCI registry，那么包的上传就有点类似于docker push，当上传的layer在registry已存在时，对应的blob将不会重复上传。只有新增的layer blob会被上传，形式上类似于增加了一层layer cache。</div>
 </div>
 </div>
+<h3 id=增量发布>增量发布</h3>
+<p>如果app bundle尺寸很大的话，会对交付效率带来较大的影响。</p>
+<ul>
+<li>下载应用包耗时较长。</li>
+<li>应用包占用的存储空间较大，并且应用包的跨网离线拷贝耗时较长。</li>
+<li>现场环境加载应用包并上传耗时较长。</li>
+</ul>
+<div class="details admonition info open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-info-circle fa-fw"></i>交付效率<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content>交付效率并没有一个官方的定义，我们这里姑且用<strong>将一个应用从公司内网环境mirror到现场环境并成功部署所耗费的时间</strong>来表述。增量发布只会影响mirror的效率，对部署效率不会有影响。</div>
+</div>
+</div>
+<p>初次交付时，这一问题无法避免，因为这时现场是个空的registry，需要mirror应用所需的所有artifacts。但是如果现场因新需求或bugfix等原因需要升级时，就不需要mirror另一个版本的全部content了。我们可以对这两个版本的bundle进行diff，生成一个补丁包来承载<strong>新版本存在，但老版本不存在的blob集合</strong>。如下图所示，app从v1.0.0升级到v1.0.1仅需要将<code>M2</code>与<code>L4</code>打到补丁包里即可，即其复用了就版本的<code>L1</code>与<code>L2</code>两个blob。</p>
+<div class=mermaid id=id-2></div>
+<p>增量发布对于小版本bugfix效率很高，改动越小，可以复用的layer越多，补丁包就越小，交付效率也就越高。</p>
 <h2 id=优化方案>优化方案</h2>
 <h3 id=现有开源项目参考>现有开源项目参考</h3>
 <ul>
@@ -229,7 +248,7 @@
 </a><figcaption class=image-caption>cnab&rsquo;s bundle format in OCI registry</figcaption>
 </figure>
 <p>简化一下组织结构，本质上就是一颗多叉树。</p>
-<div class=mermaid id=id-2></div>
+<div class=mermaid id=id-3></div>
 <h2 id=实践探索>实践探索</h2>
 <p>我们以一个具体的例子来简化一下我们要解决的问题：我<strong>们如何使用helm在私有化k8s集群中部署起来一个nginx服务</strong>。我们要做的是将helm chart与image发布并打包，在现场环境中导入这些artifacts。</p>
 <p>结合oras, crane与containerd sdk开发一个小工具<strong>cb</strong>，提供如下核心功能</p>
@@ -267,9 +286,19 @@
 <td>从OCI image-layout中恢复bundle</td>
 <td>加载OCI image-layout中的<code>index.json</code>并将关联的content及reference push到registry</td>
 </tr>
+<tr>
+<td><code>diff</code></td>
+<td>比较并产生target reference相对source reference的patch包</td>
+<td>形式仍以OCI image-layout存在，只是<code>blobs</code>与<code>index.json</code>中存在的是两个ref之间的diff，而非全量的引用关系。一般来讲，diff产生的patch包，脱离了source reference是无法加载的</td>
+</tr>
+<tr>
+<td><code>patch</code></td>
+<td>加载patch包</td>
+<td>Provider需要结合source reference与patch包构建完整target reference。另外patch包里记录source与target是一个不错的选择</td>
+</tr>
 </tbody>
 </table>
-<p>此外<strong>cb</strong>还wrap了<strong>crane</strong>的<code>manifest</code>，<code>catalog</code>及<code>list</code> 功能</p>
+<p>此外<strong>cb</strong>还wrap了<strong>crane</strong>的<code>manifest</code>，<code>catalog</code>及<code>list</code> 功能，另外结合了<a href=https://github.com/goccy/go-graphviz target=_blank rel="noopener noreffer">go-graphviz</a>实现了OCI layer可视化功能。</p>
 <h3 id=准备阶段>准备阶段</h3>
 <ul>
 <li>
@@ -448,12 +477,56 @@ $ cat nginx-app/index.json<span class=p>|</span> jq .
 </a><figcaption class=image-caption>ubuntu-nginx-app:v1.0.0镜像的层序结构</figcaption>
 </figure></p>
 <p>下载与加载均可以正常工作。</p>
-<h3 id=其他功能>其他功能</h3>
-<ul>
-<li>基于layer粒度的bundle diff & patch。</li>
-<li>Image树状结构可视化。</li>
-</ul>
-<h2 id=总结>总结</h2>
+<h3 id=补丁机制>补丁机制</h3>
+<p>通过<code>ubuntu-nginx-app:v1.0.0</code>与<code>nginx-app:v1.0.0</code>两个bundle验证一下补丁机制的可用性。从上述层序结构图中可以看到后者是前者的一个子集，所以预想中patch包应包含<strong>根节点及其左右两个子分支全部节点对应的blob，及ubuntu-nginx-app:v1.0.0和ubuntu:21.04两个reference</strong>。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb diff myregistry:5000/ubuntu-nginx-app:v1.0.0 myregistry:5000/nginx-app:v1.0.0 -o patch
+INFO<span class=o>[</span>0000<span class=o>]</span> get <span class=m>6</span> diffs
+</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree patch
+patch
+├── blobs
+│   └── sha256
+│       ├── 4451f5c7eb7af74432585f5ebfbeb01bbfc87ec4a74dc93703bdd89330559cd1
+│       ├── 52e0a43cc3025f0814510022bc2bc7f64135a9f4c93944ea0b82df344cc798c0
+│       ├── a2723fc64a92418869862e0a14d8e913641ba6e4bca78cf43d0db4be4c3c14fa
+│       ├── bf70ebd2c444440ae068c5ccea80e2087906a825ff1019a9f6d6cbb229e33481
+│       ├── ee951c00fa8985cc5f5b49f0d7fe5e456697198f24fed85142b4869083b7085b
+│       └── ef8ee90cfa9cfc7c218586dea9daa6a8d1d191b3c73be143f4120fe140dae3d0
+├── index.json
+├── ingest
+└── oci-layout
+
+<span class=m>3</span> directories, <span class=m>8</span> files
+</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat patch/index.json <span class=p>|</span> jq .
+<span class=o>{</span>
+  <span class=s2>&#34;schemaVersion&#34;</span>: 2,
+  <span class=s2>&#34;manifests&#34;</span>: <span class=o>[</span>
+    <span class=o>{</span>
+      <span class=s2>&#34;mediaType&#34;</span>: <span class=s2>&#34;application/vnd.oci.image.index.v1+json&#34;</span>,
+      <span class=s2>&#34;digest&#34;</span>: <span class=s2>&#34;sha256:a2723fc64a92418869862e0a14d8e913641ba6e4bca78cf43d0db4be4c3c14fa&#34;</span>,
+      <span class=s2>&#34;size&#34;</span>: 669,
+      <span class=s2>&#34;annotations&#34;</span>: <span class=o>{</span>
+        <span class=s2>&#34;org.opencontainers.image.ref.name&#34;</span>: <span class=s2>&#34;myregistry:5000/ubuntu-nginx-app:v1.0.0&#34;</span>
+      <span class=o>}</span>
+    <span class=o>}</span>,
+    <span class=o>{</span>
+      <span class=s2>&#34;mediaType&#34;</span>: <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span>,
+      <span class=s2>&#34;digest&#34;</span>: <span class=s2>&#34;sha256:ef8ee90cfa9cfc7c218586dea9daa6a8d1d191b3c73be143f4120fe140dae3d0&#34;</span>,
+      <span class=s2>&#34;size&#34;</span>: 529,
+      <span class=s2>&#34;annotations&#34;</span>: <span class=o>{</span>
+        <span class=s2>&#34;org.opencontainers.image.ref.name&#34;</span>: <span class=s2>&#34;myregistry:5000/ubuntu:21.04&#34;</span>
+      <span class=o>}</span>
+    <span class=o>}</span>
+  <span class=o>]</span>
+<span class=o>}</span>
+</code></pre></div><p>上述结果表明patch包中<code>blobs</code>及<code>index.json</code>中的引用均符合我们预期。</p>
+<p>清空registry并将<code>nginx-app:v1.0.0</code>load到registry中以验证应用patch的正确性。</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb load nginx-app
+INFO<span class=o>[</span>0000<span class=o>]</span> successfully push ref myregistry:5000/nginx-app:v1.0.0
+INFO<span class=o>[</span>0001<span class=o>]</span> successfully push ref myregistry:5000/nginx-chart:1.0.0
+$ cb patch patch
+INFO<span class=o>[</span>0000<span class=o>]</span> successfully push ref myregistry:5000/ubuntu:21.04
+INFO<span class=o>[</span>0001<span class=o>]</span> successfully push ref myregistry:5000/ubuntu-nginx-app:v1.0.0
+</code></pre></div><h2 id=总结>总结</h2>
 <p>本文主要介绍了私有化交付下的应用打包方案，简单介绍了私有化交付的模式，提出了现有的打包方案及基于layer cache的一些优化方向。</p>
 <p>本文要解决的问题是如何将一组内容从一个registry离线搬运到另一个registry中。问题的核心是如何将一组artifacts关联起来，这些内容应以什么组织形式在公司与现场之间流转。</p>
 <p>通过bundle的概念对应用进行打包，便于对应用及版本进行管理。而OCI image layout是将bundle本地化的一个不错的解决思路，此架构可以与<a href=https://helm.sh/docs/topics/registries/ target=_blank rel="noopener noreffer">helm OCI</a>完全兼容。</p></div><div class=post-footer id=post-footer>
@@ -491,5 +564,5 @@ Please enable JavaScript to view the comments powered by <a href=https://valine.
 </a><a href=# id=view-comments class=fixed-button title=查看评论>
 <i class="fas fa-comment fa-fw"></i>
 </a>
-</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/mermaid/mermaid.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},data:{"id-1":"graph LR;\nhome[公司内发布平台]\nregistry[公网发布中心]\noffline[离线存储介质]\nscenio[私有化交付现场]\nhome --打包并发布--\u003e registry\nregistry --下载应用包--\u003eoffline\noffline --人肉搬运并上传--\u003escenio\nscenio--部署--\u003escenio","id-2":"graph TB;\nsubgraph OCI image index\nbundle\npi[multi-platform index]\nend\nsubgraph OCI image manifest\nimage\nap[应用包]\ndp[数据包]\nend\nsubgraph OCI layer\nil[rootfs.diff]\nchart\ndata\nend\n\nbundle --\u003e pi\nbundle --\u003e ap\nbundle --\u003e dp\n\npi --\u003e image\n\nimage --\u003e il\nap --\u003e chart\ndp --\u003e data"},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/mermaid/mermaid.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},data:{"id-1":"graph LR;\nhome[公司内发布平台]\nregistry[公网发布中心]\noffline[离线存储介质]\nscenio[私有化交付现场]\nhome --打包并发布--\u003e registry\nregistry --下载应用包--\u003eoffline\noffline --人肉搬运并上传--\u003escenio\nscenio--部署--\u003escenio","id-2":'graph TB;\nm1["app@v1.0.0\u003cbr\u003e[M1]"]\nm2["app@v1.0.1\u003cbr\u003e[M2]"]\nl1((L1))\nl2((L2))\nl3((L3))\nl4((L4))\nm1 --\u003e l1\nm1 --\u003e l2\nm1 --\u003e l3\nm2 -.-\u003e l1\nm2 -.-\u003e l2\n\nsubgraph patch-v1.0.1\nm2 -.-\u003e l4\nend',"id-3":"graph TB;\nsubgraph OCI image index\nbundle\npi[multi-platform index]\nend\nsubgraph OCI image manifest\nimage\nap[应用包]\ndp[数据包]\nend\nsubgraph OCI layer\nil[rootfs.diff]\nchart\ndata\nend\n\nbundle --\u003e pi\nbundle --\u003e ap\nbundle --\u003e dp\n\npi --\u003e image\n\nimage --\u003e il\nap --\u003e chart\ndp --\u003e data"},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
 </html>
