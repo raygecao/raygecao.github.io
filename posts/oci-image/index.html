@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/oci-image/><link rel=prev href=https://raygecao.github.io/posts/oci-distribution/><link rel=next href=https://raygecao.github.io/posts/oras/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"OCI Image Format Spec探索与实践","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/oci-image\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/oci-image\/featured-image.png","width":651,"height":430}],"genre":"posts","keywords":"container","wordcount":4200,"url":"https:\/\/raygecao.github.io\/posts\/oci-image\/","datePublished":"2021-08-26T20:57:38+08:00","dateModified":"2021-08-26T20:57:38+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/oci-image/><link rel=prev href=https://raygecao.github.io/posts/oci-distribution/><link rel=next href=https://raygecao.github.io/posts/oras/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"OCI Image Format Spec探索与实践","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/oci-image\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/oci-image\/featured-image.png","width":651,"height":430}],"genre":"posts","keywords":"container","wordcount":4469,"url":"https:\/\/raygecao.github.io\/posts\/oci-image\/","datePublished":"2021-08-26T20:57:38+08:00","dateModified":"2021-08-26T20:57:38+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -86,7 +86,7 @@
 <div class="toc-content always-active" id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">OCI Image Format Spec探索与实践</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-08-26>2021-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4200 字&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-08-26>2021-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4469 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id=/posts/oci-image/ class=leancloud_visitors data-flag-title="OCI Image Format Spec探索与实践">
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div>
@@ -204,7 +204,52 @@
 </div>
 <div class=details-content>
 <div class=admonition-content><p><code>mediaType</code>用于唯一地标识当前blob的类型，通过此类型可以标准化对blob的处理。以containerd的<a href=https://github.com/containerd/containerd/blob/main/images/image.go#L329-L369 target=_blank rel="noopener noreffer">image.ChildrenHandler</a>获取当前descriptor所有直接子引用为例。可以看出对不同blob的处理依据就是<code>mediaType</code>。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=c1>// Children returns the immediate children of content described by the descriptor.
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=c1>// Children returns the immediate children of content described by the descriptor.
 </span><span class=c1></span><span class=kd>func</span> <span class=nf>Children</span><span class=p>(</span><span class=nx>ctx</span> <span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span> <span class=nx>provider</span> <span class=nx>content</span><span class=p>.</span><span class=nx>Provider</span><span class=p>,</span> <span class=nx>desc</span> <span class=nx>ocispec</span><span class=p>.</span><span class=nx>Descriptor</span><span class=p>)</span> <span class=p>([]</span><span class=nx>ocispec</span><span class=p>.</span><span class=nx>Descriptor</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
 	<span class=kd>var</span> <span class=nx>descs</span> <span class=p>[]</span><span class=nx>ocispec</span><span class=p>.</span><span class=nx>Descriptor</span>
 	<span class=k>switch</span> <span class=nx>desc</span><span class=p>.</span><span class=nx>MediaType</span> <span class=p>{</span>
@@ -245,7 +290,9 @@
 
 	<span class=k>return</span> <span class=nx>descs</span><span class=p>,</span> <span class=kc>nil</span>
 <span class=p>}</span>
-</code></pre></div></div>
+</code></pre></td></tr></table>
+</div>
+</div></div>
 </div>
 </div>
 <h2 id=image-manifest>Image Manifest</h2>
@@ -298,7 +345,27 @@
 </table>
 <h3 id=实践探索>实践探索</h3>
 <p>以linux/amd64下的<code>ubuntu:21.04</code>为例，我们看一下其manifest:</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
   <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
   <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.v2+json&#34;</span><span class=p>,</span>
   <span class=nt>&#34;config&#34;</span><span class=p>:</span> <span class=p>{</span>
@@ -314,7 +381,9 @@
     <span class=p>}</span>
   <span class=p>]</span>
 <span class=p>}</span>
-</code></pre></div><p>可以看到，其mediaType为<code>application/vnd.docker.distribution.manifest.v2+json</code>，包含一个config blob与一个layer blob。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到，其mediaType为<code>application/vnd.docker.distribution.manifest.v2+json</code>，包含一个config blob与一个layer blob。</p>
 <h2 id=image-index>Image Index</h2>
 <p>Index又被称为fat manifest，manifest可以视为layer的索引，而index是在manifest上又加了一层的索引。有了index，这种两层树状结构变成了多层，提供了多描述符入口点。</p>
 <blockquote>
@@ -359,7 +428,73 @@
 </table>
 <h3 id=实践探索-1>实践探索</h3>
 <p>我们看一下dockerhub上ubuntu:21.04的index。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
    <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
    <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.docker.distribution.manifest.list.v2+json&#34;</span><span class=p>,</span>
    <span class=nt>&#34;manifests&#34;</span><span class=p>:</span> <span class=p>[</span>
@@ -421,7 +556,9 @@
       <span class=p>}</span>
    <span class=p>]</span>
 <span class=p>}</span>
-</code></pre></div><p>从中不难看出，该镜像提供了六种CPU架构下编译的ubuntu镜像，当某个client发出<code>docker pull</code>命令时，registry会index到对应的架构平台，找到合适的manifest。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>从中不难看出，该镜像提供了六种CPU架构下编译的ubuntu镜像，当某个client发出<code>docker pull</code>命令时，registry会index到对应的架构平台，找到合适的manifest。</p>
 <h2 id=filesystem-layer>Filesystem layer</h2>
 <p>Layer是镜像内文件系统的组成成分，每一层都都再描述一系列文件系统变化。</p>
 <h3 id=mediatype-2>MediaType</h3>
@@ -431,7 +568,24 @@
 </ul>
 <h3 id=实践探索-2>实践探索</h3>
 <p>我们copy出ubuntu:21.04的layer并解压，看一下base image的样式，tar内文件太多，仅列出前10行。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cp blobs/sha256/44/4451f5c7eb7af74432585f5ebfbeb01bbfc87ec4a74dc93703bdd89330559cd1/data ~/ubuntu.tar.gz <span class=o>&amp;&amp;</span> gzip -d ~/ubuntu.tar.gz -c <span class=p>|</span> tar tv <span class=p>|</span> head -10
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cp blobs/sha256/44/4451f5c7eb7af74432585f5ebfbeb01bbfc87ec4a74dc93703bdd89330559cd1/data ~/ubuntu.tar.gz <span class=o>&amp;&amp;</span> gzip -d ~/ubuntu.tar.gz -c <span class=p>|</span> tar tv <span class=p>|</span> head -10
 
 <span class=c1># output</span>
 lrwxrwxrwx 0/0               <span class=m>0</span> 2021-07-24 01:47 bin -&gt; usr/bin
@@ -444,7 +598,9 @@ drwxr-xr-x 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/alterna
 -rw-r--r-- 0/0             <span class=m>100</span> 2021-04-14 18:32 etc/alternatives/README
 lrwxrwxrwx 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/alternatives/awk -&gt; /usr/bin/mawk
 lrwxrwxrwx 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/alternatives/nawk -&gt; /usr/bin/mawk
-</code></pre></div><div class="details admonition tip open">
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition tip open">
 <div class="details-summary admonition-title">
 <i class="icon fas fa-lightbulb fa-fw"></i>技巧<i class="details-icon fas fa-angle-right fa-fw"></i>
 </div>
@@ -453,11 +609,34 @@ lrwxrwxrwx 0/0               <span class=m>0</span> 2021-07-24 01:50 etc/alterna
 </div>
 </div>
 <p>再探索一下filesystem changeset的内容，新创建一个镜像，修改镜像内的文件系统</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=k>FROM</span><span class=s> ubuntu:21.04</span><span class=err>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-dockerfile data-lang=dockerfile><span class=k>FROM</span><span class=s> ubuntu:21.04</span><span class=err>
 </span><span class=err></span><span class=k>RUN</span> <span class=nb>echo</span> <span class=s2>&#34;hello world&#34;</span> &gt; /tmp/hello.txt<span class=err>
 </span><span class=err></span><span class=k>COPY</span> ccc .<span class=err>
-</span></code></pre></div><p>分别将第二层与第三层的内容拷贝出来并解压</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 略去拷贝过程</span>
+</span></code></pre></td></tr></table>
+</div>
+</div><p>分别将第二层与第三层的内容拷贝出来并解压</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 略去拷贝过程</span>
 
 <span class=c1>######Layer2######</span>
 $ tar zxvf layer2.tar.gz
@@ -467,7 +646,9 @@ tmp/hello.txt
 <span class=c1>######Layer3######</span>
 $ tar zxvf layer3.tar.gz
 ccc
-</code></pre></div><p>上述结果验证了之前踩过的一个坑：写Dockerfile构建镜像时，使用<code>COPY</code>将宿主机上的文件复制到镜像里时，如果源文件变化了，docker缓存会失效。之前误以为一个dockerfile中的一条语句对应一个layer，只要语句不变，layer就不变，就可以使用cache。此例清晰地描述出layer会与文件系统的changeset密切相关。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述结果验证了之前踩过的一个坑：写Dockerfile构建镜像时，使用<code>COPY</code>将宿主机上的文件复制到镜像里时，如果源文件变化了，docker缓存会失效。之前误以为一个dockerfile中的一条语句对应一个layer，只要语句不变，layer就不变，就可以使用cache。此例清晰地描述出layer会与文件系统的changeset密切相关。</p>
 <h2 id=configuration>Configuration</h2>
 <p>用于描述镜像的一些元信息及容器运行时所需的信息。</p>
 <h3 id=mediatype-3>MediaType</h3>
@@ -535,7 +716,84 @@ ccc
 </div>
 <h3 id=实践探索-3>实践探索</h3>
 <p>展示一下ubuntu:21.04的configuration，部分与container相关的字段超出此spec范围。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
   <span class=nt>&#34;architecture&#34;</span><span class=p>:</span> <span class=s2>&#34;amd64&#34;</span><span class=p>,</span>
   <span class=nt>&#34;config&#34;</span><span class=p>:</span> <span class=p>{</span>
     <span class=nt>&#34;Hostname&#34;</span><span class=p>:</span> <span class=s2>&#34;&#34;</span><span class=p>,</span>
@@ -608,7 +866,9 @@ ccc
     <span class=p>]</span>
   <span class=p>}</span>
 <span class=p>}</span>
-</code></pre></div><h2 id=image-layout>Image Layout</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=image-layout>Image Layout</h2>
 <p>用于描述OCI内容寻址（<strong>content-addressable</strong>）blob与位置寻址（<strong>location-addressable</strong>）reference的目录结构。</p>
 <div class="details admonition info open">
 <div class="details-summary admonition-title">
@@ -641,7 +901,28 @@ ccc
 <p>比较完善的示例是<a href=https://helm.sh/docs/topics/registries/ target=_blank rel="noopener noreffer">helm对OCI支持</a>，chart的发布支持OCI规范，实现上依赖于本地的OCI Image Layout与OCI registry做交互完成chart的发布。</p>
 <div class=mermaid id=id-1></div>
 <p>使用<code>save</code> cmd保存两个版本的chart。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ helm chart save mychart-0.1.0 myregistry:5000/mychart:v0.1.0
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ helm chart save mychart-0.1.0 myregistry:5000/mychart:v0.1.0
 
 ref:     myregistry:5000/mychart:v0.1.0
 digest:  dfec110f2b7aecb1d8604d64f7f32026b0af51aa1286627c6520ff2cf1576337
@@ -658,8 +939,27 @@ size:    3.7 KiB
 name:    mychart
 version: 0.2.0
 v0.2.0: saved
-</code></pre></div><p>local OCI image layout的结构为：</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree ~/.cache/helm/registry/cache
+</code></pre></td></tr></table>
+</div>
+</div><p>local OCI image layout的结构为：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree ~/.cache/helm/registry/cache
 
 ├── blobs
 │   └── sha256
@@ -672,8 +972,35 @@ v0.2.0: saved
 ├── index.json
 ├── ingest
 └── oci-layout
-</code></pre></div><p>查看一下index.json中的内容<code>cat ~/.cache/helm/registry/cache/index.json | jq .</code></p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>查看一下index.json中的内容<code>cat ~/.cache/helm/registry/cache/index.json | jq .</code></p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
   <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
   <span class=nt>&#34;manifests&#34;</span><span class=p>:</span> <span class=p>[</span>
     <span class=p>{</span>
@@ -694,7 +1021,9 @@ v0.2.0: saved
     <span class=p>}</span>
   <span class=p>]</span>
 <span class=p>}</span>
-</code></pre></div><p>从<code>index.json</code>中很容易看出来通过descriptor中的digest与<code>org.opencontainers.image.ref.name</code> annotion将location（chart reference）与content（OCI manifest）关联了起来。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>从<code>index.json</code>中很容易看出来通过descriptor中的digest与<code>org.opencontainers.image.ref.name</code> annotion将location（chart reference）与content（OCI manifest）关联了起来。</p>
 <h2 id=总结与延伸>总结与延伸</h2>
 <p>本文介绍了OCI Image Format Spec的组成，其对mediaType做了兼容，可以说是Docker Image Format Spec的一个超集。但OCI Image Format Spec要更通用些，体现在layer content可以更加多样，并且index不局限于一层。在此通用规范下可以做一些更cool的事情，比如<a href=https://github.com/opencontainers/artifacts target=_blank rel="noopener noreffer">OCI Artifacts</a>。</p>
 <p>此外，OCI Image Format Spec与<a href=https://github.com/opencontainers/runtime-spec target=_blank rel="noopener noreffer">OCI Runtime Spec</a>及<a href=https://github.com/opencontainers/distribution-spec target=_blank rel="noopener noreffer">OCI Distribution Spec</a>密切相关，比如image config如何转换成runtime bundle；image如何存储到registry。可见OCI Image Format Spec是OCI 规范中关键纽带。</p>

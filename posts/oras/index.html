@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/oras/><link rel=prev href=https://raygecao.github.io/posts/oci-image/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"私有化交付下的应用打包方案","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/oras\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/oras\/featured-image.png","width":700,"height":373}],"genre":"posts","keywords":"container","wordcount":5713,"url":"https:\/\/raygecao.github.io\/posts\/oras\/","datePublished":"2021-08-26T20:58:05+08:00","dateModified":"2021-08-26T20:58:05+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/oras/><link rel=prev href=https://raygecao.github.io/posts/oci-image/><link rel=next href=https://raygecao.github.io/posts/container-from-scratch/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"私有化交付下的应用打包方案","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/oras\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/oras\/featured-image.png","width":700,"height":373}],"genre":"posts","keywords":"container","wordcount":5911,"url":"https:\/\/raygecao.github.io\/posts\/oras\/","datePublished":"2021-08-26T20:58:05+08:00","dateModified":"2021-08-26T20:58:05+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -86,7 +86,7 @@
 <div class="toc-content always-active" id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">私有化交付下的应用打包方案</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-08-26>2021-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5713 字&nbsp;
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-08-26>2021-08-26</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5911 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;<span id=/posts/oras/ class=leancloud_visitors data-flag-title=私有化交付下的应用打包方案>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div>
@@ -309,7 +309,22 @@
 </li>
 </ul>
 <h3 id=上传制品>上传制品</h3>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># push chart</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># push chart</span>
 $ cb push myregistry:5000/nginx-chart:1.0.0 --files mychart
 
 <span class=c1># push nginx image</span>
@@ -320,8 +335,34 @@ $ cb catalog myregistry:5000 <span class=c1># 列出registry中的repositories</
 NO.	NAME
 <span class=m>0</span>  	nginx
 <span class=m>1</span>  	nginx-chart
-</code></pre></div><p>Push仅仅包装了oras cli，nginx chart的manifest如下</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>Push仅仅包装了oras cli，nginx chart的manifest如下</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
   <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
   <span class=nt>&#34;config&#34;</span><span class=p>:</span> <span class=p>{</span>
     <span class=nt>&#34;mediaType&#34;</span><span class=p>:</span> <span class=s2>&#34;application/vnd.unknown.config.v1+json&#34;</span><span class=p>,</span>
@@ -341,16 +382,66 @@ NO.	NAME
     <span class=p>}</span>
   <span class=p>]</span>
 <span class=p>}</span>
-</code></pre></div><h3 id=打包bundle>打包bundle</h3>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=打包bundle>打包bundle</h3>
 <p>定义nginx-app bundle，tag为v1.0.0，包含nginx镜像与nginx chart。bundle.yaml简化如下</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>myregistry:5000/nginx-app</span><span class=w>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>myregistry:5000/nginx-app</span><span class=w>
 </span><span class=w></span><span class=nt>tag</span><span class=p>:</span><span class=w> </span><span class=l>v1.0.0</span><span class=w>
 </span><span class=w></span><span class=nt>artifacts</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;myregistry:5000/nginx:1.21.1&#34;</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;myregistry:5000/nginx-chart:1.0.0&#34;</span><span class=w>
-</span></code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb bundle nginx-bundle.yaml <span class=c1># 打包nginx-app</span>
-</code></pre></div><p><code>nginx-app:v1.0.0</code>的index如下，reference记录在<code>org.opencontainers.image.ref.name</code> annotation里，这个reference（tag）需要被记录并在现场加载时恢复。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+</span></code></pre></td></tr></table>
+</div>
+</div><div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb bundle nginx-bundle.yaml <span class=c1># 打包nginx-app</span>
+</code></pre></td></tr></table>
+</div>
+</div><p><code>nginx-app:v1.0.0</code>的index如下，reference记录在<code>org.opencontainers.image.ref.name</code> annotation里，这个reference（tag）需要被记录并在现场加载时恢复。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
   <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
   <span class=nt>&#34;manifests&#34;</span><span class=p>:</span> <span class=p>[</span>
     <span class=p>{</span>
@@ -376,8 +467,71 @@ NO.	NAME
     <span class=p>}</span>
   <span class=p>]</span>
 <span class=p>}</span>
-</code></pre></div><h3 id=下载bundle>下载bundle</h3>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 将niginx-app bundle下载到nginx-app目录下</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=下载bundle>下载bundle</h3>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 将niginx-app bundle下载到nginx-app目录下</span>
 $ cb pack myregistry:5000/nginx-app:v1.0.0 -o nginx-app 
 
 <span class=c1># 验证nginx-app中的结构符合OCI Image Layer Spec</span>
@@ -434,18 +588,68 @@ $ cat nginx-app/index.json<span class=p>|</span> jq .
     <span class=o>}</span>
   <span class=o>]</span>
 <span class=o>}</span>
-</code></pre></div><h3 id=加载bundle>加载bundle</h3>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=加载bundle>加载bundle</h3>
 <p>删除掉registry中的内容并重启，将nginx-app加载到registry中，可以恢复完整的nginx-app bundle。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb load nginx-app
-</code></pre></div><h3 id=多层结构>多层结构</h3>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb load nginx-app
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=多层结构>多层结构</h3>
 <p>当前打包策略实现了OCI Artifacts的高扩展性，结构树可以灵活地向上延展，比如bundle里嵌套bundle。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>myregistry:5000/ubuntu-nginx-app</span><span class=w>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>myregistry:5000/ubuntu-nginx-app</span><span class=w>
 </span><span class=w></span><span class=nt>tag</span><span class=p>:</span><span class=w> </span><span class=l>v1.0.0</span><span class=w>
 </span><span class=w></span><span class=nt>artifacts</span><span class=p>:</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;myregistry:5000/nginx-app:v1.0.0&#34;</span><span class=w> </span><span class=c># 这是一个bundle</span><span class=w>
 </span><span class=w>  </span>- <span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;myregistry:5000/ubuntu:21.04&#34;</span><span class=w>  </span><span class=c># 这是一个image</span><span class=w>
-</span></code></pre></div><p>打包后，<code>ubuntu-nginx-app:v1.0.0</code>的index如下：</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
+</span></code></pre></td></tr></table>
+</div>
+</div><p>打包后，<code>ubuntu-nginx-app:v1.0.0</code>的index如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=p>{</span>
   <span class=nt>&#34;schemaVersion&#34;</span><span class=p>:</span> <span class=mi>2</span><span class=p>,</span>
   <span class=nt>&#34;manifests&#34;</span><span class=p>:</span> <span class=p>[</span>
     <span class=p>{</span>
@@ -471,7 +675,9 @@ $ cat nginx-app/index.json<span class=p>|</span> jq .
     <span class=p>}</span>
   <span class=p>]</span>
 <span class=p>}</span>
-</code></pre></div><p>对应的层序结构为：
+</code></pre></td></tr></table>
+</div>
+</div><p>对应的层序结构为：
 <figure><a class=lightgallery href=/posts/oras/bundle-in-bundle.svg title=/posts/oras/bundle-in-bundle.svg data-thumbnail=/posts/oras/bundle-in-bundle.svg data-sub-html="<h2>ubuntu-nginx-app:v1.0.0镜像的层序结构</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=bundle-in-bundle.svg data-srcset="/posts/oras/bundle-in-bundle.svg, bundle-in-bundle.svg 1.5x, /posts/oras/bundle-in-bundle.svg 2x" data-sizes=auto alt=/posts/oras/bundle-in-bundle.svg height=400 width=600>
 </a><figcaption class=image-caption>ubuntu-nginx-app:v1.0.0镜像的层序结构</figcaption>
@@ -479,9 +685,36 @@ $ cat nginx-app/index.json<span class=p>|</span> jq .
 <p>下载与加载均可以正常工作。</p>
 <h3 id=补丁机制>补丁机制</h3>
 <p>通过<code>ubuntu-nginx-app:v1.0.0</code>与<code>nginx-app:v1.0.0</code>两个bundle验证一下补丁机制的可用性。从上述层序结构图中可以看到后者是前者的一个子集，所以预想中patch包应包含<strong>根节点及其左右两个子分支全部节点对应的blob，及ubuntu-nginx-app:v1.0.0和ubuntu:21.04两个reference</strong>。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb diff myregistry:5000/ubuntu-nginx-app:v1.0.0 myregistry:5000/nginx-app:v1.0.0 -o patch
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb diff myregistry:5000/ubuntu-nginx-app:v1.0.0 myregistry:5000/nginx-app:v1.0.0 -o patch
 INFO<span class=o>[</span>0000<span class=o>]</span> get <span class=m>6</span> diffs
-</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree patch
+</code></pre></td></tr></table>
+</div>
+</div><div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree patch
 patch
 ├── blobs
 │   └── sha256
@@ -496,7 +729,35 @@ patch
 └── oci-layout
 
 <span class=m>3</span> directories, <span class=m>8</span> files
-</code></pre></div><div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat patch/index.json <span class=p>|</span> jq .
+</code></pre></td></tr></table>
+</div>
+</div><div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat patch/index.json <span class=p>|</span> jq .
 <span class=o>{</span>
   <span class=s2>&#34;schemaVersion&#34;</span>: 2,
   <span class=s2>&#34;manifests&#34;</span>: <span class=o>[</span>
@@ -518,15 +779,29 @@ patch
     <span class=o>}</span>
   <span class=o>]</span>
 <span class=o>}</span>
-</code></pre></div><p>上述结果表明patch包中<code>blobs</code>及<code>index.json</code>中的引用均符合我们预期。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>上述结果表明patch包中<code>blobs</code>及<code>index.json</code>中的引用均符合我们预期。</p>
 <p>清空registry并将<code>nginx-app:v1.0.0</code>load到registry中以验证应用patch的正确性。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb load nginx-app
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cb load nginx-app
 INFO<span class=o>[</span>0000<span class=o>]</span> successfully push ref myregistry:5000/nginx-app:v1.0.0
 INFO<span class=o>[</span>0001<span class=o>]</span> successfully push ref myregistry:5000/nginx-chart:1.0.0
 $ cb patch patch
 INFO<span class=o>[</span>0000<span class=o>]</span> successfully push ref myregistry:5000/ubuntu:21.04
 INFO<span class=o>[</span>0001<span class=o>]</span> successfully push ref myregistry:5000/ubuntu-nginx-app:v1.0.0
-</code></pre></div><h2 id=总结>总结</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=总结>总结</h2>
 <p>本文主要介绍了私有化交付下的应用打包方案，简单介绍了私有化交付的模式，提出了现有的打包方案及基于layer cache的一些优化方向。</p>
 <p>本文要解决的问题是如何将一组内容从一个registry离线搬运到另一个registry中。问题的核心是如何将一组artifacts关联起来，这些内容应以什么组织形式在公司与现场之间流转。</p>
 <p>通过bundle的概念对应用进行打包，便于对应用及版本进行管理。而OCI image layout是将bundle本地化的一个不错的解决思路，此架构可以与<a href=https://helm.sh/docs/topics/registries/ target=_blank rel="noopener noreffer">helm OCI</a>完全兼容。</p></div><div class=post-footer id=post-footer>
@@ -550,7 +825,8 @@ INFO<span class=o>[</span>0001<span class=o>]</span> successfully push ref myreg
 <span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
 </section>
 </div>
-<div class=post-nav><a href=/posts/oci-image/ class=prev rel=prev title="OCI Image Format Spec探索与实践"><i class="fas fa-angle-left fa-fw"></i>OCI Image Format Spec探索与实践</a></div>
+<div class=post-nav><a href=/posts/oci-image/ class=prev rel=prev title="OCI Image Format Spec探索与实践"><i class="fas fa-angle-left fa-fw"></i>OCI Image Format Spec探索与实践</a>
+<a href=/posts/container-from-scratch/ class=next rel=next title="Containers from scratch探究">Containers from scratch探究<i class="fas fa-angle-right fa-fw"></i></a></div>
 </div>
 <div id=comments><div id=valine class=comment></div><noscript>
 Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.

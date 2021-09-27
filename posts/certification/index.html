@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/certification/><link rel=prev href=https://raygecao.github.io/posts/minikube-tls/><link rel=next href=https://raygecao.github.io/posts/oci/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"网络安全基础","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/certification\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/certification\/featured-image.jpeg","width":620,"height":413}],"genre":"posts","keywords":"tls, 网络","wordcount":5967,"url":"https:\/\/raygecao.github.io\/posts\/certification\/","datePublished":"2021-07-22T09:00:24+08:00","dateModified":"2021-07-22T09:00:24+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/certification/><link rel=prev href=https://raygecao.github.io/posts/minikube-tls/><link rel=next href=https://raygecao.github.io/posts/oci/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"网络安全基础","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/certification\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/certification\/featured-image.jpeg","width":620,"height":413}],"genre":"posts","keywords":"tls, 网络","wordcount":6025,"url":"https:\/\/raygecao.github.io\/posts\/certification\/","datePublished":"2021-07-22T09:00:24+08:00","dateModified":"2021-07-22T09:00:24+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -86,8 +86,8 @@
 <div class="toc-content always-active" id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">网络安全基础</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-07-22>2021-07-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5967 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 12 分钟&nbsp;<span id=/posts/certification/ class=leancloud_visitors data-flag-title=网络安全基础>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-07-22>2021-07-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6025 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 13 分钟&nbsp;<span id=/posts/certification/ class=leancloud_visitors data-flag-title=网络安全基础>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div>
 </div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/certification/featured-image.jpeg data-srcset="/posts/certification/featured-image.jpeg, /posts/certification/featured-image.jpeg 1.5x, /posts/certification/featured-image.jpeg 2x" data-sizes=auto alt=/posts/certification/featured-image.jpeg title=/posts/certification/featured-image.jpeg></div><div class="details toc" id=toc-static kept>
@@ -192,7 +192,69 @@
 </ul>
 <p>认证机构验证持有者的身份（CSR）无误后，便向其发布一个带其签名的证书，以此来标识此证书中的公钥是可信的。</p>
 <p>在TLS中，通常使用<strong>x509证书</strong>，下例演示了minikube为kube-apiserver生成的服务端证书，我们根据这个证书看一下证书的机构。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>Certificate:
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-text data-lang=text>Certificate:
     Data:
         Version: 3 (0x2)                         # x509证书版本号
         Serial Number: 2 (0x2)                   # 序列号，每个证书唯一，用以与其他证书区分开
@@ -250,7 +312,9 @@
          53:d3:a1:a6:3e:82:64:f1:04:02:2c:ce:b9:68:5b:fc:1d:40:
          c8:8f:9a:ce:04:9d:5a:c9:6c:94:8e:43:f5:e4:78:00:82:bb:
          f4:5c:5b:d7
-</code></pre></div><p>x509证书定义了一系列扩展，<strong>用于对证书进行约束及限制</strong>，常用的扩展列举如下：</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>x509证书定义了一系列扩展，<strong>用于对证书进行约束及限制</strong>，常用的扩展列举如下：</p>
 <table>
 <thead>
 <tr>

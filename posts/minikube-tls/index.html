@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/minikube-tls/><link rel=prev href=https://raygecao.github.io/posts/network/><link rel=next href=https://raygecao.github.io/posts/certification/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Minikube中的TLS认证探秘","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/minikube-tls\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/minikube-tls\/featured-image.png","width":355,"height":142}],"genre":"posts","keywords":"k8s, tls","wordcount":6247,"url":"https:\/\/raygecao.github.io\/posts\/minikube-tls\/","datePublished":"2021-07-11T22:14:32+08:00","dateModified":"2021-07-11T22:14:32+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/minikube-tls/><link rel=prev href=https://raygecao.github.io/posts/network/><link rel=next href=https://raygecao.github.io/posts/certification/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Minikube中的TLS认证探秘","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/minikube-tls\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/minikube-tls\/featured-image.png","width":355,"height":142}],"genre":"posts","keywords":"k8s, tls","wordcount":6577,"url":"https:\/\/raygecao.github.io\/posts\/minikube-tls\/","datePublished":"2021-07-11T22:14:32+08:00","dateModified":"2021-07-11T22:14:32+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -86,8 +86,8 @@
 <div class="toc-content always-active" id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">Minikube中的TLS认证探秘</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-07-11>2021-07-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6247 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 13 分钟&nbsp;<span id=/posts/minikube-tls/ class=leancloud_visitors data-flag-title=Minikube中的TLS认证探秘>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-07-11>2021-07-11</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6577 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 14 分钟&nbsp;<span id=/posts/minikube-tls/ class=leancloud_visitors data-flag-title=Minikube中的TLS认证探秘>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div>
 </div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/minikube-tls/featured-image.png data-srcset="/posts/minikube-tls/featured-image.png, /posts/minikube-tls/featured-image.png 1.5x, /posts/minikube-tls/featured-image.png 2x" data-sizes=auto alt=/posts/minikube-tls/featured-image.png title=/posts/minikube-tls/featured-image.png></div><div class="details toc" id=toc-static kept>
@@ -140,7 +140,39 @@
 </li>
 </ul>
 <p>每个控制面组件在启动时会指定所使用到的证书，下例列举出apiserver的启动参数</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 获取kube-apiserver 相关配置</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 获取kube-apiserver 相关配置</span>
 $ kubectl get pods/kube-apiserver-minikube -o yaml --namespace kube-system
 spec:
   containers:
@@ -168,9 +200,37 @@ spec:
     - --proxy-client-key-file<span class=o>=</span>/var/lib/minikube/certs/front-proxy-client.key
     - --requestheader-client-ca-file<span class=o>=</span>/var/lib/minikube/certs/front-proxy-ca.crt
     - ....
-</code></pre></div><p>从上面不难看出，对于一条通信链路的服务端和客户端，都需要提供<strong>一个证书，一个私钥</strong>，和<strong>一个验证对端证书的CA根证书</strong>。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>从上面不难看出，对于一条通信链路的服务端和客户端，都需要提供<strong>一个证书，一个私钥</strong>，和<strong>一个验证对端证书的CA根证书</strong>。</p>
 <p>再来看看我们的kubeconfig，里面有kubectl的客户端证书及秘钥，以及验证apiserver服务端证书的CA根证书。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ kubectl config view
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ kubectl config view
 apiVersion: v1
 clusters:
 - cluster:
@@ -192,10 +252,33 @@ users:
     <span class=c1># kubectl持有的客户端证书及私钥</span>
     client-certificate: <span class=nv>$HOME</span>/.minikube/profiles/minikube/client.crt
     client-key: <span class=nv>$HOME</span>/.minikube/profiles/minikube/client.key
-</code></pre></div><h2 id=寻幽>寻幽</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=寻幽>寻幽</h2>
 <p>下面我们来验证一下kubectl与apiserver的证书及双向认证。</p>
 <p>从上一节可以推断出kubectl中CA <code>$HOME/.minikube/ca.crt</code>可以验证apiserver的服务端证书 <code>/var/lib/minikube/certs/apiserver.crt</code>，apiserver的CA <code>/var/lib/minikube/certs/ca.crt </code>可以验证kubectl的客户端证书<code>$HOME/.minikube/profiles/minikube/client.crt</code>，验证结果如下：</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 服务端证书验证</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 服务端证书验证</span>
 $ openssl verify -CAfile ~/.minikube/ca.crt /var/lib/minikube/certs/apiserver.crt
 
 /var/lib/minikube/certs/apiserver.crt: <span class=nv>O</span> <span class=o>=</span> system:masters, <span class=nv>CN</span> <span class=o>=</span> minikube
@@ -212,8 +295,54 @@ error <span class=m>7</span> at <span class=m>0</span> depth lookup:certificate 
 139864367138456:error:0407006A:rsa routines:RSA_padding_check_PKCS1_type_1:block <span class=nb>type</span> is not 01:rsa_pk1.c:103:
 139864367138456:error:04067072:rsa routines:RSA_EAY_PUBLIC_DECRYPT:padding check failed:rsa_eay.c:705:
 139864367138456:error:0D0C5006:asn1 encoding routines:ASN1_item_verify:EVP lib:a_verify.c:218:
-</code></pre></div><p>双方验证均未通过，难道是根证书有问题？</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 查看apiserver客户端证书</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>双方验证均未通过，难道是根证书有问题？</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 查看apiserver客户端证书</span>
 $ openssl x509 -text -in /var/lib/minikube/certs/apiserver.crt -noout
 
 Certificate:
@@ -253,7 +382,9 @@ Certificate:
             Not After : Aug  <span class=m>7</span> 09:07:41 <span class=m>2030</span> GMT
         Subject: <span class=nv>CN</span><span class=o>=</span>minikubeCA
 ......
-</code></pre></div><p>apiserver服务端证书和kubectl的CA证书输出也符合预期，前者的Issuer与后者的Subject相同，说明<strong>前者的证书是后者颁发的</strong>；后者Issuer与Subject相同，说明<strong>其是一个合法的自签名证书</strong>。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>apiserver服务端证书和kubectl的CA证书输出也符合预期，前者的Issuer与后者的Subject相同，说明<strong>前者的证书是后者颁发的</strong>；后者Issuer与Subject相同，说明<strong>其是一个合法的自签名证书</strong>。</p>
 <p>我是谁，我在哪&mldr;</p>
 <p>明明服务器上kubectl可以访问到apiserver，证书的颁发关系也没问题，而且TLS双向认证原理也是无懈可击，为什么openssl证书验证就是有问题的呢？</p>
 <h2 id=溯源>溯源</h2>
@@ -269,7 +400,50 @@ Certificate:
 这个错误犯得自己都想笑，x509证书中Issuer代表<strong>颁发机构</strong>，而Subject代表<strong>证书所有者</strong>，A的Issuer与B的Subject相同，只能说明A的证书颁发机构与B的所有者重名，并不能说明A一定是B颁发的。<strong>这就好比小明的妈妈叫小丽，但是叫小丽的不一定是小明的妈妈</strong>。证书认证本质上是通过<strong>数字签名</strong>进行的，签名的私钥是唯一的，但机构名称并不唯一，因此验签失败并不与实际矛盾。</p>
 <p>但是事出反常必有妖，<strong>叫小丽的可能有很多，但是一个房子里就两个人，并且他们都叫小丽就很不寻常</strong>。这就让我开始怀疑环境中是不是有另一套minikubeCA根证书，<strong>即存在不止一个minikube</strong>？</p>
 <p>在验证kubectl客户端证书的时候留意到<code>~/.minikube</code>的配置目录中也有个apiserver.crt</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree ~/.minikube
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree ~/.minikube
 minikube
 ├── addons
 ├── ca.crt
@@ -308,11 +482,44 @@ minikube
 │       └── proxy-client.key
 ├── proxy-client-ca.crt
 └── proxy-client-ca.key
-</code></pre></div><p>使用openssl使用Kubectl的服务端验证根证书验证一下这个证书，验证通过。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ openssl verify -CAfile  ~/.minikube/ca.crt ~/.minikube/profiles/minikube/apiserver.crt
+</code></pre></td></tr></table>
+</div>
+</div><p>使用openssl使用Kubectl的服务端验证根证书验证一下这个证书，验证通过。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ openssl verify -CAfile  ~/.minikube/ca.crt ~/.minikube/profiles/minikube/apiserver.crt
 <span class=nv>$HOME</span>/.minikube/profiles/minikube/apiserver.crt: OK
-</code></pre></div><p>这时候另一个疑惑就涌上来了：为什么<strong>kubectl客户端证书和apiserver服务端证书会放在完全不相关的两个目录下</strong>？又挖一挖config文件，发现有auth path相关的路径配置。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat ~/.minikube/machines/minikube/config.json
+</code></pre></td></tr></table>
+</div>
+</div><p>这时候另一个疑惑就涌上来了：为什么<strong>kubectl客户端证书和apiserver服务端证书会放在完全不相关的两个目录下</strong>？又挖一挖config文件，发现有auth path相关的路径配置。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat ~/.minikube/machines/minikube/config.json
 <span class=o>{</span>
   ....
       <span class=o>{</span>
@@ -331,7 +538,9 @@ minikube
             <span class=s2>&#34;StorePath&#34;</span>: <span class=s2>&#34;</span><span class=nv>$HOME</span><span class=s2>/.minikube&#34;</span>
         <span class=o>}</span>
 <span class=o>}</span>
-</code></pre></div><p>尽管没看过minikube的源码，也没在官方文档上找到很明确的说法，但是基本上可以确定minikube启动的所有控制面组件使用的证书是在这里配置的，也就是完全存放在<code>~/.minikube</code>path中。而pod中挂载的<code>/var/lib/minikube/certs</code>应该并非挂是宿主机对应的path上，毕竟minikube是运行在VM中的，挂载路径的灵活性便可想而知。
+</code></pre></td></tr></table>
+</div>
+</div><p>尽管没看过minikube的源码，也没在官方文档上找到很明确的说法，但是基本上可以确定minikube启动的所有控制面组件使用的证书是在这里配置的，也就是完全存放在<code>~/.minikube</code>path中。而pod中挂载的<code>/var/lib/minikube/certs</code>应该并非挂是宿主机对应的path上，毕竟minikube是运行在VM中的，挂载路径的灵活性便可想而知。
 <div class="details admonition info open">
 <div class="details-summary admonition-title">
 <i class="icon fas fa-info-circle fa-fw"></i>minikube的定位<i class="details-icon fas fa-angle-right fa-fw"></i>
@@ -352,7 +561,27 @@ minikube
 </ul>
 <p>这两个问题有着很强的相关性，一个大胆的猜想就是<strong>本机连的apiserver是在/var/lib/minikube/certs中认证的</strong>。</p>
 <p>首先来看一下apiserver的配置</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 查看apiserver的配置</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 查看apiserver的配置</span>
 $ kubectl get pods/kube-apiserver-minikube -o yaml --namespace kube-system
 
 spec:
@@ -368,10 +597,43 @@ spec:
   podIP: 172.17.0.40
     podIPs:
     - ip: 172.17.0.40
-</code></pre></div><p>从apiserver的配置中我们可以看到对应的podIP并不是宿主机的ip，而是个虚拟机的ip。这个再结合<strong>minikube在虚拟机中运行k8s</strong>很容易理解。那么也就是说minikube并没有暴露在宿主机的8443端口。可是我们执行kubectl<strong>并不是返回端口connection refused，而是返回的x509认证失败</strong>，这也就是宿主机的8443端口被监听。使用ps查看apiserver的进程，结果居然存在2个进程。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>从apiserver的配置中我们可以看到对应的podIP并不是宿主机的ip，而是个虚拟机的ip。这个再结合<strong>minikube在虚拟机中运行k8s</strong>很容易理解。那么也就是说minikube并没有暴露在宿主机的8443端口。可是我们执行kubectl<strong>并不是返回端口connection refused，而是返回的x509认证失败</strong>，这也就是宿主机的8443端口被监听。使用ps查看apiserver的进程，结果居然存在2个进程。</p>
 <p>这样之前的灵异现象都能串起来了：<strong>宿主机还有一个额外的minikube集群，并且对外暴露了宿主机8443端口，使用/var/lib/minikube/certs进行认证</strong>。</p>
 <p>经过一番查证与折腾，发现在/etc/kubernetes下有一些kubeconfig file以及控制面组件的部署文件。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree /etc/kubernetes
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree /etc/kubernetes
 /etc/kubernetes
 ├── addons
 │   ├── dashboard-clusterrolebinding.yaml
@@ -398,9 +660,32 @@ spec:
 │   ├── kube-controller-manager.yaml
 │   └── kube-scheduler.yaml
 └── scheduler.conf
-</code></pre></div><p>然后在服务器上指定kubeconfig为<code>admin.conf</code>执行kubectl，果然结果来自另外的一个集群。这个集群应该是我在最早接触k8s时使用的版本比较低的minikube搭建的，至于为啥部署形态会成这样我也不清楚至今仍然未解。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后在服务器上指定kubeconfig为<code>admin.conf</code>执行kubectl，果然结果来自另外的一个集群。这个集群应该是我在最早接触k8s时使用的版本比较低的minikube搭建的，至于为啥部署形态会成这样我也不清楚至今仍然未解。</p>
 <p>观察这个Minikube部署的apiserver，的确对外暴露的宿主机的8443端口。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ sudo <span class=nv>KUBECONFIG</span><span class=o>=</span>/etc/kubernetes/admin.conf kubectl get pods/kube-apiserver-XX --namespace kube-system -o yaml
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ sudo <span class=nv>KUBECONFIG</span><span class=o>=</span>/etc/kubernetes/admin.conf kubectl get pods/kube-apiserver-XX --namespace kube-system -o yaml
 ......
 spec:
   containers:
@@ -417,11 +702,37 @@ spec:
    podIPs:
    - ip: 10.122.101.148
    qosClass: Burstable
-</code></pre></div><p>将admin.conf中的证书与/var/lib/minikube/certs下的证书进行互相验签，均可通过。真相由此浮出水面。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>将admin.conf中的证书与/var/lib/minikube/certs下的证书进行互相验签，均可通过。真相由此浮出水面。</p>
 <h2 id=前行>前行</h2>
 <p>知道了问题的症结，需要向最初的目的前进了。先忽视掉上面揪出来的野minikube，尝试连接新搭建的minikube，另一个后续会通过一个额外的context加入到本地多集群管理中。</p>
 <p>由于8443端口已经被先前的端口占用了，那么我们就选择暴露一个额外的端口<strong>38443</strong>吧。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 首先启动minikube（我在启动前删除了之前部署的minikube数据），指定apiserver的端口为38443，指定apiserver的ip为10.122.101.148</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 首先启动minikube（我在启动前删除了之前部署的minikube数据），指定apiserver的端口为38443，指定apiserver的ip为10.122.101.148</span>
 <span class=c1># apiserver 端口其实不必指定，后续会介绍须引入本地端口转发来将服务暴露出去</span>
 $ minikube start --apiserver-ips<span class=o>=</span>10.122.101.148 --apiserver-port<span class=o>=</span><span class=m>38443</span>
 
@@ -441,8 +752,27 @@ spec:
   podIP: 172.17.0.40
     podIPs:
     - ip: 172.17.0.40
-</code></pre></div><p>What? 不是设置了apiserver的ip为宿主机的ip了吗？为什么podIP还是虚拟机的ip？文档里还特意的解释了flag <strong>apiserver-ips</strong>的作用，就是要 <strong>make the apiserver available from outside the machine</strong>。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ minikube start --help
+</code></pre></td></tr></table>
+</div>
+</div><p>What? 不是设置了apiserver的ip为宿主机的ip了吗？为什么podIP还是虚拟机的ip？文档里还特意的解释了flag <strong>apiserver-ips</strong>的作用，就是要 <strong>make the apiserver available from outside the machine</strong>。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ minikube start --help
 Starts a <span class=nb>local</span> Kubernetes cluster
 
 Options:
@@ -455,34 +785,94 @@ This can be used <span class=k>if</span> you want to make the apiserver availabl
 can be used <span class=k>if</span> you want to make the apiserver available from outside the machine
       --apiserver-port<span class=o>=</span>8443: The apiserver listening port
 ......
-</code></pre></div><p><a href=https://github.com/kubernetes/minikube/issues/11320 target=_blank rel="noopener noreffer">apiserver-ips option is not working</a> 这个issue专门描述了此问题，明确指出此参数<strong>仅会将对应的ip添加到证书SAN，不会修改apiserver的podIP</strong>。当然，作者困惑是否存在这种使用方式的场景。虽然不是很明确这样使用会带来什么样的问题（maybe端口冲突？安全？可扩展性？），但是作为初入坑k8s的同学来讲，这种简单的访问方式可能会降低一些我们的学习门槛。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p><a href=https://github.com/kubernetes/minikube/issues/11320 target=_blank rel="noopener noreffer">apiserver-ips option is not working</a> 这个issue专门描述了此问题，明确指出此参数<strong>仅会将对应的ip添加到证书SAN，不会修改apiserver的podIP</strong>。当然，作者困惑是否存在这种使用方式的场景。虽然不是很明确这样使用会带来什么样的问题（maybe端口冲突？安全？可扩展性？），但是作为初入坑k8s的同学来讲，这种简单的访问方式可能会降低一些我们的学习门槛。</p>
 <figure><a class=lightgallery href=/posts/minikube-tls/issue11320.jpg title=/posts/minikube-tls/issue11320.jpg data-thumbnail=/posts/minikube-tls/issue11320.jpg data-sub-html="<h2>apiserver-ips option is not working</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=issue11320.jpg data-srcset="/posts/minikube-tls/issue11320.jpg, issue11320.jpg 1.5x, /posts/minikube-tls/issue11320.jpg 2x" data-sizes=auto alt=/posts/minikube-tls/issue11320.jpg height=500 width=1000>
 </a><figcaption class=image-caption>apiserver-ips option is not working</figcaption>
 </figure>
 <p>既然这样，怎样才能将apiserver可以被本地访问到呢？这个也简单，可以通过<strong>ssh本地端口转发</strong>进行。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 将服务器10.122.101.148的38443端口转发到172.17.0.40的38443端口</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 将服务器10.122.101.148的38443端口转发到172.17.0.40的38443端口</span>
 $ ssh -L 10.122.101.148:38443:172.17.0.40:38443 -N -f 10.122.101.148
-</code></pre></div><p>最后，只需要将我们的kubeconfig的server字段改成<strong>10.122.101.148:38443</strong>就可以开心的访问远程的minikube了。</p>
+</code></pre></td></tr></table>
+</div>
+</div><p>最后，只需要将我们的kubeconfig的server字段改成<strong>10.122.101.148:38443</strong>就可以开心的访问远程的minikube了。</p>
 <div class="details admonition tip open">
 <div class="details-summary admonition-title">
 <i class="icon fas fa-lightbulb fa-fw"></i>x509证书扩展<i class="details-icon fas fa-angle-right fa-fw"></i>
 </div>
 <div class=details-content>
 <div class=admonition-content><p><strong>将对应ip添加到证书SAN</strong>，这个解释我并不是很理解，直到后面做了个实验才有些感觉。在没指定<strong>apiserver-ips</strong>去curl https://10.122.101.148，会出现诸如<strong>Hostname 10.122.101.148 doesn&rsquo;t match certificate&rsquo;s altnames: &ldquo;Host: XXX. is not in the cert&rsquo;s altnames:XXX</strong>的错误，而指定了<strong>apiserver-ips=10.122.101.148</strong>后，apiserver的服务端证书便可以通过验证。这是因为该参数将ip加入到了服务端证书的SAN扩展字段中，使得10.122.101.148成为证书可信的域。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ openssl x509 -text -in .minikube/profiles/minikube/apiserver.crt -noout
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ openssl x509 -text -in .minikube/profiles/minikube/apiserver.crt -noout
 
 X509v3 extensions:
     X509v3 Subject Alternative Name:
        DNS:minikubeCA, DNS:control-plane.minikube.internal, DNS:kubernetes.default.svc.cluster.local, DNS:kubernetes.default.svc, DNS:
 kubernetes.default, DNS:kubernetes, DNS:localhost, IP Address:10.122.101.148, IP Address:172.17.0.40, IP Address:10.96.0.1, IP Address:127.0.0.
 1, IP Address:10.0.0.1
-</code></pre></div></div>
+</code></pre></td></tr></table>
+</div>
+</div></div>
 </div>
 </div>
 <h2 id=插曲>插曲</h2>
 <p>在验证双向认证时，为了避免两端都要使用openssl验证，便想通过curl去验证。使用curl验证的结果让我再次怀疑人生&mldr;</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 执行双向验证，客户端验证服务端证书失败</span>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 执行双向验证，客户端验证服务端证书失败</span>
 $ curl https://10.122.101.148:38443  --cert ~/.minikube/profiles/minikube/client.crt --key ~/.minikube/profiles/minikube/client.key --cacert ~/.minikube/ca.crt
 
 curl: <span class=o>(</span>60<span class=o>)</span> server certificate verification failed. CAfile: ~/.minikube/ca.crt CRLfile: none
@@ -515,8 +905,27 @@ $ curl https://10.122.101.148:38443  --cert ~/.minikube/profiles/minikube/client
 <span class=c1># 确认客户端CA对服务端的证书验证结果，认证通过</span>
 openssl verify -CAfile  ~/.minikube/ca.crt ~/.minikube/profiles/minikube/apiserver.crt
 ~/.minikube/profiles/minikube/apiserver.crt: OK
-</code></pre></div><p>上面的测试结果看上去互相矛盾，折腾了很久，大概查了下curl的文档，感觉自己做的并没有问题，大胆的怀疑一下是curl的版本问题，于是准备在一个curl版本更高的镜像里去执行这个curl命令。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 在golang:1.16.2镜像中通过curl验证双向认证，成功</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上面的测试结果看上去互相矛盾，折腾了很久，大概查了下curl的文档，感觉自己做的并没有问题，大胆的怀疑一下是curl的版本问题，于是准备在一个curl版本更高的镜像里去执行这个curl命令。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 在golang:1.16.2镜像中通过curl验证双向认证，成功</span>
 $ docker run --rm -v <span class=nv>$HOME</span>/.minikube:/minikube golang:1.16.2 curl https://10.122.101.148:38443 --cert /minikube/profiles/minikube/client.crt --key /minikube/profiles/minikube/client.key --cacert /minikube/ca.crt
 
  <span class=o>{</span>
@@ -529,8 +938,29 @@ $ docker run --rm -v <span class=nv>$HOME</span>/.minikube:/minikube golang:1.16
     <span class=o>]</span>
  <span class=o>}</span>
   
-</code></pre></div><p>果然是旧版本curl的问题。由于目前为止在这上面浪费了比较久的时间，并且感觉越往后排查越偏离初始方向，因此便未继续往下追溯。二者版本列举如下，希望自己未来有时间、有兴趣去往底层排查一下。</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 服务器10.122.101.148上curl版本</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>果然是旧版本curl的问题。由于目前为止在这上面浪费了比较久的时间，并且感觉越往后排查越偏离初始方向，因此便未继续往下追溯。二者版本列举如下，希望自己未来有时间、有兴趣去往底层排查一下。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 服务器10.122.101.148上curl版本</span>
 $ curl --version
 
 curl 7.47.0 <span class=o>(</span>x86_64-pc-linux-gnu<span class=o>)</span> libcurl/7.47.0 GnuTLS/3.4.10 zlib/1.2.8 libidn/1.32 librtmp/2.3
@@ -545,7 +975,9 @@ Release-Date: 2019-02-06
 Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtmp rtsp scp sftp smb smbs smtp smtps telnet tftp
 Features: AsynchDNS IDN IPv6 Largefile GSS-API Kerberos SPNEGO NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets HTTPS-proxy PSL
 
-</code></pre></div><h2 id=悟道>悟道</h2>
+</code></pre></td></tr></table>
+</div>
+</div><h2 id=悟道>悟道</h2>
 <ul>
 <li><strong>你永远不知道你不知道的事</strong>，只有学习才会让我们发现原本我们不知道的事，哪怕过程使我们谦(zi)卑。</li>
 <li>最初只是想体验一下telepresence，仅仅是一个准备工作就牵出如此多的知识点，遇到问题是痛苦的，但寻找解决问题的方法是快乐的。</li>
