@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/container-from-scratch/><link rel=prev href=https://raygecao.github.io/posts/oras/><link rel=next href=https://raygecao.github.io/posts/telepresence/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Containers from scratch探究","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/featured-image.png","width":776,"height":290}],"genre":"posts","keywords":"container","wordcount":3019,"url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/","datePublished":"2021-09-27T20:38:46+08:00","dateModified":"2021-09-27T20:38:46+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/container-from-scratch/><link rel=prev href=https://raygecao.github.io/posts/oras/><link rel=next href=https://raygecao.github.io/posts/telepresence/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Containers from scratch探究","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/featured-image.png","width":776,"height":290}],"genre":"posts","keywords":"container","wordcount":4200,"url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/","datePublished":"2021-09-27T20:38:46+08:00","dateModified":"2021-09-27T20:38:46+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -86,8 +86,8 @@
 <div class="toc-content always-active" id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">Containers from scratch探究</h1><div class=post-meta>
 <div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-09-27>2021-09-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3019 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 7 分钟&nbsp;<span id=/posts/container-from-scratch/ class=leancloud_visitors data-flag-title="Containers from scratch探究">
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-09-27>2021-09-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4200 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id=/posts/container-from-scratch/ class=leancloud_visitors data-flag-title="Containers from scratch探究">
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div>
 </div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/container-from-scratch/featured-image.png data-srcset="/posts/container-from-scratch/featured-image.png, /posts/container-from-scratch/featured-image.png 1.5x, /posts/container-from-scratch/featured-image.png 2x" data-sizes=auto alt=/posts/container-from-scratch/featured-image.png title=/posts/container-from-scratch/featured-image.png></div><div class="details toc" id=toc-static kept>
@@ -107,7 +107,14 @@
 <li><a href=#验证cgourp设置>验证Cgourp设置</a></li>
 </ul>
 </li>
-<li><a href=#扩展延伸>扩展延伸</a>
+<li><a href=#功能扩展>功能扩展</a>
+<ul>
+<li><a href=#支持bind-mount>支持bind mount</a></li>
+<li><a href=#cgroup资源扩展memorycpu>Cgroup资源扩展（Memory/CPU）</a></li>
+<li><a href=#使用pivot_root系统调用替换chroot>使用pivot_root系统调用替换chroot</a></li>
+</ul>
+</li>
+<li><a href=#知识延伸>知识延伸</a>
 <ul>
 <li><a href=#挂载传播>挂载传播</a></li>
 </ul>
@@ -388,13 +395,13 @@ lrwxrwxrwx <span class=m>1</span> root root <span class=m>0</span> Sep <span cla
 <span class=c1># host</span>
 $ ll /proc/self/ns
 total <span class=m>0</span>
-lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span class=m>24</span> 13:57 cgroup -&gt; cgroup:<span class=o>[</span>4026531835<span class=o>]</span>
-lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span class=m>24</span> 13:57 ipc -&gt; ipc:<span class=o>[</span>4026531839<span class=o>]</span>
-lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span class=m>24</span> 13:57 mnt -&gt; mnt:<span class=o>[</span>4026531840<span class=o>]</span>
-lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span class=m>24</span> 13:57 net -&gt; net:<span class=o>[</span>4026531969<span class=o>]</span>
-lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span class=m>24</span> 13:57 pid -&gt; pid:<span class=o>[</span>4026531836<span class=o>]</span>
-lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span class=m>24</span> 13:57 user -&gt; user:<span class=o>[</span>4026531837<span class=o>]</span>
-lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span class=m>24</span> 13:57 uts -&gt; uts:<span class=o>[</span>4026531838<span class=o>]</span>
+lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 cgroup -&gt; cgroup:<span class=o>[</span>4026531835<span class=o>]</span>
+lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 ipc -&gt; ipc:<span class=o>[</span>4026531839<span class=o>]</span>
+lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 mnt -&gt; mnt:<span class=o>[</span>4026531840<span class=o>]</span>
+lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 net -&gt; net:<span class=o>[</span>4026531969<span class=o>]</span>
+lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 pid -&gt; pid:<span class=o>[</span>4026531836<span class=o>]</span>
+lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 user -&gt; user:<span class=o>[</span>4026531837<span class=o>]</span>
+lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 uts -&gt; uts:<span class=o>[</span>4026531838<span class=o>]</span>
 </code></pre></td></tr></table>
 </div>
 </div><p>由此可知，container内的mnt, pid, uts namespace与host的均不同。</p>
@@ -425,7 +432,197 @@ lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span
 <li><code>;</code>表示函数调用结束。</li>
 <li><code>:</code>运行此函数，触发fork bomb。</li>
 </ul>
-<h2 id=扩展延伸>扩展延伸</h2>
+<h2 id=功能扩展>功能扩展</h2>
+<h3 id=支持bind-mount>支持bind mount</h3>
+<p><strong>Bind mount</strong>将宿主目录映射到容器内，实现上比较简单，即在<code>chroot jail</code>前进行bind即可。示例代码如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-go data-lang=go>        <span class=c1>// bind mount
+</span><span class=c1></span>        <span class=nx>testBindPath</span> <span class=o>:=</span> <span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=s>&#34;test&#34;</span><span class=p>)</span>
+        <span class=nx>os</span><span class=p>.</span><span class=nf>Mkdir</span><span class=p>(</span><span class=nx>testBindPath</span><span class=p>,</span> <span class=mo>0755</span><span class=p>)</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>syscall</span><span class=p>.</span><span class=nf>Mount</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%s/test&#34;</span><span class=p>,</span> <span class=nx>homePath</span><span class=p>),</span> <span class=nx>testBindPath</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>MS_BIND</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上例将家目录下的test目录bind mount到rootfs的test目录，从而在容器内部可见。</p>
+<h3 id=cgroup资源扩展memorycpu>Cgroup资源扩展（Memory/CPU）</h3>
+<p>在memory和cpu下创建两个cgroup，设置好限制内容，并将container pid加入到这两个cgroup中：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-go data-lang=go>        <span class=c1>// Add cpu limitation for 0.3 core
+</span><span class=c1></span>        <span class=nx>cpu</span> <span class=o>:=</span> <span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cgroups</span><span class=p>,</span> <span class=s>&#34;cpu&#34;</span><span class=p>)</span>
+        <span class=nx>os</span><span class=p>.</span><span class=nf>Mkdir</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cpu</span><span class=p>,</span> <span class=s>&#34;liz&#34;</span><span class=p>),</span> <span class=mo>0755</span><span class=p>)</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cpu</span><span class=p>,</span> <span class=s>&#34;liz/cpu.cfs_period_us&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;100000&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cpu</span><span class=p>,</span> <span class=s>&#34;liz/cpu.cfs_quota_us&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;30000&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cpu</span><span class=p>,</span> <span class=s>&#34;liz/notify_on_release&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;1&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cpu</span><span class=p>,</span> <span class=s>&#34;liz/cgroup.procs&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>os</span><span class=p>.</span><span class=nf>Getpid</span><span class=p>())),</span> <span class=mo>0700</span><span class=p>))</span>
+
+        <span class=c1>// Add memory limitation for 100M
+</span><span class=c1></span>        <span class=nx>mem</span> <span class=o>:=</span> <span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cgroups</span><span class=p>,</span> <span class=s>&#34;memory&#34;</span><span class=p>)</span>
+        <span class=nx>os</span><span class=p>.</span><span class=nf>Mkdir</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz&#34;</span><span class=p>),</span> <span class=mo>0755</span><span class=p>)</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz/memory.limit_in_bytes&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;100M&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz/memory.swappiness&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;0&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz/notify_on_release&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;1&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz/cgroup.procs&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>os</span><span class=p>.</span><span class=nf>Getpid</span><span class=p>())),</span> <span class=mo>0700</span><span class=p>))</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>上例分别对cpu与memory进行了限制：</p>
+<ul>
+<li><strong>CPU</strong>: 限制container最大使用核数为0.3</li>
+<li><strong>Memory</strong>: 限制物理内存上限为100M，且禁用swap，即内容使用超过了100M的话立刻触发OOM。</li>
+</ul>
+<p>验证cgroup隔离效果：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>root@container:/# cat /proc/self/cgroup
+12:perf_event:/
+11:cpuset:/
+10:devices:/user.slice
+9:net_cls,net_prio:/
+8:pids:/liz
+7:blkio:/user.slice
+6:memory:/liz
+5:rdma:/
+4:hugetlb:/
+3:freezer:/
+2:cpu,cpuacct:/liz
+1:name<span class=o>=</span>systemd:/user.slice/user-1000.slice/session-12.scope
+0::/user.slice/user-1000.slice/session-12.scope
+</code></pre></td></tr></table>
+</div>
+</div><p>使用<code>while : ; do : ; done</code> 压测cpu limitation：</p>
+<figure><a class=lightgallery href=/posts/container-from-scratch/cpu-limit.png title=/posts/container-from-scratch/cpu-limit.png data-thumbnail=/posts/container-from-scratch/cpu-limit.png data-sub-html="<h2>CPU使用被限制在0.3Core</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=cpu-limit.png data-srcset="/posts/container-from-scratch/cpu-limit.png, cpu-limit.png 1.5x, /posts/container-from-scratch/cpu-limit.png 2x" data-sizes=auto alt=/posts/container-from-scratch/cpu-limit.png height=200 width=1000>
+</a><figcaption class=image-caption>CPU使用被限制在0.3Core</figcaption>
+</figure>
+<p>验证memory limitation：</p>
+<figure><a class=lightgallery href=/posts/container-from-scratch/mem-limit.png title=/posts/container-from-scratch/mem-limit.png data-thumbnail=/posts/container-from-scratch/mem-limit.png data-sub-html="<h2>分配400M内存导致OOM</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=mem-limit.png data-srcset="/posts/container-from-scratch/mem-limit.png, mem-limit.png 1.5x, /posts/container-from-scratch/mem-limit.png 2x" data-sizes=auto alt=/posts/container-from-scratch/mem-limit.png height=200 width=1000>
+</a><figcaption class=image-caption>分配400M内存导致OOM</figcaption>
+</figure>
+<h3 id=使用pivot_root系统调用替换chroot>使用pivot_root系统调用替换chroot</h3>
+<p>pivot_root与chroot作用类似，都是将rootfs jail到一个目录上。区别在于<strong>前者更改此mount namespace下的所有进程的rootfs，后者仅更改当前进程的rootfs</strong>。</p>
+<p>pivot_root核心思想是将root mount更改为<strong>new_root</strong>，并且原root mount会移到<strong>put_old</strong>中。其定义了一系列限制，列举如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-text data-lang=text>       -  new_root and put_old must be directories.
+
+       -  new_root and put_old must not be on the same mount as the current root.
+
+       -  put_old must be at or underneath new_root; that is, adding some nonnegative number of &#34;/..&#34; prefixes to the pathname
+          pointed to by put_old must yield the same directory as new_root.
+
+       -  new_root  must  be  a path to a mount point, but can&#39;t be &#34;/&#34;.  A path that is not already a mount point can be con‐
+          verted into one by bind mounting the path onto itself.
+
+       -  The propagation type of the parent mount of new_root and the parent mount of the current root directory must not  be
+          MS_SHARED;  similarly, if put_old is an existing mount point, its propagation type must not be MS_SHARED.  These re‐
+          strictions ensure that pivot_root() never propagates any changes to another mount namespace.
+
+       -  The current root directory must be a mount point.
+</code></pre></td></tr></table>
+</div>
+</div><p>参考 <a href=https://github.com/opencontainers/runc/blob/v1.0.2/libcontainer/rootfs_linux.go#L817 target=_blank rel="noopener noreffer">runc pivotRoot func</a> 对代码进行修改：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-go data-lang=go>        <span class=nf>must</span><span class=p>(</span><span class=nx>syscall</span><span class=p>.</span><span class=nf>Mount</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=nx>rootPath</span><span class=p>,</span> <span class=s>&#34;bind&#34;</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>MS_BIND</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>))</span>
+        <span class=c1>// jail rootfs with pivot_root syscall
+</span><span class=c1></span>        <span class=c1>// ref: https://github.com/opencontainers/runc/blob/v1.0.2/libcontainer/rootfs_linux.go#L817
+</span><span class=c1></span>        <span class=nx>putOldPath</span> <span class=o>:=</span> <span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=s>&#34;put_old&#34;</span><span class=p>)</span>
+        <span class=nx>os</span><span class=p>.</span><span class=nf>Mkdir</span><span class=p>(</span><span class=nx>putOldPath</span><span class=p>,</span> <span class=mo>0755</span><span class=p>)</span>
+        <span class=nf>must</span><span class=p>(</span><span class=nx>syscall</span><span class=p>.</span><span class=nf>PivotRoot</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=nx>putOldPath</span><span class=p>))</span>
+        <span class=c1>// lazy unmount
+</span><span class=c1></span>        <span class=nf>must</span><span class=p>(</span><span class=nx>syscall</span><span class=p>.</span><span class=nf>Unmount</span><span class=p>(</span><span class=s>&#34;/put_old&#34;</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>MNT_DETACH</span><span class=p>))</span>
+        <span class=k>if</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>os</span><span class=p>.</span><span class=nf>Remove</span><span class=p>(</span><span class=s>&#34;/put_old&#34;</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span><span class=p>{</span>
+                <span class=nb>panic</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span>
+        <span class=p>}</span>
+        <span class=c1>//must(syscall.Chroot(&#34;fmt.Sprintf(&#34;%s/ubuntufs&#34;, homePath))
+</span><span class=c1></span>        <span class=nf>must</span><span class=p>(</span><span class=nx>os</span><span class=p>.</span><span class=nf>Chdir</span><span class=p>(</span><span class=s>&#34;/&#34;</span><span class=p>))</span>
+</code></pre></td></tr></table>
+</div>
+</div><ul>
+<li>为满足第二条限制，<code>new_root</code>以bind mount形式脱离current root filesystem。</li>
+<li>由于存在process使用原root mount下的文件，因此无法直接unmount掉<code>put_old</code>。这里使用<strong>lazy unmount</strong>（通过<strong>syscall.MNT_DETACH</strong> flag）的方式卸载掉。Lazy unmount使新的进程看不到此挂载点（隐藏掉），并且当使用此mount的进程全部退出后将其真正卸载掉。</li>
+</ul>
+<div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><strong>上述扩展的完整代码参考<a href=https://github.com/raygecao/containers-from-scratch/pull/1/files target=_blank rel="noopener noreffer">这里</a>。</strong></div>
+</div>
+</div>
+<h2 id=知识延伸>知识延伸</h2>
 <p>为探究<code>Line:34</code> Unshareflags对挂载的影响，我们了解一下挂载传播。</p>
 <h3 id=挂载传播>挂载传播</h3>
 <p>Mount namespace有时会因提供太强的隔离性导致便捷性降低的问题，比如将一个新磁盘加载到一个光驱驱动器中，当有多个mount namespace时，需要将该磁盘挂载到每个namespace中。为了只使用一次挂载命令就可以将磁盘挂载到所有的命名空间中，Linux 从2.6.15起引入了<strong>共享子树特性</strong>。即<strong>允许在namespace之间自动、可控地传播挂载和卸载事件</strong>。</p>
@@ -462,7 +659,7 @@ lrwxrwxrwx <span class=m>1</span> caolei caolei <span class=m>0</span> Sep <span
 <li>否则挂载点的传播类型是<code>MS_PRIVATE</code>。</li>
 </ul>
 <p>有了这个概念，我们验证一下这个<code>Unshareflag</code>加与不加的区别：</p>
-<p>添加<code>Unshareflags</code></p>
+<p>添加<code>Unshareflags</code>：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
@@ -477,7 +674,7 @@ root@container:/# cat /proc/self/mountinfo
 <span class=m>4223</span> <span class=m>4751</span> 0:642 / /mytemp rw,relatime - tmpfs thing rw
 </code></pre></td></tr></table>
 </div>
-</div><p>未添加<code>Unshareflags</code></p>
+</div><p>未添加<code>Unshareflags</code>：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt>1
