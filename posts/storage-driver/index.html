@@ -1,0 +1,795 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
+<title>浅谈Docker Storage Driver - 拾遗之途</title><meta name=Description content><meta property="og:title" content="浅谈Docker Storage Driver">
+<meta property="og:description" content="Docker 通过storage driver来存储镜像层，并且将数据存储到容器层。本文主要介绍storage driver与volume的区别，以及对经典的driver：aufs, overlay, overlay2进行简单的探索。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://raygecao.github.io/posts/storage-driver/"><meta property="og:image" content="https://raygecao.github.io/posts/storage-driver/featured-image.png"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-10-16T12:23:06+08:00">
+<meta property="article:modified_time" content="2021-10-16T12:23:06+08:00">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://raygecao.github.io/posts/storage-driver/featured-image.png">
+<meta name=twitter:title content="浅谈Docker Storage Driver">
+<meta name=twitter:description content="Docker 通过storage driver来存储镜像层，并且将数据存储到容器层。本文主要介绍storage driver与volume的区别，以及对经典的driver：aufs, overlay, overlay2进行简单的探索。">
+<meta name=application-name content="拾遗之途">
+<meta name=apple-mobile-web-app-title content="拾遗之途">
+<meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/storage-driver/><link rel=prev href=https://raygecao.github.io/posts/telepresence/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"浅谈Docker Storage Driver","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/storage-driver\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/storage-driver\/featured-image.png","width":800,"height":600}],"genre":"posts","keywords":"container","wordcount":4472,"url":"https:\/\/raygecao.github.io\/posts\/storage-driver\/","datePublished":"2021-10-16T12:23:06+08:00","dateModified":"2021-10-16T12:23:06+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</div>
+<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+取消
+</a>
+</div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a></div>
+</div>
+</header>
+<div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div>
+</div>
+<div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div>
+</div>
+<main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>目录</h2>
+<div class="toc-content always-active" id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animated flipInX">浅谈Docker Storage Driver</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E8%B7%B5/><i class="far fa-folder fa-fw"></i>探索与实践</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-10-16>2021-10-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4472 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id=/posts/storage-driver/ class=leancloud_visitors data-flag-title="浅谈Docker Storage Driver">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div>
+</div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/storage-driver/featured-image.png data-srcset="/posts/storage-driver/featured-image.png, /posts/storage-driver/featured-image.png 1.5x, /posts/storage-driver/featured-image.png 2x" data-sizes=auto alt=/posts/storage-driver/featured-image.png title=/posts/storage-driver/featured-image.png></div><div class="details toc" id=toc-static kept>
+<div class="details-summary toc-title">
+<span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#storage-driver-vs-docker-volume>Storage Driver vs Docker Volume</a></li>
+<li><a href=#aufs>Aufs</a>
+<ul>
+<li><a href=#理论>理论</a></li>
+<li><a href=#实践>实践</a></li>
+</ul>
+</li>
+<li><a href=#overlayfs>OverlayFS</a>
+<ul>
+<li><a href=#overlay2>Overlay2</a></li>
+<li><a href=#overlay>Overlay</a></li>
+</ul>
+</li>
+<li><a href=#aufs-overlay与overlay2比较>Aufs, overlay与overlay2比较</a></li>
+<li><a href=#附录>附录</a></li>
+<li><a href=#参考文献>参考文献</a></li>
+</ul>
+</nav></div>
+</div><div class=content id=content><p>Docker 通过storage driver来<strong>存储镜像层，并且将数据存储到容器层</strong>。本文主要介绍storage driver与volume的区别，以及对经典的driver：<code>aufs</code>, <code>overlay</code>, <code>overlay2</code>进行简单的探索。</p>
+<h2 id=storage-driver-vs-docker-volume>Storage Driver vs Docker Volume</h2>
+<ul>
+<li><strong>Storage Driver</strong>
+<ul>
+<li>用于存储image layer。</li>
+<li>用于在容器层（writeable layer）存数据。</li>
+<li>容器层在容器销毁后丢失，无法做到持久化，无法在多个容器中共享用户数据。</li>
+<li>一般使用<strong>CoW</strong>（copy on write）机制写容器层，初次写数据时需要从镜像层将数据copy-up到容器层进行写操作。</li>
+<li>容器可以复用镜像层，由于CoW机制，每创建一个容器仅多创建一个很薄的容器层，可以充分提升空间效率。</li>
+</ul>
+</li>
+<li><strong>Docker Volume</strong>
+<ul>
+<li>持久化容器产生的数据，与容器生命周期无关。</li>
+<li>数据可以在容器间共享。</li>
+<li>写volume性能远比写容器层的性能好，volume适合于写密集的场景。</li>
+</ul>
+</li>
+</ul>
+<h2 id=aufs>Aufs</h2>
+<h3 id=理论>理论</h3>
+<ul>
+<li>
+<p>判断内核是否支持aufs driver，结果输出如下表示支持：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ grep aufs /proc/filesystems
+
+nodev aufs
+</code></pre></td></tr></table>
+</div>
+</div></li>
+<li>
+<p>Aufs是一个联合文件系统，其采用<strong>union mount</strong>将linux系统上的多个目录<strong>堆叠</strong>成一个目录，一个目录代表一个branch（在docker术语中对应为layer）。</p>
+<figure><a class=lightgallery href=/posts/storage-driver/aufs-layers.png title=/posts/storage-driver/aufs-layers.png data-thumbnail=/posts/storage-driver/aufs-layers.png data-sub-html="<h2>Aufs layer组织形式</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=aufs-layers.png data-srcset="/posts/storage-driver/aufs-layers.png, aufs-layers.png 1.5x, /posts/storage-driver/aufs-layers.png 2x" data-sizes=auto alt=/posts/storage-driver/aufs-layers.png height=400 width=800>
+</a><figcaption class=image-caption>Aufs layer组织形式</figcaption>
+</figure>
+</li>
+<li>
+<p><strong>存储结构</strong></p>
+<ul>
+<li><code>diff/</code>：每一层的内容，每层以一个独立的子目录存储。</li>
+<li><code>layers/</code>：存放layers的元信息以标识镜像layer如何堆叠，每层以一个文件表示。</li>
+<li><code>mnt/</code>：挂载点，每层一个，用于向容器组装/挂载联合文件系统。</li>
+</ul>
+</li>
+<li>
+<p><strong>容器读文件</strong></p>
+<ul>
+<li>仅在容器层存在：直接从容器层读出。</li>
+<li>仅在镜像层存在：沿着layer stack寻找文件，找到后读出。</li>
+<li>在容器层和镜像层均存在：从容器层读出，镜像层相应的文件被容器层所遮盖。</li>
+</ul>
+</li>
+<li>
+<p><strong>容器写文件</strong></p>
+<ul>
+<li>从容器层查找文件，如果存在则直接修改。</li>
+<li>如果不存在，沿着镜像layer stack查找文件，如果文件存在则copy-up到容器层进行修改。</li>
+<li>如果镜像层也不存在，则直接在容器层创建文件。</li>
+</ul>
+</li>
+<li>
+<p><strong>容器删除文件/目录</strong></p>
+<ul>
+<li>删除文件：在容器层创建一个<code>whiteout file</code>，避免向下层继续寻找。</li>
+<li>删除目录：在容器层创建一个<code>opaque file</code>（实测依然是whiteout file）。</li>
+</ul>
+</li>
+<li>
+<p><strong>Aufs性能</strong></p>
+<ul>
+<li>对容器密集型友好，因其能有效利用运行中的容器image，使得容器启动更迅速，减少磁盘空间使用。</li>
+<li>能有效使用page cache。</li>
+<li>首次写操作开销大，尤其是文件在镜像层存在时，需要copy-up至容器层。由于<strong>aufs底层存储是文件级别而非块级别</strong>，对于文件的修改需要将整个文件复制到容器层。因此文件越大，写性能越差。</li>
+</ul>
+</li>
+<li>
+<p><strong>最佳实践</strong></p>
+<ul>
+<li>使用ssd盘，速度远高于旋转式磁盘。</li>
+<li>对于write-heavy负载使用<strong>volume</strong>，减少IO开销的同时可以将容器数据持久化，并且可以在多个容器中共享。</li>
+</ul>
+</li>
+</ul>
+<h3 id=实践>实践</h3>
+<p>使用ubuntu:16.04 image对aufs driver进行探究，首先启动一个container：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ docker run -it --rm ubuntu:16.04 bash
+</code></pre></td></tr></table>
+</div>
+</div><p>Docker存储目录结构如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree -L <span class=m>2</span> /var/lib/docker/aufs
+
+/var/lib/docker/aufs
+├── diff
+│   ├── 1492027998d17f2f422a0d46ed6e41a9ef59911bb13357765aeb0dc9f150ea76
+│   ├── 72c62493358ebb6ae7d47717a491b7f3ff402fb338a34d9df8529c166223737a
+│   ├── 8065b4da5339d297dfb53f4bd7edfeba97b5c0089eda635c412943c4d7e55e81
+│   ├── a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227
+│   ├── a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227-init
+│   └── aff7006186a6867de9cc7a75f1d31c90eb52753b9d96d6c85a3f66e78ccd465b
+├── layers
+│   ├── 1492027998d17f2f422a0d46ed6e41a9ef59911bb13357765aeb0dc9f150ea76
+│   ├── 72c62493358ebb6ae7d47717a491b7f3ff402fb338a34d9df8529c166223737a
+│   ├── 8065b4da5339d297dfb53f4bd7edfeba97b5c0089eda635c412943c4d7e55e81
+│   ├── a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227
+│   ├── a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227-init
+│   └── aff7006186a6867de9cc7a75f1d31c90eb52753b9d96d6c85a3f66e78ccd465b
+└── mnt
+    ├── 1492027998d17f2f422a0d46ed6e41a9ef59911bb13357765aeb0dc9f150ea76
+    ├── 72c62493358ebb6ae7d47717a491b7f3ff402fb338a34d9df8529c166223737a
+    ├── 8065b4da5339d297dfb53f4bd7edfeba97b5c0089eda635c412943c4d7e55e81
+    ├── a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227
+    ├── a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227-init
+    └── aff7006186a6867de9cc7a75f1d31c90eb52753b9d96d6c85a3f66e78ccd465b
+
+<span class=m>15</span> directories, <span class=m>6</span> files
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到存在一个<code>-init</code>后缀目录项，因此可以断定<code>a5cad43</code>是容器层，其他均为镜像层。</p>
+<p>从挂载信息中可以验证这一点，aufs仅需挂载upperdir：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ mount <span class=p>|</span> grep aufs
+
+none on /var/lib/docker/aufs/mnt/a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227 <span class=nb>type</span> aufs <span class=o>(</span>rw,relatime,si<span class=o>=</span>b3be613c19d0e57c,dio,dirperm1<span class=o>)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到此挂载source内容即为ubuntu rootfs的内容：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ ls /var/lib/docker/aufs/mnt/a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227
+
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+</code></pre></td></tr></table>
+</div>
+</div><p>此镜像中layer stack又是如何组织的呢？</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ cat /var/lib/docker/aufs/layers/a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227
+
+a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227-init
+aff7006186a6867de9cc7a75f1d31c90eb52753b9d96d6c85a3f66e78ccd465b
+8065b4da5339d297dfb53f4bd7edfeba97b5c0089eda635c412943c4d7e55e81
+1492027998d17f2f422a0d46ed6e41a9ef59911bb13357765aeb0dc9f150ea76
+72c62493358ebb6ae7d47717a491b7f3ff402fb338a34d9df8529c166223737a
+</code></pre></td></tr></table>
+</div>
+</div><p>可以从容器层的layers内容中看到layer stack自顶向下的组织形式为 <strong>a5 -> a5-init -> af -> 80 -> 14 -> 72</strong>。</p>
+<p>接下来验证一下容器内更改文件系统对aufs存储有什么影响。</p>
+<h4 id=创建文件>创建文件</h4>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 容器内</span>
+$ touch kkk
+
+<span class=c1># 宿主机</span>
+$ find /var/lib/docker/aufs -name kkk
+
+/var/lib/docker/aufs/mnt/a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227/kkk
+/var/lib/docker/aufs/diff/a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227/kkk
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看见文件的创建仅发生在容器层。同理，更改文件内容也是如此，只是涉及到从镜像层到容器层的copy-up。</p>
+<h4 id=删除文件>删除文件</h4>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 容器内</span>
+$ rm /bin/zegrep
+
+<span class=c1># 宿主机</span>
+$ find  /var/lib/docker/aufs -name *zegrep*
+
+/var/lib/docker/aufs/mnt/a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227/usr/share/man/man1/zegrep.1.gz
+/var/lib/docker/aufs/diff/a5cad43027e71dcd8efaa9287a4c502a59631c108d22b5e861d9ca1878525227/bin/.wh.zegrep
+/var/lib/docker/aufs/diff/72c62493358ebb6ae7d47717a491b7f3ff402fb338a34d9df8529c166223737a/bin/zegrep
+/var/lib/docker/aufs/diff/72c62493358ebb6ae7d47717a491b7f3ff402fb338a34d9df8529c166223737a/usr/share/man/man1/zegrep.1.gz
+</code></pre></td></tr></table>
+</div>
+</div><p>可以看到容器中<code>/bin/zegrep</code>位于最底层的<code>72c6249</code>镜像层，容器内删除此文件并不会在镜像层删除，而是在容器层<code>a5cad43</code>产生一个whiteout文件——<code>/bin/.wh.zegrep</code>，通过whiteout文件避免沿着layer stack向下查找。如果容器内误删了某个文件，可以在对应容器层diff目录中将whiteout文件删除以将其恢复。</p>
+<h2 id=overlayfs>OverlayFS</h2>
+<ul>
+<li>
+<p>OverlayFS是一种类似aufs的联合文件系统，但是速度更快，更简单。Docker基于overlayFS提供了两种存储驱动：<code>overlay</code>和<code>overlay2</code></p>
+</li>
+<li>
+<p>将两个目录以<strong>union mount</strong>的形式组织成单个目录，镜像层目录为<code>lowerdir</code>，容器层目录为<code>upperdir</code>，对外呈现一致的目录视图（容器内看到的文件系统）叫做<code>merged</code>。</p>
+<figure><a class=lightgallery href=/posts/storage-driver/overlay-layers.png title=/posts/storage-driver/overlay-layers.png data-thumbnail=/posts/storage-driver/overlay-layers.png data-sub-html="<h2>overlayFS layer组织形式</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=overlay-layers.png data-srcset="/posts/storage-driver/overlay-layers.png, overlay-layers.png 1.5x, /posts/storage-driver/overlay-layers.png 2x" data-sizes=auto alt=/posts/storage-driver/overlay-layers.png height=400 width=800>
+</a><figcaption class=image-caption>overlayFS layer组织形式</figcaption>
+</figure>
+</li>
+</ul>
+<h3 id=overlay2>Overlay2</h3>
+<ul>
+<li>
+<p>Overlay2每一层均以一个<code>patch</code>的形式表示，基于内核overlayFS的Multiple lower layers特性实现，不再需要硬链接，<strong>lowerdir是将镜像层所有的layer overlay起来组成</strong>。</p>
+<p>容器层挂载信息：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># mount | grep overlay</span>
+overlay on /var/lib/docker/overlay2/23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241b696e7870d37dca0130b/merged <span class=nb>type</span> overlay <span class=o>(</span>rw,relatime,lowerdir<span class=o>=</span>/var/lib/docker/overlay2/l/XRV25KXVQWJ42GBK5UJD7ICFVV:/var/lib/docker/overlay2/l/ZVAQQEPIP4VXNQK2LZM24JXP7H:/var/lib/docker/overlay2/l/7YTDWL6UA7JEAI5KPCZEUDIUUF:/var/lib/docker/overlay2/l/OER42RBQQTIFRQ7LZRR4IPRQWU:/var/lib/docker/overlay2/l/2MR2ULDESC4VPFHAYTSOAVXLFF,upperdir<span class=o>=</span>/var/lib/docker/overlay2/23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241b696e7870d37dca0130b/diff,workdir<span class=o>=</span>/var/lib/docker/overlay2/23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241b696e7870d37dca0130b/work,xino<span class=o>=</span>off<span class=o>)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>层间组织关系简单示意：</p>
+</li>
+</ul>
+<div class=mermaid id=id-1></div>
+<ul>
+<li>
+<p><strong>存储结构</strong></p>
+<ul>
+<li><code>diff/</code>：本层的内容。</li>
+<li><code>link</code>：当前层的短标识。</li>
+<li><code>lower</code>：当前层的父layers，按层序排列，除最底层外有此文件。</li>
+<li><code>work/</code>：overlayFS内部使用的文件，除最底层外有此目录。</li>
+<li><code>merged/</code>：其自身及其父layer的联合目录结构，只有容器层有此目录。</li>
+<li><code>l/</code>：短id的符号链接。</li>
+</ul>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># tree -L 2 /var/lib/docker/overlay2</span>
+/var/lib/docker/overlay2
+├── 013299735d8abd2c0cc5cbad32f011be44fad600a624bc6c2f1f94b9bffa64c2
+│   ├── diff
+│   ├── link
+│   ├── lower
+│   └── work
+├── 23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241b696e7870d37dca0130b
+│   ├── diff
+│   ├── link
+│   ├── lower
+│   ├── merged
+│   └── work
+├── 23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241b696e7870d37dca0130b-init
+│   ├── committed
+│   ├── diff
+│   ├── link
+│   ├── lower
+│   └── work
+├── 36bf33266ffa01007cdc8db601c77fb6bd5aa5d2dc8dd35fe873e1580073db82
+│   ├── committed
+│   ├── diff
+│   └── link
+├── 3862629a36e3286f03a2d9234633fdb0e9301a33a7195087afd3b3f92c1464fb
+│   ├── committed
+│   ├── diff
+│   ├── link
+│   ├── lower
+│   └── work
+├── 6d1ca51490fa03a0ebf3767e0ddc93508593fa380b542af3e5187f0ec5e2629c
+│   ├── committed
+│   ├── diff
+│   ├── link
+│   ├── lower
+│   └── work
+├── 74e31d6f05b337350eb841d01d9728852f6fb0c69a007957dcf04cdb570d8b06
+│   ├── committed
+│   ├── diff
+│   ├── link
+│   ├── lower
+│   └── work
+└── l
+    ├── 2MR2ULDESC4VPFHAYTSOAVXLFF -&gt; ../36bf33266ffa01007cdc8db601c77fb6bd5aa5d2dc8dd35fe873e1580073db82/diff
+    ├── 7YTDWL6UA7JEAI5KPCZEUDIUUF -&gt; ../74e31d6f05b337350eb841d01d9728852f6fb0c69a007957dcf04cdb570d8b06/diff
+    ├── EYKZCXLZJEZJW55DB7S5ID2HKW -&gt; ../23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241b696e7870d37dca0130b/diff
+    ├── OER42RBQQTIFRQ7LZRR4IPRQWU -&gt; ../3862629a36e3286f03a2d9234633fdb0e9301a33a7195087afd3b3f92c1464fb/diff
+    ├── TQQ75355OL5U7VFEC6XG7YBWE5 -&gt; ../013299735d8abd2c0cc5cbad32f011be44fad600a624bc6c2f1f94b9bffa64c2/diff
+    ├── XRV25KXVQWJ42GBK5UJD7ICFVV -&gt; ../23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241b696e7870d37dca0130b-init/diff
+    └── ZVAQQEPIP4VXNQK2LZM24JXP7H -&gt; ../6d1ca51490fa03a0ebf3767e0ddc93508593fa380b542af3e5187f0ec5e2629c/diff
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><p>OverlayFS中删除文件仍然使用<strong>whiteout文件</strong>来阻止向容器层以下查找文件，只是在aufs中，whiteout文件以<code>.wh.{FILENAME}</code>命名的<strong>普通文件</strong>呈现；而在overlayFS中，whiteout文件以原文件命名的<strong>字符设备文件</strong>呈现。</p>
+<p>例如，从附录ubuntu:16.04的镜像分析中可以看到第三层删除了<code>/var/lib/apt/lists</code>下的所有文件，对应layer的diff中可以看到，这些文件都变成了字符设备文件：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ ll -a /var/lib/docker/overlay2/74e31d6f05b337350eb841d01d9728852f6fb0c69a007957dcf04cdb570d8b06/diff/var/lib/apt/lists/
+
+total <span class=m>8</span>
+drwxr-xr-x <span class=m>2</span> root root <span class=m>4096</span> Aug <span class=m>31</span> 09:21 ./
+drwxr-xr-x <span class=m>3</span> root root <span class=m>4096</span> Aug  <span class=m>5</span> 03:01 ../
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial_InRelease
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial_main_binary-amd64_Packages
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial_main_i18n_Translation-en
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial_restricted_binary-amd64_Packages
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial_restricted_i18n_Translation-en
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial-updates_InReleasec--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial-updates_main_binary-amd64_Packages
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial-updates_main_i18n_Translation-en
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial-updates_restricted_binary-amd64_Packages
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 archive.ubuntu.com_ubuntu_dists_xenial-updates_restricted_i18n_Translation-en
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 lock
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 partial
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 security.ubuntu.com_ubuntu_dists_xenial-security_InRelease
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 security.ubuntu.com_ubuntu_dists_xenial-security_main_binary-amd64_Packages
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 security.ubuntu.com_ubuntu_dists_xenial-security_main_i18n_Translation-en
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 security.ubuntu.com_ubuntu_dists_xenial-security_restricted_binary-amd64_Packages
+c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span class=m>7</span> 13:55 security.ubuntu.com_ubuntu_dists_xenial-security_restricted_i18n_Translation-en
+</code></pre></td></tr></table>
+</div>
+</div></div>
+</div>
+</div>
+</li>
+</ul>
+<h3 id=overlay>Overlay</h3>
+<ul>
+<li>
+<p>Overlay中每一层都构筑成完整的镜像，即每一层都是从最底层到当前层overlay出的完整结构，下一层的文件以<strong>硬链接</strong>的方式出现在它的上一层，<strong>lowerdir只由镜像层的top layer组成</strong>。</p>
+<p>容器层挂载信息：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=c1># 镜像层每层以硬链接形式共享文件</span>
+$ <span class=nb>cd</span> /var/lib/docker/overlay<span class=p>;</span> ls -i 07236efba039eb5cb4e0b6ec010218aefd17293f8297d43c04be4a5b0fd59ab7/root/bin/ls  09195a984aeac5c05ac3c487b1bb2ffb4d57465a3dc575c13e8d4610484ae0b2/root/bin/ls
+
+<span class=m>655184</span> 07236efba039eb5cb4e0b6ec010218aefd17293f8297d43c04be4a5b0fd59ab7/root/bin/ls
+<span class=m>655184</span> 09195a984aeac5c05ac3c487b1bb2ffb4d57465a3dc575c13e8d4610484ae0b2/root/bin/ls
+
+<span class=c1># 容器层仅overlay mount了镜像层最顶层的root目录</span>
+$ mount <span class=p>|</span> grep overlay
+
+overlay on /var/lib/docker/overlay/4d0852eca897d746e415bffb325ad3661f8371987082f6b6c8e9d5b9fda9abc5/merged <span class=nb>type</span> overlay <span class=o>(</span>rw,relatime,lowerdir<span class=o>=</span>/var/lib/docker/overlay/07236efba039eb5cb4e0b6ec010218aefd17293f8297d43c04be4a5b0fd59ab7/root,upperdir<span class=o>=</span>/var/lib/docker/overlay/4d0852eca897d746e415bffb325ad3661f8371987082f6b6c8e9d5b9fda9abc5/upper,workdir<span class=o>=</span>/var/lib/docker/overlay/4d0852eca897d746e415bffb325ad3661f8371987082f6b6c8e9d5b9fda9abc5/work,xino<span class=o>=</span>off<span class=o>)</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>层间组织关系简单示意：</p>
+<div class=mermaid id=id-2></div>
+</li>
+<li>
+<p><strong>存储结构</strong></p>
+<ul>
+<li><code>root/</code>：本层完整的目录结构，下层文件以硬链的形式出现在本层，所有镜像层有且仅有此目录。</li>
+<li><code>merged/</code>： 其自身及其父layer的联合目录结构，只有容器层有此目录。</li>
+<li><code>upper/</code>：本层的内容，类似于overlay2中的<strong>diff</strong>目录，但只有容器层有此目录。</li>
+<li><code>work/</code>：overlayFS内部使用的文件，只有容器层有此目录。</li>
+<li><code>lower-id</code>：lowerdir（镜像层顶层）的id。</li>
+</ul>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree -L <span class=m>2</span> /var/lib/docker/overlay
+
+/var/lib/docker/overlay
+├── 07236efba039eb5cb4e0b6ec010218aefd17293f8297d43c04be4a5b0fd59ab7
+│   └── root
+├── 09195a984aeac5c05ac3c487b1bb2ffb4d57465a3dc575c13e8d4610484ae0b2
+│   └── root
+├── 15afdc0d3161ffd9002a5d7714bb3566a658bfa286de82ff95a49368769e5072
+│   └── root
+├── 4d0852eca897d746e415bffb325ad3661f8371987082f6b6c8e9d5b9fda9abc5
+│   ├── lower-id
+│   ├── merged
+│   ├── upper
+│   └── work
+├── 4d0852eca897d746e415bffb325ad3661f8371987082f6b6c8e9d5b9fda9abc5-init
+│   ├── lower-id
+│   ├── upper
+│   └── work
+└── f6bdc701b8624ef39632441ad84efde79de50ae2bc3c637eabf0827084d547ec
+    └── root
+</code></pre></td></tr></table>
+</div>
+</div><div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw"></i>init layer<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content><p>在上述driver中，存储目录中都有一个<code>-init</code>后缀的目录，此为<strong>init layer</strong>，位于容器层与镜像层之间，<strong>只读</strong>。其主要包含了docker为容器准备的一些文件：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ tree /var/lib/docker/overlay/2178b65434aae442f3e71937bc6f775063a9993a3684625e982c7195052e9289-init/
+
+/var/lib/docker/overlay/2178b65434aae442f3e71937bc6f775063a9993a3684625e982c7195052e9289-init/
+├── lower-id
+├── upper
+│   ├── dev
+│   │   └── console
+│   └── etc
+│       ├── hostname
+│       ├── hosts
+│       ├── mtab -&gt; /proc/mounts
+│       └── resolv.conf
+└── work
+    └── work
+</code></pre></td></tr></table>
+</div>
+</div><p>upper中除了<code>mtab</code>是指向<code>/proc/mounts</code>的软链接之外，其他都是空的普通文件。这些文件都是Linux runtime必须的文件，如果缺少会导致某些程序或库出现异常。<strong>init layer主要是用于占坑，避免系统因缺少特殊文件而崩溃，具体内容后续进行bind mount</strong>。</p>
+<p>由于init layer很薄并且只读，上述讨论将其予以忽略，其本身可以帮助我们快速定位到容器层的id。</p>
+</div>
+</div>
+</div>
+</li>
+</ul>
+<h2 id=aufs-overlay与overlay2比较>Aufs, overlay与overlay2比较</h2>
+<ul>
+<li><strong>相同点</strong>
+<ul>
+<li>划分容器层与镜像层，镜像层只读可以复用；容器层可写，遵循CoW机制。</li>
+<li>底层基于<strong>file-leve</strong>l，而非block-level，可有效利用内存，但写操作开销大，CoW效率低。当文件很大时，对其修改需要全部copy up到容器层，即便是仅仅进行了很小的修改。</li>
+</ul>
+</li>
+<li><strong>不同点</strong>
+<ul>
+<li>Aufs driver是按照layer stack组织镜像层的，即在定位文件时需要沿着layer stack一层一层地去定位。因此其性能相较于overlayFS差，尤其是镜像层数比较深时。</li>
+<li>Overlay driver每层都构筑完整的镜像目录结构，通过硬链接的形式复用底层镜像层的文件。在镜像层数较深时，定位文件及写容器层的性能要略好于overlay2。但是由于每层都是完整的镜像目录结构，<strong>各级子目录会占用大量的Inode</strong>，尤其当层数很深时inode易被耗尽。</li>
+<li>Overlay2 driver每层仅包含当前层的增量内容，通过overlay multiple lower layers形式构筑lowerdir，解决了overlay driver中消耗大量inode的问题，也是docker官方推荐的storage driver。</li>
+</ul>
+</li>
+</ul>
+<h2 id=附录>附录</h2>
+<p>使用dive对ubuntu:16.04进行镜像分析：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ dive ubuntu:16.04
+</code></pre></td></tr></table>
+</div>
+</div><figure><a class=lightgallery href=/posts/storage-driver/ubuntu-image.png title=/posts/storage-driver/ubuntu-image.png data-thumbnail=/posts/storage-driver/ubuntu-image.png data-sub-html="<h2>ubuntu:16.04的镜像分析</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=ubuntu-image.png data-srcset="/posts/storage-driver/ubuntu-image.png, ubuntu-image.png 1.5x, /posts/storage-driver/ubuntu-image.png 2x" data-sizes=auto alt=/posts/storage-driver/ubuntu-image.png height=200 width=600>
+</a><figcaption class=image-caption>ubuntu:16.04的镜像分析</figcaption>
+</figure>
+<h2 id=参考文献>参考文献</h2>
+<ul>
+<li><a href=https://docs.docker.com/storage/storagedriver/ target=_blank rel="noopener noreffer">About storage drivers</a></li>
+<li><a href=https://docs.docker.com/storage/storagedriver/aufs-driver/ target=_blank rel="noopener noreffer">Use the AUFS storage driver</a></li>
+<li><a href=https://docs.docker.com/storage/storagedriver/overlayfs-driver/ target=_blank rel="noopener noreffer">Use the OverlayFS storage driver</a></li>
+</ul></div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>更新于 2021-10-16</span>
+</div>
+<div class=post-info-license></div>
+</div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/container/>container</a></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/telepresence/ class=prev rel=prev title=Telepresence——本地调试k8s服务利器><i class="fas fa-angle-left fa-fw"></i>Telepresence——本地调试k8s服务利器</a></div>
+</div>
+<div id=comments><div id=valine class=comment></div><noscript>
+Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
+</noscript></div></article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+<i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论>
+<i class="fas fa-comment fa-fw"></i>
+</a>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/mermaid/mermaid.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},data:{"id-1":"graph BT;\nl1[Layer1: \u003cfont color=red\u003ea,b,c\u003c/font\u003e]\nl2[Layer2: \u003cfont color=red\u003eB,d\u003c/font\u003e]\nl3[Layer3: \u003cfont color=red\u003eC,e\u003c/font\u003e]\nld[Lowerdir: \u003cfont color=red\u003ea,B,C,d,e\u003c/font\u003e]\nl1 -- add B,d --\u003e l2\nl2 -- add C,e --\u003e l3\nl3 -. overlay .-\u003e ld","id-2":"  graph BT;\n  l1[Layer1: \u003cfont color=red\u003ea,b,c\u003c/font\u003e]\n  l2[Layer2: \u003cfont color=red\u003ea,B,c,d\u003c/font\u003e]\n  l3[Layer3: \u003cfont color=red\u003ea,B,C,d,e\u003c/font\u003e]\n  ld[Lowerdir: \u003cfont color=red\u003ea,B,C,d,e\u003c/font\u003e]\n  l1 -- add B,d --\u003e l2\n  l2 -- add C,e --\u003e l3\n  l3 -. overlay .-\u003e ld\n  "},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>
