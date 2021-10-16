@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/storage-driver/><link rel=prev href=https://raygecao.github.io/posts/telepresence/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"浅谈Docker Storage Driver","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/storage-driver\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/storage-driver\/featured-image.png","width":800,"height":600}],"genre":"posts","keywords":"container","wordcount":4472,"url":"https:\/\/raygecao.github.io\/posts\/storage-driver\/","datePublished":"2021-10-16T12:23:06+08:00","dateModified":"2021-10-16T12:23:06+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/storage-driver/><link rel=prev href=https://raygecao.github.io/posts/telepresence/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"浅谈Docker Storage Driver","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/storage-driver\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/storage-driver\/featured-image.png","width":800,"height":600}],"genre":"posts","keywords":"container","wordcount":4516,"url":"https:\/\/raygecao.github.io\/posts\/storage-driver\/","datePublished":"2021-10-16T12:23:06+08:00","dateModified":"2021-10-16T12:23:06+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
 <body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
@@ -85,9 +85,9 @@
 <h2 class=toc-title>目录</h2>
 <div class="toc-content always-active" id=toc-content-auto></div>
 </div><article class="page single"><h1 class="single-title animated flipInX">浅谈Docker Storage Driver</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E8%B7%B5/><i class="far fa-folder fa-fw"></i>探索与实践</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-10-16>2021-10-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4472 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id=/posts/storage-driver/ class=leancloud_visitors data-flag-title="浅谈Docker Storage Driver">
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=" author" class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-10-16>2021-10-16</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4516 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;<span id=/posts/storage-driver/ class=leancloud_visitors data-flag-title="浅谈Docker Storage Driver">
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div>
 </div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/storage-driver/featured-image.png data-srcset="/posts/storage-driver/featured-image.png, /posts/storage-driver/featured-image.png 1.5x, /posts/storage-driver/featured-image.png 2x" data-sizes=auto alt=/posts/storage-driver/featured-image.png title=/posts/storage-driver/featured-image.png></div><div class="details toc" id=toc-static kept>
@@ -155,16 +155,16 @@ nodev aufs
 </div></li>
 <li>
 <p>Aufs是一个联合文件系统，其采用<strong>union mount</strong>将linux系统上的多个目录<strong>堆叠</strong>成一个目录，一个目录代表一个branch（在docker术语中对应为layer）。</p>
-<figure><a class=lightgallery href=/posts/storage-driver/aufs-layers.png title=/posts/storage-driver/aufs-layers.png data-thumbnail=/posts/storage-driver/aufs-layers.png data-sub-html="<h2>Aufs layer组织形式</h2>">
+<figure><a class=lightgallery href=/posts/storage-driver/aufs-layers.png title=/posts/storage-driver/aufs-layers.png data-thumbnail=/posts/storage-driver/aufs-layers.png data-sub-html="<h2>aufs layer组织形式</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=aufs-layers.png data-srcset="/posts/storage-driver/aufs-layers.png, aufs-layers.png 1.5x, /posts/storage-driver/aufs-layers.png 2x" data-sizes=auto alt=/posts/storage-driver/aufs-layers.png height=400 width=800>
-</a><figcaption class=image-caption>Aufs layer组织形式</figcaption>
+</a><figcaption class=image-caption>aufs layer组织形式</figcaption>
 </figure>
 </li>
 <li>
 <p><strong>存储结构</strong></p>
 <ul>
 <li><code>diff/</code>：每一层的内容，每层以一个独立的子目录存储。</li>
-<li><code>layers/</code>：存放layers的元信息以标识镜像layer如何堆叠，每层以一个文件表示。</li>
+<li><code>layers/</code>：存放layers的元信息以标识镜像层如何堆叠，每层以一个文件表示。</li>
 <li><code>mnt/</code>：挂载点，每层一个，用于向容器组装/挂载联合文件系统。</li>
 </ul>
 </li>
@@ -194,8 +194,9 @@ nodev aufs
 <li>
 <p><strong>Aufs性能</strong></p>
 <ul>
-<li>对容器密集型友好，因其能有效利用运行中的容器image，使得容器启动更迅速，减少磁盘空间使用。</li>
+<li>对容器密集型场景友好，因其能有效利用运行中的容器image，使得容器启动更迅速，减少磁盘空间使用。</li>
 <li>能有效使用page cache。</li>
+<li>定位文件开销大，需要沿着layer stack逐层定位。</li>
 <li>首次写操作开销大，尤其是文件在镜像层存在时，需要copy-up至容器层。由于<strong>aufs底层存储是文件级别而非块级别</strong>，对于文件的修改需要将整个文件复制到容器层。因此文件越大，写性能越差。</li>
 </ul>
 </li>
@@ -394,7 +395,7 @@ $ find  /var/lib/docker/aufs -name *zegrep*
 <h3 id=overlay2>Overlay2</h3>
 <ul>
 <li>
-<p>Overlay2每一层均以一个<code>patch</code>的形式表示，基于内核overlayFS的Multiple lower layers特性实现，不再需要硬链接，<strong>lowerdir是将镜像层所有的layer overlay起来组成</strong>。</p>
+<p>Overlay2 driver每一层均以一个<code>patch</code>的形式表示，基于内核overlayFS的multiple lower layers特性实现，不再需要硬链接，<strong>lowerdir是将镜像层所有的layer overlay起来组成</strong>。</p>
 <p>容器层挂载信息：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -419,7 +420,7 @@ overlay on /var/lib/docker/overlay2/23ae9a63ab9f4f4c36af29f78fb64d4e943c7af9f241
 <li><code>lower</code>：当前层的父layers，按层序排列，除最底层外有此文件。</li>
 <li><code>work/</code>：overlayFS内部使用的文件，除最底层外有此目录。</li>
 <li><code>merged/</code>：其自身及其父layer的联合目录结构，只有容器层有此目录。</li>
-<li><code>l/</code>：短id的符号链接。</li>
+<li><code>l/</code>：此目录存放短id的符号链接。</li>
 </ul>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -588,7 +589,7 @@ c--------- <span class=m>1</span> root root 0, <span class=m>0</span> Oct  <span
 <h3 id=overlay>Overlay</h3>
 <ul>
 <li>
-<p>Overlay中每一层都构筑成完整的镜像，即每一层都是从最底层到当前层overlay出的完整结构，下一层的文件以<strong>硬链接</strong>的方式出现在它的上一层，<strong>lowerdir只由镜像层的top layer组成</strong>。</p>
+<p>Overlay driver每一层都构筑成完整的镜像，即每一层都是从最底层到当前层overlay出的完整结构，下一层的文件以<strong>硬链接</strong>的方式出现在它的上一层，<strong>lowerdir只由镜像层的top layer组成</strong>。</p>
 <p>容器层挂载信息：</p>
 <div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
@@ -714,7 +715,7 @@ overlay on /var/lib/docker/overlay/4d0852eca897d746e415bffb325ad3661f8371987082f
     └── work
 </code></pre></td></tr></table>
 </div>
-</div><p>upper中除了<code>mtab</code>是指向<code>/proc/mounts</code>的软链接之外，其他都是空的普通文件。这些文件都是Linux runtime必须的文件，如果缺少会导致某些程序或库出现异常。<strong>init layer主要是用于占坑，避免系统因缺少特殊文件而崩溃，具体内容后续进行bind mount</strong>。</p>
+</div><p>upper dir中除了<code>mtab</code>是指向<code>/proc/mounts</code>的软链接之外，其他都是空的普通文件。这些文件都是Linux runtime必须的文件，如果缺少会导致某些程序或库出现异常。<strong>init layer主要是用于占坑，避免系统因缺少特殊文件而崩溃，具体内容后续进行bind mount</strong>。</p>
 <p>由于init layer很薄并且只读，上述讨论将其予以忽略，其本身可以帮助我们快速定位到容器层的id。</p>
 </div>
 </div>
@@ -725,14 +726,14 @@ overlay on /var/lib/docker/overlay/4d0852eca897d746e415bffb325ad3661f8371987082f
 <ul>
 <li><strong>相同点</strong>
 <ul>
-<li>划分容器层与镜像层，镜像层只读可以复用；容器层可写，遵循CoW机制。</li>
-<li>底层基于<strong>file-leve</strong>l，而非block-level，可有效利用内存，但写操作开销大，CoW效率低。当文件很大时，对其修改需要全部copy up到容器层，即便是仅仅进行了很小的修改。</li>
+<li>划分容器层与镜像层，镜像层只读可以复用；容器层可写，采用CoW机制。</li>
+<li>底层基于<strong>file-level</strong>，而非block-level，可有效利用内存，但写操作开销大，CoW效率低。当文件很大时，对其修改需要全部copy-up到容器层，即便是仅仅进行了很小的修改。</li>
 </ul>
 </li>
 <li><strong>不同点</strong>
 <ul>
 <li>Aufs driver是按照layer stack组织镜像层的，即在定位文件时需要沿着layer stack一层一层地去定位。因此其性能相较于overlayFS差，尤其是镜像层数比较深时。</li>
-<li>Overlay driver每层都构筑完整的镜像目录结构，通过硬链接的形式复用底层镜像层的文件。在镜像层数较深时，定位文件及写容器层的性能要略好于overlay2。但是由于每层都是完整的镜像目录结构，<strong>各级子目录会占用大量的Inode</strong>，尤其当层数很深时inode易被耗尽。</li>
+<li>Overlay driver每层都构筑完整的镜像目录结构，通过硬链接的形式复用底层镜像层的文件。在镜像层数较深时，定位文件及写容器层的性能要略好于overlay2。但是由于每层都是完整的镜像目录结构，<strong>各级子目录会占用大量的inode</strong>，尤其当层数很深时，inode易被耗尽。</li>
 <li>Overlay2 driver每层仅包含当前层的增量内容，通过overlay multiple lower layers形式构筑lowerdir，解决了overlay driver中消耗大量inode的问题，也是docker官方推荐的storage driver。</li>
 </ul>
 </li>
@@ -756,6 +757,7 @@ overlay on /var/lib/docker/overlay/4d0852eca897d746e415bffb325ad3661f8371987082f
 <li><a href=https://docs.docker.com/storage/storagedriver/ target=_blank rel="noopener noreffer">About storage drivers</a></li>
 <li><a href=https://docs.docker.com/storage/storagedriver/aufs-driver/ target=_blank rel="noopener noreffer">Use the AUFS storage driver</a></li>
 <li><a href=https://docs.docker.com/storage/storagedriver/overlayfs-driver/ target=_blank rel="noopener noreffer">Use the OverlayFS storage driver</a></li>
+<li><a href=https://coolshell.cn/articles/17061.html target=_blank rel="noopener noreffer">DOCKER基础技术：AUFS</a></li>
 </ul></div><div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
@@ -791,5 +793,5 @@ Please enable JavaScript to view the comments powered by <a href=https://valine.
 </a><a href=# id=view-comments class=fixed-button title=查看评论>
 <i class="fas fa-comment fa-fw"></i>
 </a>
-</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/mermaid/mermaid.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},data:{"id-1":"graph BT;\nl1[Layer1: \u003cfont color=red\u003ea,b,c\u003c/font\u003e]\nl2[Layer2: \u003cfont color=red\u003eB,d\u003c/font\u003e]\nl3[Layer3: \u003cfont color=red\u003eC,e\u003c/font\u003e]\nld[Lowerdir: \u003cfont color=red\u003ea,B,C,d,e\u003c/font\u003e]\nl1 -- add B,d --\u003e l2\nl2 -- add C,e --\u003e l3\nl3 -. overlay .-\u003e ld","id-2":"  graph BT;\n  l1[Layer1: \u003cfont color=red\u003ea,b,c\u003c/font\u003e]\n  l2[Layer2: \u003cfont color=red\u003ea,B,c,d\u003c/font\u003e]\n  l3[Layer3: \u003cfont color=red\u003ea,B,C,d,e\u003c/font\u003e]\n  ld[Lowerdir: \u003cfont color=red\u003ea,B,C,d,e\u003c/font\u003e]\n  l1 -- add B,d --\u003e l2\n  l2 -- add C,e --\u003e l3\n  l3 -. overlay .-\u003e ld\n  "},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><link rel=stylesheet href=/lib/mermaid/mermaid.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/mermaid/mermaid.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},data:{"id-1":"graph BT;\nl1[Layer1: a,b,c]\nl2[Layer2: B,d]\nl3[Layer3: C,e]\nld[Lowerdir: a,B,C,d,e]\nl1 -- add B,d --\u003e l2\nl2 -- add C,e --\u003e l3\nl3 -. overlay .-\u003e ld","id-2":"  graph BT;\n  l1[Layer1: a,b,c]\n  l2[Layer2: a,B,c,d]\n  l3[Layer3: a,B,C,d,e]\n  ld[Lowerdir: a,B,C,d,e]\n  l1 -- add B,d --\u003e l2\n  l2 -- add C,e --\u003e l3\n  l3 -. overlay .-\u003e ld\n  "},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
 </html>
