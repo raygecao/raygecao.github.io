@@ -1,0 +1,512 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
+<title>Iptables概要整理 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Iptables概要整理">
+<meta property="og:description" content="Iptables is the userspace command line program used to configure the Linux 2.4.x and later packet filtering ruleset. It is targeted towards system administrators.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://raygecao.github.io/posts/iptables/"><meta property="og:image" content="https://raygecao.github.io/posts/iptables/featured-image.png"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-12-08T20:44:15+08:00">
+<meta property="article:modified_time" content="2021-12-08T20:44:15+08:00">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://raygecao.github.io/posts/iptables/featured-image.png">
+<meta name=twitter:title content="Iptables概要整理">
+<meta name=twitter:description content="Iptables is the userspace command line program used to configure the Linux 2.4.x and later packet filtering ruleset. It is targeted towards system administrators.">
+<meta name=application-name content="拾遗之途">
+<meta name=apple-mobile-web-app-title content="拾遗之途">
+<meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/iptables/><link rel=prev href=https://raygecao.github.io/posts/storage-driver/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Iptables概要整理","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/iptables\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/iptables\/featured-image.png","width":635,"height":148}],"genre":"posts","keywords":"网络","wordcount":4675,"url":"https:\/\/raygecao.github.io\/posts\/iptables\/","datePublished":"2021-12-08T20:44:15+08:00","dateModified":"2021-12-08T20:44:15+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
+<body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</div>
+<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+取消
+</a>
+</div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a></div>
+</div>
+</header>
+<div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div>
+</div>
+<div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div>
+</div>
+<main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>目录</h2>
+<div class="toc-content always-active" id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animated flipInX">Iptables概要整理</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-12-08>2021-12-08</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4675 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;<span id=/posts/iptables/ class=leancloud_visitors data-flag-title=Iptables概要整理>
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div>
+</div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/iptables/featured-image.png data-srcset="/posts/iptables/featured-image.png, /posts/iptables/featured-image.png 1.5x, /posts/iptables/featured-image.png 2x" data-sizes=auto alt=/posts/iptables/featured-image.png title=/posts/iptables/featured-image.png></div><div class="details toc" id=toc-static kept>
+<div class="details-summary toc-title">
+<span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#简介>简介</a>
+<ul>
+<li><a href=#iptables-四表五链>Iptables 四表五链</a></li>
+<li><a href=#匹配条件>匹配条件</a></li>
+<li><a href=#常用的处理动作>常用的处理动作</a></li>
+<li><a href=#cheatsheet>CheatSheet</a></li>
+<li><a href=#增删改查基本指令示例>增删改查基本指令示例</a></li>
+<li><a href=#自定义链>自定义链</a></li>
+</ul>
+</li>
+<li><a href=#docker-iptables分析>Docker iptables分析</a>
+<ul>
+<li><a href=#filter表>filter表</a></li>
+<li><a href=#nat表>nat表</a></li>
+</ul>
+</li>
+<li><a href=#tips>Tips</a></li>
+<li><a href=#参考文献>参考文献</a></li>
+</ul>
+</nav></div>
+</div><div class=content id=content><p><strong>Iptables</strong> is the userspace command line program used to configure the Linux 2.4.x and later packet filtering ruleset. It is targeted towards system administrators.</p>
+<h2 id=简介>简介</h2>
+<p>Netfilter/Iptables是unix/linux自带的防火墙工具，netfilter是内核中<strong>数据包处理模块</strong>，定义了一组hook点，埋在网络协议栈中以对不同阶段的包进行处理，而Iptables是<strong>操纵netfilter的命令行工具</strong>。netfilter工作在<strong>二、三、四层</strong>，其匹配规则涵盖网卡，IP，端口等。</p>
+<ul>
+<li>netfilter的作用
+<ul>
+<li>NAT（网络地址转换）</li>
+<li>数据包内容修改</li>
+<li>数据包过滤</li>
+</ul>
+</li>
+</ul>
+<h3 id=iptables-四表五链>Iptables 四表五链</h3>
+<ul>
+<li>
+<p><strong>Iptables四张表</strong></p>
+<ul>
+<li><strong>filter表</strong>：负责过滤数据包；</li>
+<li><strong>nat表</strong>：网络地址转换，如SNAT、DNAT；</li>
+<li><strong>mangle表</strong>：修改报文，解包->修改->封包；</li>
+<li><strong>raw表</strong>：关闭nat及数据包链接追踪机制；</li>
+</ul>
+</li>
+<li>
+<p><strong>Iptables五个默认链</strong></p>
+<ul>
+<li><strong>PREROUTING</strong>：刚进入网络层的数据包会先经由PREROUTING链，并根据路由判断目标地址是否为本机。由于此链为接收包的第一站，因此<strong>DNAT通常在此链上配置</strong>；</li>
+<li><strong>INPUT</strong>：经由PREROUTING链的数据包发现目标地址为本机，会经由INPUT链进入本机，<strong>入站过滤规则通常在此链配置</strong>；</li>
+<li><strong>FORWARD</strong>：经由PREROUTING链的数据报发现目标地址不是本机，会经由FORWARD链进行转发，通常<strong>网络防火墙会在此链配置</strong>；</li>
+<li><strong>OUTPUT</strong>：从本机产生的数据包向外发送时会先经过OUTPUT链，通常<strong>出站过滤规则在此链配置</strong>。</li>
+<li><strong>POSTROUTING</strong>：经由OUTPUT/FORWORD链中流出的数据包最终经路由后会到达POSTROUTING链，以从对应的接口流出，POSTROUTING为数据包流出的最后一站，SNAT通常在此链上配置；</li>
+</ul>
+<p>每条链上会有多个规则，按顺序匹配，符合规则的触发action，并停止后续的规则匹配。</p>
+<figure><a class=lightgallery href=/posts/iptables/iptables.png title=/posts/iptables/iptables.png data-thumbnail=/posts/iptables/iptables.png data-sub-html="<h2>iptables的默认链及拥有的功能表，引自从零开始认识 iptables</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=iptables.png data-srcset="/posts/iptables/iptables.png, iptables.png 1.5x, /posts/iptables/iptables.png 2x" data-sizes=auto alt=/posts/iptables/iptables.png height=300 width=500>
+</a><figcaption class=image-caption>iptables的默认链及拥有的功能表，引自<a href=https://morven.life/posts/the_knowledge_of_iptables/ target=_blank rel="noopener noreffer">从零开始认识 iptables</a></figcaption>
+</figure>
+<ul>
+<li>数据包由外部发往本主机进程流向为：<code>PREROUTING -> INPUT</code></li>
+<li>数据包由本主机发往外部进程流向为：<code>OUTPUT -> POSTROUTING</code></li>
+<li>数据包由本主机进行转发的流向为：<code>PREROUTING -> FORWARD -> POSTROUTING</code></li>
+</ul>
+</li>
+<li>
+<p><strong>表与链的区别</strong>：表主要是按功能进行分类；而链是协议栈中某处提供的钩子函数。</p>
+</li>
+<li>
+<p><strong>默认策略</strong>：每条默认链都会有一个默认策略，<strong>在没有规则被匹配时会执行默认策略中的动作</strong>，而与之相关的是防火墙的两种通行策略：</p>
+<ul>
+<li><strong>黑名单机制</strong>：只有匹配到规则的数据包才可能被拒绝，没有匹配到的数据包都会被接受。<strong>将默认策略设置为ACCEPT即可实现黑名单机制</strong>；</li>
+<li><strong>白名单机制</strong>：只有匹配到规则的数据包才可能被接收，没有匹配到的数据包都会被拒绝。<strong>将默认策略设置为DROP即可实现白名单机制</strong>；</li>
+</ul>
+<div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div>
+<div class=details-content>
+<div class=admonition-content>黑白名单机制并非只能靠调整默认策略实现，设置默认策略只是实现此机制的一种方案，也可以通过其他方案来实现黑白名单机制，比如<strong>将默认策略设置ACCEPT，在链的尾部加一个DROP ALL的规则可以实现白名单机制</strong>。通常<strong>不建议将默认策略更改为DROP/REJECT</strong>，因为在此默认策略下，误flush了链会导致所有请求被拒绝。</div>
+</div>
+</div>
+</li>
+<li>
+<p><strong>同一链上各表执行优先级</strong>：<code>raw > mangle > nat > filter</code></p>
+</li>
+</ul>
+<h3 id=匹配条件>匹配条件</h3>
+<ul>
+<li>常见匹配条件</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>iptables输出</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>源IP</td>
+<td>source</td>
+<td>IP报头中记录，可以使单个IP地址或网段，<code>-s</code>指定</td>
+</tr>
+<tr>
+<td>目的IP</td>
+<td>destination</td>
+<td>IP报头中记录，可以使单个IP地址或网段， <code>-d</code>指定</td>
+</tr>
+<tr>
+<td>流入网卡</td>
+<td>in</td>
+<td><code>-i</code>指定</td>
+</tr>
+<tr>
+<td>流出网卡</td>
+<td>out</td>
+<td><code>-o</code>指定</td>
+</tr>
+<tr>
+<td>协议类型</td>
+<td>prot</td>
+<td><code>-p</code>指定，支持tcp/udp/icmp等</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>扩展匹配条件</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>表示</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>源端口</td>
+<td>tcp spt:22</td>
+<td>导入协议模块，同时指定<code>--sport</code>指定目的端口</td>
+</tr>
+<tr>
+<td>目的端口</td>
+<td>tcp dpt:22</td>
+<td>导入协议模块，同时指定<code>--dport</code> 指定目的端口</td>
+</tr>
+<tr>
+<td>字符串</td>
+<td>STRING</td>
+<td>导入string模块，同时指定<code>--string</code>指定匹配文本内容</td>
+</tr>
+<tr>
+<td>连接数</td>
+<td>connlimit</td>
+<td>需导入connlimit模块，并设置连接数规则</td>
+</tr>
+<tr>
+<td>报文速率</td>
+<td>limit</td>
+<td>需导入limit模块，并设置速率限制规则</td>
+</tr>
+<tr>
+<td>状态</td>
+<td>state</td>
+<td>需导入state模块，通过<code>--state</code>对状态进行设置，通常用来判断报文是对方主动发送的还是对方回复的响应报文</td>
+</tr>
+</tbody>
+</table>
+<p>使用<code>!</code>可以对匹配条件进行取反，扩展匹配条件通常需要通过<code>-m</code>导入特定的模块才可以使用。</p>
+<h3 id=常用的处理动作>常用的处理动作</h3>
+<table>
+<thead>
+<tr>
+<th>动作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACCEPT</td>
+<td>接受此数据包</td>
+</tr>
+<tr>
+<td>DROP</td>
+<td>直接丢弃此数据包</td>
+</tr>
+<tr>
+<td>REJECT</td>
+<td>拒绝数据包，并返回相应的通知</td>
+</tr>
+<tr>
+<td>SNAT</td>
+<td>源端网络地址转换，即将数据包的源IP改写为指定IP</td>
+</tr>
+<tr>
+<td>MASQUERADE</td>
+<td>动态的SNAT，无需手动指定源IP，iptables会将数据包的源IP改写成out网卡的IP，适用于动态生成IP的场景</td>
+</tr>
+<tr>
+<td>DNAT</td>
+<td>目的端网络地址转换，即将数据包的目的地址改写为指定IP</td>
+</tr>
+<tr>
+<td>REDIRECT</td>
+<td>本机端口映射，即将数据包导向另一个端口</td>
+</tr>
+<tr>
+<td>LOG</td>
+<td>将数据包记录在内核日志中，然后继续后续规则匹配</td>
+</tr>
+<tr>
+<td>RETURN</td>
+<td>结束在当前链中的规则匹配，返回到父链继续匹配</td>
+</tr>
+</tbody>
+</table>
+<h3 id=cheatsheet>CheatSheet</h3>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>作用</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>-L</code></td>
+<td>获取规则列表</td>
+<td>可接链名，不接默认为所有链，一般使用<code>-nvL --line</code>列举</td>
+</tr>
+<tr>
+<td><code>-I</code>/<code>-A</code></td>
+<td>在特定行/尾行插入</td>
+<td><code>-I</code>可以指定行号，默认为首行</td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>指定表名</td>
+<td>默认为filter表</td>
+</tr>
+<tr>
+<td><code>-D</code></td>
+<td>删除某条规则</td>
+<td>可以指定行号，也可以指定匹配条件+动作</td>
+</tr>
+<tr>
+<td><code>-R</code></td>
+<td>更新规则</td>
+<td><strong>须指定匹配条件和动作</strong>，建议使用<strong>删除+添加</strong>的形式</td>
+</tr>
+<tr>
+<td><code>-F</code></td>
+<td>清空某条链全部规则</td>
+<td>慎用</td>
+</tr>
+<tr>
+<td><code>-P</code></td>
+<td>修改某条链上的默认规则</td>
+<td>初始为ACCEPT，<strong>不建议设置为DROP/REJECT</strong></td>
+</tr>
+<tr>
+<td><code>-N</code></td>
+<td>创建一条自定义链</td>
+<td>规则模块化，便于管理</td>
+</tr>
+</tbody>
+</table>
+<h3 id=增删改查基本指令示例>增删改查基本指令示例</h3>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>$ iptables -t filter -nvL INPUT --line <span class=c1># 查询filter表，INPUT链的所有规则并展示行号</span>
+$ iptables -t filter -I INPUT <span class=m>2</span> -s 10.1.0.1 -j DROP <span class=c1># 在filter表，INPUT链第二行添加拒绝源IP为10.1.0.1的DROP规则</span>
+$ iptables -t filter -D INPUT <span class=m>2</span> <span class=c1># 在filter表，INPUT链删除第二条规则</span>
+$ iptables -D INPUT <span class=m>2</span> <span class=o>&amp;&amp;</span> iptable -I INPUT <span class=m>2</span> -s 10.1.0.2 -j REJECT <span class=c1># 将filter表，INPUT链第二条规则修改为拒绝10.122.0.2</span>
+$ iptables -t filter -P FORWARD DROP <span class=c1># 将filter表的FORWARD链默认动作设置为DROP(默认禁止转发)</span>
+</code></pre></td></tr></table>
+</div>
+</div><h3 id=自定义链>自定义链</h3>
+<p>上述描述的五条链是Iptables的默认链，除此之外，iptables还支持自定义链，自定义链与默认链的操作方式相同，但不是netfilter标准hook点，因此<strong>自定义链需要附加在某个默认链上</strong>。默认链在匹配到自定义链时会将其展开进行规则匹配，类似于内联函数，我们可以类比自定义函数来看一下自定义链的优势。</p>
+<ul>
+<li>函数一般需要满足单一性原则，自定义链也是<strong>将满足同一功能/归属统一业务的规则集中在一条链上管理</strong>，这样可以有效避免默认链上规则无限制的增长，便于管理与维护。</li>
+<li>函数是可复用的，自定义链也是<strong>可以复用</strong>的，一些通用的规则可以放在一条自定义链上被多个默认链/其他自定义链引用，对复用链的更新会传播到引用链中，对同一条规则的修改无需手动操作多条链。</li>
+</ul>
+<h2 id=docker-iptables分析>Docker iptables分析</h2>
+<p>为了将docker中iptables的作用展示的更透彻，示例环境启动了两个容器，详情如下：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=c1># docker ps</span>
+CONTAINER ID   IMAGE                 COMMAND         CREATED       STATUS       PORTS                     NAMES
+f36770eceff5   ibmcom/guestbook:v2   <span class=s2>&#34;./guestbook&#34;</span>   <span class=m>3</span> weeks ago   Up <span class=m>3</span> weeks   0.0.0.0:19002-&gt;3000/tcp   jolly_noether
+d8e30286aa69   ibmcom/guestbook:v1   <span class=s2>&#34;./guestbook&#34;</span>   <span class=m>3</span> weeks ago   Up <span class=m>3</span> weeks   0.0.0.0:19001-&gt;3000/tcp   eager_dubinsky
+</code></pre></td></tr></table>
+</div>
+</div><p>均在默认的bridge网络下，两个容器的3000端口分别publish到19002与19001端口。</p>
+<h3 id=filter表>filter表</h3>
+<p>Iptables的INPUT链，OUTPUT链均为空，FORWARD设置了默认策略是DROP的白名单模式，这里着重看一下<strong>FORWARD</strong>链：</p>
+<figure><a class=lightgallery href=/posts/iptables/forward-filter.png title=/posts/iptables/forward-filter.png data-thumbnail=/posts/iptables/forward-filter.png data-sub-html="<h2>filter表中forward链</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=forward-filter.png data-srcset="/posts/iptables/forward-filter.png, forward-filter.png 1.5x, /posts/iptables/forward-filter.png 2x" data-sizes=auto alt=/posts/iptables/forward-filter.png height=200 width=800>
+</a><figcaption class=image-caption>filter表中forward链</figcaption>
+</figure>
+<ul>
+<li>
+<p>Rule1引用了一个自定义链<code>DOCKER-USER</code>，此链只有一个RETURN动作，如果需要在此docker环境下手动添加iptables rules可以选择在此处添加。</p>
+</li>
+<li>
+<p>Rule2引用了<code>DOCKER-ISOLATION-STAGE-1</code>链，相继引用了<code>DOCKER-ISOLATION-STAGE-2</code>链，这两条链也都没有实质性规则，所有的转发数据包会继续向下匹配。</p>
+</li>
+<li>
+<p>Rule3表示接受从docker0流出的所有响应报文。</p>
+</li>
+<li>
+<p>Rule4表示从docker0流出的数据包需要走DOCKER链，DOCKER链我们稍后分析。</p>
+</li>
+<li>
+<p>Rule5表示接受从docker0流入，但不是从docker0流出的数据包，<strong>容器访问宿主机/外网等非容器网络时匹配此规则</strong>。</p>
+</li>
+<li>
+<p>Rule6表示接受从docker0流入，同时从docker0流出的数据报，在默认bridge网络上的<strong>容器间通信匹配此规则</strong>。</p>
+</li>
+</ul>
+<p>再来看一下<strong>DOCKER</strong>链，容器相关的规则都放在DOCKER链上，便于管理及查询。</p>
+<figure><a class=lightgallery href=/posts/iptables/docker-filter.png title=/posts/iptables/docker-filter.png data-thumbnail=/posts/iptables/docker-filter.png data-sub-html="<h2>filter表中自定义DOCKER链</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=docker-filter.png data-srcset="/posts/iptables/docker-filter.png, docker-filter.png 1.5x, /posts/iptables/docker-filter.png 2x" data-sizes=auto alt=/posts/iptables/docker-filter.png height=200 width=800>
+</a><figcaption class=image-caption>filter表中自定义DOCKER链</figcaption>
+</figure>
+<ul>
+<li>Rule1表示接受不是从docker0流入，但从docker0流出，并且访问的目的IP为<strong>172.17.0.2</strong>， 访问目的port为<strong>3000</strong>的tcp报文。</li>
+<li>Rule2表示接受不是从docker0流入，但从docker0流出，并且访问的目的IP为<strong>172.17.0.3</strong>， 访问目的port为<strong>3000</strong>的tcp报文。</li>
+</ul>
+<p>上述规则都没有匹配的报文，那是因为无论我们从容器内还是宿主机访问容器，都是从docker0流入、从docker0流出。如果将某个一条路由的节点添加一条路由规则，将172.17.0.0/24的destination gateway设置为本机，这样对<code>172.17.0.3:3000</code>的访问会经物理网卡流入，经docker0流出到容器内，会匹配上此链上的规则。说白了，其意图是<strong>只要你能将请求路由到本机，我就允许你访问默认bridge网络中容器提供的服务</strong>。</p>
+<h3 id=nat表>nat表</h3>
+<p>下面来分析一下nat表，OUTPUT链和PREROUTING链会引用DOCKER自定义链，其他链上规则基本为空或者都不会匹配到。我们主要关注一下POSTROUTING链和DOKCER链，先看一下<strong>POSTROUTING</strong>链：</p>
+<figure><a class=lightgallery href=/posts/iptables/postrouting-nat.png title=/posts/iptables/postrouting-nat.png data-thumbnail=/posts/iptables/postrouting-nat.png data-sub-html="<h2>nat表中PREROUTING链</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=postrouting-nat.png data-srcset="/posts/iptables/postrouting-nat.png, postrouting-nat.png 1.5x, /posts/iptables/postrouting-nat.png 2x" data-sizes=auto alt=/posts/iptables/postrouting-nat.png height=200 width=800>
+</a><figcaption class=image-caption>nat表中PREROUTING链</figcaption>
+</figure>
+<ul>
+<li>Rule1表示不是从docker0流出的，且源网段为<code>172.17.0.0/16</code>的数据包会被进行动态SNAT，将数据包的源IP改为流出网卡的地址，若从容器内访问外网，源IP会被更新为宿主机物理网卡的IP地址。</li>
+<li>Rule2，Rule3乍一看像是自己访问自己的3000端口时会采用MASQ。但从容器内路由规则可以看到，容器内访问容器网络是无需路由到docker0，而直接在二层网络上转发。而容器内通过容器IP访问自身服务是无需经由docker0的，因此第2、3条的作用不明确。</li>
+</ul>
+<p>再看一下<strong>DOCKER</strong>链：</p>
+<figure><a class=lightgallery href=/posts/iptables/docker-nat.png title=/posts/iptables/docker-nat.png data-thumbnail=/posts/iptables/docker-nat.png data-sub-html="<h2>nat表中自定义DOCKER链</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=docker-nat.png data-srcset="/posts/iptables/docker-nat.png, docker-nat.png 1.5x, /posts/iptables/docker-nat.png 2x" data-sizes=auto alt=/posts/iptables/docker-nat.png height=200 width=800>
+</a><figcaption class=image-caption>nat表中自定义DOCKER链</figcaption>
+</figure>
+<ul>
+<li>Rule1表示从docker0流入的数据包直接跳过此链，因为容器网络间的访问是不需要NAT的。</li>
+<li>Rule2, Rule3分别表示两个容器publish了3000端口到19001端口，3000端口到19002端口。那些不是从docker0流入的数据包想要访问容器内的服务时，访问对应网卡上的<strong>19001</strong>端口的tcp请求就转发到<strong>172.17.0.2:3000</strong>；而访问<strong>19002</strong>端口的tcp请求就转发到<strong>172.17.0.3:3000</strong>。</li>
+</ul>
+<h2 id=tips>Tips</h2>
+<ul>
+<li>由于iptables是按顺序匹配的，因此应该<strong>将更容易匹配的规则放在前面</strong>，以提升防火墙的匹配性能。</li>
+<li>当存在多个匹配条件时，各条件之间为与的关系，即<strong>所有匹配条件均满足时才会执行对应的action</strong>。</li>
+<li>配置白名单时，一般不会将默认链策略设置为DROP，这是因为如果误刷了该默认链（<code>-F</code>）将导致所有数据包都会被拒绝，会导致我们无法连接到服务器。<strong>一般白名单机制会将默认链策略设置为ACCEPT，并在链的最后设置DROP ALL的规则</strong>。</li>
+<li>为提升iptables线性匹配算法，一些ACL优化算法被提出，<a href=https://www.infoq.cn/article/Tc5Bugo5vBAkyaRb5CCU target=_blank rel="noopener noreffer">eBPF 技术实践：高性能 ACL</a> 采用根据匹配规则倒排，并利用bitmap来快速匹配的算法，以达到近O(1)的匹配性能。</li>
+</ul>
+<h2 id=参考文献>参考文献</h2>
+<ul>
+<li><a href=https://www.zsythink.net/archives/category/%e8%bf%90%e7%bb%b4%e7%9b%b8%e5%85%b3/iptables target=_blank rel="noopener noreffer">朱双印的博客iptables部分</a></li>
+<li><a href=https://morven.life/posts/the_knowledge_of_iptables/ target=_blank rel="noopener noreffer">从零开始认识 iptables</a></li>
+<li><a href=https://www.infoq.cn/article/Tc5Bugo5vBAkyaRb5CCU target=_blank rel="noopener noreffer">eBPF 技术实践：高性能 ACL</a></li>
+</ul></div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>更新于 2021-12-08</span>
+</div>
+<div class=post-info-license></div>
+</div>
+<div class=post-info-line>
+<div class=post-info-md></div>
+<div class=post-info-share>
+<span></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E7%BD%91%E7%BB%9C/>网络</a></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/storage-driver/ class=prev rel=prev title="浅谈Docker Storage Driver"><i class="fas fa-angle-left fa-fw"></i>浅谈Docker Storage Driver</a></div>
+</div>
+<div id=comments><div id=valine class=comment></div><noscript>
+Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
+</noscript></div></article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+<i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论>
+<i class="fas fa-comment fa-fw"></i>
+</a>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>
