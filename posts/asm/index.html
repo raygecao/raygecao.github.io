@@ -18,14 +18,12 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/asm/><link rel=prev href=https://raygecao.github.io/posts/anecdote/><link rel=next href=https://raygecao.github.io/posts/network/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"汇编入门速记","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/asm\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/asm\/featured-image.png","width":900,"height":450}],"genre":"posts","keywords":"汇编","wordcount":1499,"url":"https:\/\/raygecao.github.io\/posts\/asm\/","datePublished":"2021-06-27T14:25:41+08:00","dateModified":"2021-06-27T14:25:41+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
-<body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/asm/><link rel=prev href=https://raygecao.github.io/posts/anecdote/><link rel=next href=https://raygecao.github.io/posts/network/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"汇编入门速记","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/asm\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/asm\/featured-image.png","width":900,"height":450}],"genre":"posts","keywords":"汇编","wordcount":1499,"url":"https:\/\/raygecao.github.io\/posts\/asm\/","datePublished":"2021-06-27T14:25:41+08:00","dateModified":"2021-06-27T14:25:41+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title=拾遗之途>拾遗之途</a>
-</div>
-<div class=menu>
+</div><div class=menu>
 <div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
 <a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
@@ -40,20 +38,14 @@
 </span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
 <i class="fas fa-adjust fa-fw"></i>
 </a>
-</div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
+</div></div></div></header><header class=mobile id=header-mobile>
 <div class=header-container>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title=拾遗之途>拾遗之途</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
+</div><div class=menu-toggle id=menu-toggle-mobile>
 <span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><div class=search-wrapper>
+</div></div><div class=menu id=menu-mobile><div class=search-wrapper>
 <div class="search mobile" id=search-mobile>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
 <a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
@@ -65,279 +57,98 @@
 <span class="search-button search-loading" id=search-loading-mobile>
 <i class="fas fa-spinner fa-fw fa-spin"></i>
 </span>
-</div>
-<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+</div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
 取消
 </a>
 </div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
+</a></div></div></header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div></div><main class=main>
 <div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2>
-<div class="toc-content always-active" id=toc-content-auto></div>
-</div><article class="page single"><h1 class="single-title animated flipInX">汇编入门速记</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/><i class="far fa-folder fa-fw"></i>读书笔记</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-06-27>2021-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1499 字&nbsp;
+<h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">汇编入门速记</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/><i class="far fa-folder fa-fw"></i>读书笔记</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-06-27>2021-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1499 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;<span id=/posts/asm/ class=leancloud_visitors data-flag-title=汇编入门速记>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
-</span>&nbsp;</div>
-</div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/asm/featured-image.png data-srcset="/posts/asm/featured-image.png, /posts/asm/featured-image.png 1.5x, /posts/asm/featured-image.png 2x" data-sizes=auto alt=/posts/asm/featured-image.png title=/posts/asm/featured-image.png></div><div class="details toc" id=toc-static kept>
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/asm/featured-image.png data-srcset="/posts/asm/featured-image.png, /posts/asm/featured-image.png 1.5x, /posts/asm/featured-image.png 2x" data-sizes=auto alt=/posts/asm/featured-image.png title=/posts/asm/featured-image.png></div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>目录</span>
 <span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div>
-</div><div class=content id=content><p>参考王爽<a href=https://book.douban.com/subject/25726019/ target=_blank rel="noopener noreffer">《汇编语言》</a></p>
-<ul>
+</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div></div><div class=content id=content><p>参考王爽<a href=https://book.douban.com/subject/25726019/ target=_blank rel="noopener noreffer">《汇编语言》</a></p><ul>
 <li>
-<p>CPU读写外部设备需要如下交互信息（分别对应三大逻辑总线）</p>
-<ul>
-<li><strong>地址信息</strong>：存储单元的地址。</li>
-<li><strong>控制信息</strong>：器件的选择，读或写的命令。</li>
-<li><strong>数据信息</strong>：读或写的数据。</li>
-</ul>
-</li>
-<li>
-<p>寄存器的作用</p>
-<ul>
-<li>CPU可直接读写的部件，可以通过改变寄存器的内容实现对CPU的控制。</li>
-</ul>
-</li>
-<li>
-<p>寄存器cheat sheet</p>
-<table>
+<p>CPU读写外部设备需要如下交互信息（分别对应三大逻辑总线）</p><ul>
+<li><strong>地址信息</strong>：存储单元的地址。</li><li><strong>控制信息</strong>：器件的选择，读或写的命令。</li><li><strong>数据信息</strong>：读或写的数据。</li></ul></li><li>
+<p>寄存器的作用</p><ul>
+<li>CPU可直接读写的部件，可以通过改变寄存器的内容实现对CPU的控制。</li></ul></li><li>
+<p>寄存器cheat sheet</p><table>
 <thead>
 <tr>
-<th>名称</th>
-<th>类型</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
+<th>名称</th><th>类型</th><th>作用</th></tr></thead><tbody>
 <tr>
-<td>AX</td>
-<td>通用寄存器</td>
-<td>用于一般的数据传递</td>
-</tr>
-<tr>
-<td>BX</td>
-<td>通用寄存器</td>
-<td>用于表示偏移地址，如<code>mov ax [bx]</code>将ds:[bx]中的内容送入ax</td>
-</tr>
-<tr>
-<td>CX</td>
-<td>通用寄存器</td>
-<td>用于存储循环变量，cx中的值会影响loop指定的执行结果，cx为零时会跳出循环</td>
-</tr>
-<tr>
-<td>SI/DI</td>
-<td></td>
-<td>配合BX指明内存单元的偏址，如<code>[bx+si+idata]</code></td>
-</tr>
-<tr>
-<td>SP</td>
-<td></td>
-<td>存放栈顶的偏移地址</td>
-</tr>
-<tr>
-<td>IP</td>
-<td></td>
-<td>指令指针寄存器，存放代码段的偏址</td>
-</tr>
-<tr>
-<td>BP</td>
-<td></td>
-<td>栈内偏址，主要用于指向/寻找栈内的某个地址的元素</td>
-</tr>
-<tr>
-<td>DS</td>
-<td>段寄存器</td>
-<td>存放数据段的寄存器，配合[addr]做段内寻址</td>
-</tr>
-<tr>
-<td>SS</td>
-<td>段寄存器</td>
-<td>存放栈的段地址，配合SP/BP做段内寻址</td>
-</tr>
-<tr>
-<td>CS</td>
-<td>段寄存器</td>
-<td>存放代码段的寄存器，配合IP做段内寻址</td>
-</tr>
-<tr>
-<td>Flag</td>
-<td>标志寄存器</td>
-<td>用来存储相关指令的某些执行结果，从而为CPU相关指令提供行为依据</td>
-</tr>
-</tbody>
-</table>
-<table>
+<td>AX</td><td>通用寄存器</td><td>用于一般的数据传递</td></tr><tr>
+<td>BX</td><td>通用寄存器</td><td>用于表示偏移地址，如<code>mov ax [bx]</code>将ds:[bx]中的内容送入ax</td></tr><tr>
+<td>CX</td><td>通用寄存器</td><td>用于存储循环变量，cx中的值会影响loop指定的执行结果，cx为零时会跳出循环</td></tr><tr>
+<td>SI/DI</td><td></td><td>配合BX指明内存单元的偏址，如<code>[bx+si+idata]</code></td></tr><tr>
+<td>SP</td><td></td><td>存放栈顶的偏移地址</td></tr><tr>
+<td>IP</td><td></td><td>指令指针寄存器，存放代码段的偏址</td></tr><tr>
+<td>BP</td><td></td><td>栈内偏址，主要用于指向/寻找栈内的某个地址的元素</td></tr><tr>
+<td>DS</td><td>段寄存器</td><td>存放数据段的寄存器，配合[addr]做段内寻址</td></tr><tr>
+<td>SS</td><td>段寄存器</td><td>存放栈的段地址，配合SP/BP做段内寻址</td></tr><tr>
+<td>CS</td><td>段寄存器</td><td>存放代码段的寄存器，配合IP做段内寻址</td></tr><tr>
+<td>Flag</td><td>标志寄存器</td><td>用来存储相关指令的某些执行结果，从而为CPU相关指令提供行为依据</td></tr></tbody></table><table>
 <thead>
 <tr>
-<th>标志寄存器标志位</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
+<th>标志寄存器标志位</th><th>作用</th></tr></thead><tbody>
 <tr>
-<td>ZF</td>
-<td>零标志位，记录指令执行结果是否为0</td>
-</tr>
-<tr>
-<td>PF</td>
-<td>奇偶标志位，记录相关指令执行后，所有bit位中1的个数是否为偶数</td>
-</tr>
-<tr>
-<td>SF</td>
-<td>符号标志位，记录相关指令执行后，结果是否为负</td>
-</tr>
-<tr>
-<td>CF</td>
-<td>进位标志位，在无符号数运算时，记录了运算结果的最高有效位的进位值</td>
-</tr>
-<tr>
-<td>OF</td>
-<td>溢出标志位，用于标识指令执行结果是否溢出</td>
-</tr>
-<tr>
-<td>DF</td>
-<td>方向标识位，在串处理指令中，控制每次操作后si, di的增减</td>
-</tr>
-<tr>
-<td>TF</td>
-<td>调试标志位，TF=1时，表示进入单步执行</td>
-</tr>
-<tr>
-<td>IF</td>
-<td>中断允许标志位，表示能否接收外部中断请求，为1时能响应外部中断，反之屏蔽</td>
-</tr>
-</tbody>
-</table>
-</li>
-<li>
-<p>8086CPU是16位机，但却有20位地址总线（1MB的寻址能力），无法做到简单的一一映射，其合成物理地址的方式如下</p>
+<td>ZF</td><td>零标志位，记录指令执行结果是否为0</td></tr><tr>
+<td>PF</td><td>奇偶标志位，记录相关指令执行后，所有bit位中1的个数是否为偶数</td></tr><tr>
+<td>SF</td><td>符号标志位，记录相关指令执行后，结果是否为负</td></tr><tr>
+<td>CF</td><td>进位标志位，在无符号数运算时，记录了运算结果的最高有效位的进位值</td></tr><tr>
+<td>OF</td><td>溢出标志位，用于标识指令执行结果是否溢出</td></tr><tr>
+<td>DF</td><td>方向标识位，在串处理指令中，控制每次操作后si, di的增减</td></tr><tr>
+<td>TF</td><td>调试标志位，TF=1时，表示进入单步执行</td></tr><tr>
+<td>IF</td><td>中断允许标志位，表示能否接收外部中断请求，为1时能响应外部中断，反之屏蔽</td></tr></tbody></table></li><li>
+<p>8086CPU是16位机，但却有20位地址总线（1MB的寻址能力），无法做到简单的一一映射，其合成物理地址的方式如下</p><ul>
+<li>通过两个地址16位地址合成一个20位地址：<strong>物理地址=基址+偏址</strong>。</li><li>在8086CPU中物理地址合成公式为：<strong>物理地址=段地址*16+偏移地址</strong>。
 <ul>
-<li>通过两个地址16位地址合成一个20位地址：<strong>物理地址=基址+偏址</strong>。</li>
-<li>在8086CPU中物理地址合成公式为：<strong>物理地址=段地址*16+偏移地址</strong>。
-<ul>
-<li>内存并没有分段，段的划分来自CPU。</li>
-<li>将若干的地址连续的内存单元看做一个段，用段地址*16定位段的基址，用偏移地址定位段中的内存单元。</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>CPU如何区分出内存中存放的是数据还是指令呢？</p>
-<ul>
-<li>数据和指定在内存中的存储形式是一致的，都是二进制信息</li>
-<li>CPU将<strong>CS:IP</strong>指向的内存单元中的内容看做指令，将DS:[addr]指向的内存单元中的内容看做数据</li>
-</ul>
-</li>
-<li>
-<p><strong>SS:SP</strong>用于指向栈顶元素，需要注意栈顶越界的问题。</p>
-</li>
-<li>
-<p>内存单元的描述</p>
-<ul>
-<li>完整的描述一个内存单元需要两种信息：内存单元的地址和内存单元的长度。</li>
-<li><code>mov ax, [0]</code>：将ds:[0]的内容送入ax中，内存单元的长度为2字节（即一个字单元，因为是送入到ax）中。</li>
-<li><code>move al, [0]</code>：将ds:[0]的内容送入al中，内存单元的长度为1字节（即一个字节单元）。</li>
-</ul>
-</li>
-<li>
-<p>转移指令：修改CS或IP的指令成为转移指令。只修改IP时称为段内转移（近转移），同时修改CS和IP的指令称为段间转移（远转移）。</p>
-<ul>
+<li>内存并没有分段，段的划分来自CPU。</li><li>将若干的地址连续的内存单元看做一个段，用段地址*16定位段的基址，用偏移地址定位段中的内存单元。</li></ul></li></ul></li><li>
+<p>CPU如何区分出内存中存放的是数据还是指令呢？</p><ul>
+<li>数据和指定在内存中的存储形式是一致的，都是二进制信息</li><li>CPU将<strong>CS:IP</strong>指向的内存单元中的内容看做指令，将DS:[addr]指向的内存单元中的内容看做数据</li></ul></li><li>
+<p><strong>SS:SP</strong>用于指向栈顶元素，需要注意栈顶越界的问题。</p></li><li>
+<p>内存单元的描述</p><ul>
+<li>完整的描述一个内存单元需要两种信息：内存单元的地址和内存单元的长度。</li><li><code>mov ax, [0]</code>：将ds:[0]的内容送入ax中，内存单元的长度为2字节（即一个字单元，因为是送入到ax）中。</li><li><code>move al, [0]</code>：将ds:[0]的内容送入al中，内存单元的长度为1字节（即一个字节单元）。</li></ul></li><li>
+<p>转移指令：修改CS或IP的指令成为转移指令。只修改IP时称为段内转移（近转移），同时修改CS和IP的指令称为段间转移（远转移）。</p><ul>
 <li>无条件转移指令，如<code>jmp</code>。
 <ul>
-<li><code>jmp</code>不需要转移的目的地址，而是通过相对位移来跳转。</li>
-</ul>
-</li>
-<li>条件转移指令。</li>
-<li>循环指令，如<code>loop</code>。</li>
-<li>过程
+<li><code>jmp</code>不需要转移的目的地址，而是通过相对位移来跳转。</li></ul></li><li>条件转移指令。</li><li>循环指令，如<code>loop</code>。</li><li>过程
 <ul>
-<li>call & ret</li>
-</ul>
-</li>
-<li>中断
+<li>call & ret</li></ul></li><li>中断
 <ul>
-<li>CPU在执行完当前正在执行的指令后，检测到从外部或者内部产生的特殊信息（中断信息），便转去处理这个特殊信息</li>
-<li>内中断
+<li>CPU在执行完当前正在执行的指令后，检测到从外部或者内部产生的特殊信息（中断信息），便转去处理这个特殊信息</li><li>内中断
 <ul>
-<li>除法溢出</li>
-<li>单步执行（debug）</li>
-<li>执行into</li>
-<li>执行int指令</li>
-</ul>
-</li>
-<li>外中断
+<li>除法溢出</li><li>单步执行（debug）</li><li>执行into</li><li>执行int指令</li></ul></li><li>外中断
 <ul>
-<li>可屏蔽中断</li>
-<li>不可屏蔽中断</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>
-<p>中断处理程序入口通过中断向量表（中断类型码）来索引到（存储中断程序地址），对于8086而言，中断向量表存储在内存地址0处。中断向量表中，一个表项占两个字节，高字节存放段地址，低字节存放偏移地址</p>
-</li>
-<li>
-<p>中断过程</p>
-<ul>
-<li>从中断信息中获取中断类型码</li>
-<li>标志寄存器入栈</li>
-<li>设置标志位TF和IF为0</li>
-<li>CS内容入栈</li>
-<li>IP内容入栈</li>
-<li>根据中断类型码定位到中断程序的入口</li>
-</ul>
-</li>
-</ul></div><div class=post-footer id=post-footer>
+<li>可屏蔽中断</li><li>不可屏蔽中断</li></ul></li></ul></li></ul></li><li>
+<p>中断处理程序入口通过中断向量表（中断类型码）来索引到（存储中断程序地址），对于8086而言，中断向量表存储在内存地址0处。中断向量表中，一个表项占两个字节，高字节存放段地址，低字节存放偏移地址</p></li><li>
+<p>中断过程</p><ul>
+<li>从中断信息中获取中断类型码</li><li>标志寄存器入栈</li><li>设置标志位TF和IF为0</li><li>CS内容入栈</li><li>IP内容入栈</li><li>根据中断类型码定位到中断程序的入口</li></ul></li></ul></div><div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
 <span>更新于 2021-06-27</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md></div>
-<div class=post-info-share>
+</div><div class=post-info-license></div></div><div class=post-info-line>
+<div class=post-info-md></div><div class=post-info-share>
 <span></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E6%B1%87%E7%BC%96/>汇编</a></section>
-<section>
+</div></div></div><div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E6%B1%87%E7%BC%96/>汇编</a></section><section>
 <span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/anecdote/ class=prev rel=prev title=有趣的经济学/心理学效应><i class="fas fa-angle-left fa-fw"></i>有趣的经济学/心理学效应</a>
-<a href=/posts/network/ class=next rel=next title=《计算机网络》纲要整理>《计算机网络》纲要整理<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=valine class=comment></div><noscript>
+</section></div><div class=post-nav><a href=/posts/anecdote/ class=prev rel=prev title=有趣的经济学/心理学效应><i class="fas fa-angle-left fa-fw"></i>有趣的经济学/心理学效应</a>
+<a href=/posts/network/ class=next rel=next title=《计算机网络》纲要整理>《计算机网络》纲要整理<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>
 Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div>
-</div>
-</footer></div>
-<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+</noscript></div></article></div></main><footer class=footer>
+<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
 <i class="fas fa-arrow-up fa-fw"></i>
 </a><a href=# id=view-comments class=fixed-button title=查看评论>
 <i class="fas fa-comment fa-fw"></i>
 </a>
-</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
-</html>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

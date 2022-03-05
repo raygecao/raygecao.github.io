@@ -18,14 +18,12 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/certification/><link rel=prev href=https://raygecao.github.io/posts/minikube-tls/><link rel=next href=https://raygecao.github.io/posts/oci/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"网络安全基础","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/certification\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/certification\/featured-image.jpeg","width":620,"height":413}],"genre":"posts","keywords":"tls, 网络","wordcount":6070,"url":"https:\/\/raygecao.github.io\/posts\/certification\/","datePublished":"2021-07-22T09:00:24+08:00","dateModified":"2021-07-22T09:00:24+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head>
-<body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':''==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:''==='dark')&&document.body.setAttribute('theme','dark')</script>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/certification/><link rel=prev href=https://raygecao.github.io/posts/minikube-tls/><link rel=next href=https://raygecao.github.io/posts/oci/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"网络安全基础","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/certification\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/certification\/featured-image.jpeg","width":620,"height":413}],"genre":"posts","keywords":"tls, 网络","wordcount":6070,"url":"https:\/\/raygecao.github.io\/posts\/certification\/","datePublished":"2021-07-22T09:00:24+08:00","dateModified":"2021-07-22T09:00:24+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title=拾遗之途>拾遗之途</a>
-</div>
-<div class=menu>
+</div><div class=menu>
 <div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
 <a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
@@ -40,20 +38,14 @@
 </span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
 <i class="fas fa-adjust fa-fw"></i>
 </a>
-</div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
+</div></div></div></header><header class=mobile id=header-mobile>
 <div class=header-container>
 <div class=header-wrapper>
 <div class=header-title>
 <a href=/ title=拾遗之途>拾遗之途</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
+</div><div class=menu-toggle id=menu-toggle-mobile>
 <span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><div class=search-wrapper>
+</div></div><div class=menu id=menu-mobile><div class=search-wrapper>
 <div class="search mobile" id=search-mobile>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
 <a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
@@ -65,143 +57,50 @@
 <span class="search-button search-loading" id=search-loading-mobile>
 <i class="fas fa-spinner fa-fw fa-spin"></i>
 </span>
-</div>
-<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+</div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
 取消
 </a>
 </div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
 <i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
+</a></div></div></header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div></div><main class=main>
 <div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2>
-<div class="toc-content always-active" id=toc-content-auto></div>
-</div><article class="page single"><h1 class="single-title animated flipInX">网络安全基础</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-07-22>2021-07-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6070 字&nbsp;
+<h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">网络安全基础</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-07-22>2021-07-22</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 6070 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 13 分钟&nbsp;<span id=/posts/certification/ class=leancloud_visitors data-flag-title=网络安全基础>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
-</span>&nbsp;</div>
-</div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/certification/featured-image.jpeg data-srcset="/posts/certification/featured-image.jpeg, /posts/certification/featured-image.jpeg 1.5x, /posts/certification/featured-image.jpeg 2x" data-sizes=auto alt=/posts/certification/featured-image.jpeg title=/posts/certification/featured-image.jpeg></div><div class="details toc" id=toc-static kept>
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/certification/featured-image.jpeg data-srcset="/posts/certification/featured-image.jpeg, /posts/certification/featured-image.jpeg 1.5x, /posts/certification/featured-image.jpeg 2x" data-sizes=auto alt=/posts/certification/featured-image.jpeg title=/posts/certification/featured-image.jpeg></div><div class="details toc" id=toc-static kept>
 <div class="details-summary toc-title">
 <span>目录</span>
 <span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
 <ul>
 <li><a href=#网络面临的威胁>网络面临的威胁</a>
 <ul>
-<li><a href=#被动攻击>被动攻击</a></li>
-<li><a href=#主动攻击>主动攻击</a></li>
-</ul>
-</li>
-<li><a href=#加密>加密</a>
+<li><a href=#被动攻击>被动攻击</a></li><li><a href=#主动攻击>主动攻击</a></li></ul></li><li><a href=#加密>加密</a>
 <ul>
-<li><a href=#无加密时代>无加密时代</a></li>
-<li><a href=#对称加密>对称加密</a></li>
-<li><a href=#非对称加密>非对称加密</a></li>
-</ul>
-</li>
-<li><a href=#认证>认证</a>
+<li><a href=#无加密时代>无加密时代</a></li><li><a href=#对称加密>对称加密</a></li><li><a href=#非对称加密>非对称加密</a></li></ul></li><li><a href=#认证>认证</a>
 <ul>
-<li><a href=#数字证书>数字证书</a></li>
-<li><a href=#颁发机构ca>颁发机构（CA）</a></li>
-</ul>
-</li>
-<li><a href=#总结>总结</a></li>
-<li><a href=#参考文献>参考文献</a></li>
-</ul>
-</nav></div>
-</div><div class=content id=content><p>加密，保障信息内容安全；认证，确保信息的来源可靠。</p>
-<p>互联网的出现拉近了整个世界的距离，它的魔力就在于可以将芸芸众生都收罗在其控制范围内。正所谓<strong>有人的地方就一定有恶</strong>，网络面临着各种各样的威胁。而网络由于其巨大的影响力，一旦遭受破坏波及范围难以估量，因此网络安全便显得尤为重要。</p>
-<h2 id=网络面临的威胁>网络面临的威胁</h2>
-<p>计算机网络是不可靠的，一来网络的稳定性受制于网络提供商及对应的硬件设备；二来就是来自人为的恶意干预。前者往往是难以预测和防范的小概率事件，而后者通过精妙的网络安全技术几乎可以完全规避掉。计算机网络所面临的恶意威胁主要分为<strong>被动攻击</strong>与<strong>主动攻击</strong>两大类：</p>
-<h3 id=被动攻击>被动攻击</h3>
-<p>攻击者观察和分析数据单元而不干扰正常的网络通信。</p>
-<ul>
-<li>截获：攻击者从网上窃听他人的通信内容。</li>
-</ul>
-<h3 id=主动攻击>主动攻击</h3>
-<p>攻击者对某个连接中的数据协议单元进行处理，采取行动扰乱原本的网络通信。</p>
-<ul>
-<li>中断：攻击者有意中断他人在网络上的通信，比如DDos。</li>
-<li>篡改：攻击者故意篡改网络上传送的报文。</li>
-<li>伪造：攻击者伪造信息在网络上传送。</li>
-</ul>
-<p>这些攻击大多数并不像网络断线或者波动那样能让我们有所感知，而是在无形中破坏/泄露我们的通信。面临这些威胁，我们必须采取措施保证网络安全。</p>
-<h2 id=加密>加密</h2>
-<p>从上面的威胁类型来看，当务之急是如何保证我们的消息不被他人获知？百分百的不泄露信息要么是不产生任何信息，要么是与世隔绝，所以根本无法做出这个保证。但当我们换个思路：如何保证我们<strong>有用的消息</strong>不被他人获知？转机便出现了：<strong>加密技术</strong>保护我们有用的信息不被他人获取。</p>
-<h3 id=无加密时代>无加密时代</h3>
-<p>在那个计算机网络还没有出现，人类还比较纯粹的时代，语言和文字成为了人们通信的主要手段，消息的传递也都是基于明文。这时，我们对于加密的需求不强，因为本身消息传播途径比较少，如果真的需要传递一些秘密，只要通过人来实现就可以。随着时代的进步，消息安全的重要性额外地凸显出来。最显著的场景是在战争年代的战略消息的传递，上面提到的各种类型的威胁在这个时代都有所体现。</p>
-<ul>
-<li>截获：投信的使臣投宿客栈时，信报被细作偷看，但没有改变信报上的内容。</li>
-<li>中断：投信的使臣被细作射杀了。</li>
-<li>篡改：投信的使臣叛变了，改了信报的内容。</li>
-<li>伪造：有人假扮投信的使臣传递信报。</li>
-</ul>
-<p>通过在信报上做手脚，往往可以不折一兵一卒损敌方千军万马，因此消息的保密在人类文明伊始就意义重大。</p>
-<h3 id=对称加密>对称加密</h3>
-<p>最早的加密技术应当算是<strong>凯撒加密</strong>了，其核心思想就是简单的替换：将明文中所有字母在字母表上向前或向后偏移固定数目后形成了密文。对于外人而言，其看到的密文是一堆不相关的字符串，无法破解其要表达的信息。而对于消息接收者而言，他清楚加密的策略，也清楚对应解密方法。因此可以通过对应的逆偏移解码出明文，获取有用的消息。</p>
-<p>这就是对称加密的雏形，即加密解密双方有一个公共的规则（相同的密钥），发送发方通过此规则（密钥）进行编码（加密），接收方通过此规则（密钥）进行解码（解密），信息在传输过程中是以明文经加密后产生的密文传递。</p>
-<p>消息在网络中进行传递就要求加密算法是需要公开的，因为我们无法在通信的最开始私下里统一加密方案，也不会绞尽脑汁去创造新的加密算法。因为我们的通信对象太多了，也都远在天边，即便我们可以创造各式各样的加密算法，也无法安全地与对方分享我们的算法。所以现代的加密算法是公开的、标准化的，我们通信的时候只需要声明我们使用的算法即可，对加密的安全性保证仅在于<strong>我们为加密算法提供的特殊标识（密钥）</strong>。比如凯撒算法是公开的，但偏移量作为特殊标识是通信双方约定好的。也正是因为此标识的多样性，才能保证我们的消息不易被破解。</p>
-<p>对称加密的好处就是<strong>简单，计算速度快，开销小</strong>。而问题也显而易见，我们的密钥需要通信双方共享，但是<strong>密钥没有办法安全地传递</strong>。一旦密钥泄露出去，密文的传递跟明文的传递别无二致。</p>
-<div class="details admonition info open">
+<li><a href=#数字证书>数字证书</a></li><li><a href=#颁发机构ca>颁发机构（CA）</a></li></ul></li><li><a href=#总结>总结</a></li><li><a href=#参考文献>参考文献</a></li></ul></nav></div></div><div class=content id=content><p>加密，保障信息内容安全；认证，确保信息的来源可靠。</p><p>互联网的出现拉近了整个世界的距离，它的魔力就在于可以将芸芸众生都收罗在其控制范围内。正所谓<strong>有人的地方就一定有恶</strong>，网络面临着各种各样的威胁。而网络由于其巨大的影响力，一旦遭受破坏波及范围难以估量，因此网络安全便显得尤为重要。</p><h2 id=网络面临的威胁>网络面临的威胁</h2><p>计算机网络是不可靠的，一来网络的稳定性受制于网络提供商及对应的硬件设备；二来就是来自人为的恶意干预。前者往往是难以预测和防范的小概率事件，而后者通过精妙的网络安全技术几乎可以完全规避掉。计算机网络所面临的恶意威胁主要分为<strong>被动攻击</strong>与<strong>主动攻击</strong>两大类：</p><h3 id=被动攻击>被动攻击</h3><p>攻击者观察和分析数据单元而不干扰正常的网络通信。</p><ul>
+<li>截获：攻击者从网上窃听他人的通信内容。</li></ul><h3 id=主动攻击>主动攻击</h3><p>攻击者对某个连接中的数据协议单元进行处理，采取行动扰乱原本的网络通信。</p><ul>
+<li>中断：攻击者有意中断他人在网络上的通信，比如DDos。</li><li>篡改：攻击者故意篡改网络上传送的报文。</li><li>伪造：攻击者伪造信息在网络上传送。</li></ul><p>这些攻击大多数并不像网络断线或者波动那样能让我们有所感知，而是在无形中破坏/泄露我们的通信。面临这些威胁，我们必须采取措施保证网络安全。</p><h2 id=加密>加密</h2><p>从上面的威胁类型来看，当务之急是如何保证我们的消息不被他人获知？百分百的不泄露信息要么是不产生任何信息，要么是与世隔绝，所以根本无法做出这个保证。但当我们换个思路：如何保证我们<strong>有用的消息</strong>不被他人获知？转机便出现了：<strong>加密技术</strong>保护我们有用的信息不被他人获取。</p><h3 id=无加密时代>无加密时代</h3><p>在那个计算机网络还没有出现，人类还比较纯粹的时代，语言和文字成为了人们通信的主要手段，消息的传递也都是基于明文。这时，我们对于加密的需求不强，因为本身消息传播途径比较少，如果真的需要传递一些秘密，只要通过人来实现就可以。随着时代的进步，消息安全的重要性额外地凸显出来。最显著的场景是在战争年代的战略消息的传递，上面提到的各种类型的威胁在这个时代都有所体现。</p><ul>
+<li>截获：投信的使臣投宿客栈时，信报被细作偷看，但没有改变信报上的内容。</li><li>中断：投信的使臣被细作射杀了。</li><li>篡改：投信的使臣叛变了，改了信报的内容。</li><li>伪造：有人假扮投信的使臣传递信报。</li></ul><p>通过在信报上做手脚，往往可以不折一兵一卒损敌方千军万马，因此消息的保密在人类文明伊始就意义重大。</p><h3 id=对称加密>对称加密</h3><p>最早的加密技术应当算是<strong>凯撒加密</strong>了，其核心思想就是简单的替换：将明文中所有字母在字母表上向前或向后偏移固定数目后形成了密文。对于外人而言，其看到的密文是一堆不相关的字符串，无法破解其要表达的信息。而对于消息接收者而言，他清楚加密的策略，也清楚对应解密方法。因此可以通过对应的逆偏移解码出明文，获取有用的消息。</p><p>这就是对称加密的雏形，即加密解密双方有一个公共的规则（相同的密钥），发送发方通过此规则（密钥）进行编码（加密），接收方通过此规则（密钥）进行解码（解密），信息在传输过程中是以明文经加密后产生的密文传递。</p><p>消息在网络中进行传递就要求加密算法是需要公开的，因为我们无法在通信的最开始私下里统一加密方案，也不会绞尽脑汁去创造新的加密算法。因为我们的通信对象太多了，也都远在天边，即便我们可以创造各式各样的加密算法，也无法安全地与对方分享我们的算法。所以现代的加密算法是公开的、标准化的，我们通信的时候只需要声明我们使用的算法即可，对加密的安全性保证仅在于<strong>我们为加密算法提供的特殊标识（密钥）</strong>。比如凯撒算法是公开的，但偏移量作为特殊标识是通信双方约定好的。也正是因为此标识的多样性，才能保证我们的消息不易被破解。</p><p>对称加密的好处就是<strong>简单，计算速度快，开销小</strong>。而问题也显而易见，我们的密钥需要通信双方共享，但是<strong>密钥没有办法安全地传递</strong>。一旦密钥泄露出去，密文的传递跟明文的传递别无二致。</p><div class="details admonition info open">
 <div class="details-summary admonition-title">
 <i class="icon fas fa-info-circle fa-fw"></i>破解难易度<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div>
-<div class=details-content>
-<div class=admonition-content>对于凯撒算法而言，密钥很容易通过穷举法破解出来，毕竟字母偏移量只有25种可能，因此极易被破解。但成熟的加密算法要求密钥足够长，当然这并不意味着密钥不会被破解，只是说破解难度十分巨大，可以认为<strong>是在计算上（而不是在理论上）不可破解</strong>，或者更直白的说<strong>破解密钥的成本要比消息本身的价值高很多</strong>。这侧面说明了在对称加密中，与密钥泄露相比，密钥被破解的可能性可以完全忽略不计。</div>
-</div>
-</div>
-<p>目前常用的对称加密算法是<strong>DES，3DES，AES</strong>等。 下图是一个简单的DES示例</p>
-<figure><a class=lightgallery href=/posts/certification/des.png title=/posts/certification/des.png data-thumbnail=/posts/certification/des.png data-sub-html="<h2>对称加密算法示意</h2>">
+</div><div class=details-content>
+<div class=admonition-content>对于凯撒算法而言，密钥很容易通过穷举法破解出来，毕竟字母偏移量只有25种可能，因此极易被破解。但成熟的加密算法要求密钥足够长，当然这并不意味着密钥不会被破解，只是说破解难度十分巨大，可以认为<strong>是在计算上（而不是在理论上）不可破解</strong>，或者更直白的说<strong>破解密钥的成本要比消息本身的价值高很多</strong>。这侧面说明了在对称加密中，与密钥泄露相比，密钥被破解的可能性可以完全忽略不计。</div></div></div><p>目前常用的对称加密算法是<strong>DES，3DES，AES</strong>等。 下图是一个简单的DES示例</p><figure><a class=lightgallery href=/posts/certification/des.png title=/posts/certification/des.png data-thumbnail=/posts/certification/des.png data-sub-html="<h2>对称加密算法示意</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=des.png data-srcset="/posts/certification/des.png, des.png 1.5x, /posts/certification/des.png 2x" data-sizes=auto alt=/posts/certification/des.png height=200 width=600>
-</a><figcaption class=image-caption>对称加密算法示意</figcaption>
-</figure>
-<h3 id=非对称加密>非对称加密</h3>
-<p>对称加密致命缺陷就是<strong>无法保证密钥安全传递</strong>，因此基于公钥密码体制的非对称加密走上了舞台。顾名思义，非对称加密指的是<strong>加密密钥与解密密钥是不同的</strong>。其中加密密钥又称<strong>公钥</strong>，是向公众公开的；而解密密钥又称<strong>私钥</strong>，是对外保密的。由于公钥本身是公开的，因此无需保证其安全传递。即便被第三方截获，其也无法破解加密后的密文，因为只有对应的私钥才能将密文解密。在公钥密码体制中，最著名的是基于大数分解问题的RSA体制。</p>
-<div class="details admonition note open">
+</a><figcaption class=image-caption>对称加密算法示意</figcaption></figure><h3 id=非对称加密>非对称加密</h3><p>对称加密致命缺陷就是<strong>无法保证密钥安全传递</strong>，因此基于公钥密码体制的非对称加密走上了舞台。顾名思义，非对称加密指的是<strong>加密密钥与解密密钥是不同的</strong>。其中加密密钥又称<strong>公钥</strong>，是向公众公开的；而解密密钥又称<strong>私钥</strong>，是对外保密的。由于公钥本身是公开的，因此无需保证其安全传递。即便被第三方截获，其也无法破解加密后的密文，因为只有对应的私钥才能将密文解密。在公钥密码体制中，最著名的是基于大数分解问题的RSA体制。</p><div class="details admonition note open">
 <div class="details-summary admonition-title">
 <i class="icon fas fa-pencil-alt fa-fw"></i>加密与解密<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div>
-<div class=details-content>
-<div class=admonition-content>经常有个误区会认为<strong>公钥是用来加密的，私钥是用来解密的</strong>，但实际上二者并无相关性。公钥与私钥是通过某种算法算出的一对密码串，使用一方进行编码，便可以通过另一方进行解码。唯一的原则是<strong>公钥是公开的，私钥是保密的</strong>，我们会为不同用途选择不同的角色进行编解码。比如信息加密我们会采用公钥编码，私钥解码；数字签名会采用私钥编码，公钥解码。</div>
-</div>
-</div>
-<p>那么有了安全性如此之高的非对称加密，对称加密是不是就可以退出历史舞台了呢？并不是的，因为非对称加密有个致命的确定：<strong>开销大，性能差，而且开销是与明文的长度正相关的</strong>。在海量数据通信的时代，这显然会降低信息传递效率，因此TLS的最佳实践是<strong>通过非对称加密传递对称加密密钥，具体的信息加密仍然采用对称加密</strong>。</p>
-<p>非对称加密的另一个应用场景是<strong>数字签名</strong>，数字签名是<strong>通过私钥加密，并通过公钥解密</strong>。其作用类似于写在纸上的签名，申明其所传递的内容无误。签名只能有发信者完成，而所有人均可通过其公钥对其进行验签。有了数字签名后，其他人无法篡改或伪造信息的内容，因为他们没有也无法破解发信者的私钥，所以无法对篡改后/伪造的内容进行签名。</p>
-<p>原始信息的大小直接影响到签名的性能，通常我们需要<strong>对原始信息进行hash获取摘要，并对摘要进行签名</strong>。这要求hash算法是不可逆转的，即无法根据摘要推算出私钥。同时，好的hash算法能保证不同的信息输出的结果也都不相同，即在计算上同一结果只能对应一种原始信息。目前比较流行的hash算法是md5，其将原始信息散列成固定128位的结果。</p>
-<figure><a class=lightgallery href=/posts/certification/digital-sign.png title=/posts/certification/digital-sign.png data-thumbnail=/posts/certification/digital-sign.png data-sub-html="<h2>数字签名示意</h2>">
+</div><div class=details-content>
+<div class=admonition-content>经常有个误区会认为<strong>公钥是用来加密的，私钥是用来解密的</strong>，但实际上二者并无相关性。公钥与私钥是通过某种算法算出的一对密码串，使用一方进行编码，便可以通过另一方进行解码。唯一的原则是<strong>公钥是公开的，私钥是保密的</strong>，我们会为不同用途选择不同的角色进行编解码。比如信息加密我们会采用公钥编码，私钥解码；数字签名会采用私钥编码，公钥解码。</div></div></div><p>那么有了安全性如此之高的非对称加密，对称加密是不是就可以退出历史舞台了呢？并不是的，因为非对称加密有个致命的确定：<strong>开销大，性能差，而且开销是与明文的长度正相关的</strong>。在海量数据通信的时代，这显然会降低信息传递效率，因此TLS的最佳实践是<strong>通过非对称加密传递对称加密密钥，具体的信息加密仍然采用对称加密</strong>。</p><p>非对称加密的另一个应用场景是<strong>数字签名</strong>，数字签名是<strong>通过私钥加密，并通过公钥解密</strong>。其作用类似于写在纸上的签名，申明其所传递的内容无误。签名只能有发信者完成，而所有人均可通过其公钥对其进行验签。有了数字签名后，其他人无法篡改或伪造信息的内容，因为他们没有也无法破解发信者的私钥，所以无法对篡改后/伪造的内容进行签名。</p><p>原始信息的大小直接影响到签名的性能，通常我们需要<strong>对原始信息进行hash获取摘要，并对摘要进行签名</strong>。这要求hash算法是不可逆转的，即无法根据摘要推算出私钥。同时，好的hash算法能保证不同的信息输出的结果也都不相同，即在计算上同一结果只能对应一种原始信息。目前比较流行的hash算法是md5，其将原始信息散列成固定128位的结果。</p><figure><a class=lightgallery href=/posts/certification/digital-sign.png title=/posts/certification/digital-sign.png data-thumbnail=/posts/certification/digital-sign.png data-sub-html="<h2>数字签名示意</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=digital-sign.png data-srcset="/posts/certification/digital-sign.png, digital-sign.png 1.5x, /posts/certification/digital-sign.png 2x" data-sizes=auto alt=/posts/certification/digital-sign.png height=200 width=600>
-</a><figcaption class=image-caption>数字签名示意</figcaption>
-</figure>
-<p>有了非对称加密，信息的传递就绝对安全了吗？也不是，上述过程中最大的问题仍旧是&mldr;<strong>公钥的传递</strong>。不对呀，之前<strong>不是说了公钥是公开的吗，为什么公钥的传递还会引发安全性呢</strong>？问题的本质不在于传递公钥内容的安全性，而在于<strong>公钥的所有者是谁</strong>。换句话说，小明要和小丽通信，小明如何知道传递过来的公钥是小丽的呢？如果小丽传递过来的公钥被小三拦截，并且将小三的公钥传递给了小明，那小明原本要发给小丽的情话不就被小三拦截并破译了？小三便可以窃听或者篡改小明与小丽的通信。这就是所谓的<strong>中间人攻击</strong>。</p>
-<figure><a class=lightgallery href=/posts/certification/median-attack.png title=/posts/certification/median-attack.png data-thumbnail=/posts/certification/median-attack.png data-sub-html="<h2>中间人攻击示例</h2>">
+</a><figcaption class=image-caption>数字签名示意</figcaption></figure><p>有了非对称加密，信息的传递就绝对安全了吗？也不是，上述过程中最大的问题仍旧是&mldr;<strong>公钥的传递</strong>。不对呀，之前<strong>不是说了公钥是公开的吗，为什么公钥的传递还会引发安全性呢</strong>？问题的本质不在于传递公钥内容的安全性，而在于<strong>公钥的所有者是谁</strong>。换句话说，小明要和小丽通信，小明如何知道传递过来的公钥是小丽的呢？如果小丽传递过来的公钥被小三拦截，并且将小三的公钥传递给了小明，那小明原本要发给小丽的情话不就被小三拦截并破译了？小三便可以窃听或者篡改小明与小丽的通信。这就是所谓的<strong>中间人攻击</strong>。</p><figure><a class=lightgallery href=/posts/certification/median-attack.png title=/posts/certification/median-attack.png data-thumbnail=/posts/certification/median-attack.png data-sub-html="<h2>中间人攻击示例</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=median-attack.png data-srcset="/posts/certification/median-attack.png, median-attack.png 1.5x, /posts/certification/median-attack.png 2x" data-sizes=auto alt=/posts/certification/median-attack.png height=200 width=600>
-</a><figcaption class=image-caption>中间人攻击示例</figcaption>
-</figure>
-<p>那么如何避免中间人攻击呢？这就需要引出<strong>第三方认证</strong>了，即通过权威机构证明这个公钥是小丽的。</p>
-<h2 id=认证>认证</h2>
-<p>认证通俗来讲，就是通过一个第三方来验明某个人的身份，从而确认公钥就是这个人的，以避免中间人攻击。在流程上，一般是一方带着自己的身份信息向第三方机构去申请一个证书，第三方机构颁发一个带有自己签名的证书，该方将证书发送给对端进行验证。我们着重介绍一下<strong>数字证书</strong>和<strong>颁发机构</strong>这两个概念。</p>
-<h3 id=数字证书>数字证书</h3>
-<p>数字证书指在互联网通讯中标识通讯各方身份信息的一个数字认证，人们可以在网上用它来识别对方的身份。一般而言，证书需要包含如下内容：</p>
-<ul>
-<li>持有者身份信息</li>
-<li>证书颁发者信息</li>
-<li><strong>持有者的公钥</strong></li>
-<li><strong>认证机构的数字签名</strong></li>
-</ul>
-<p>认证机构验证持有者的身份（CSR）无误后，便向其发布一个带其签名的证书，以此来标识此证书中的公钥是可信的。</p>
-<p>在TLS中，通常使用<strong>x509证书</strong>，下例演示了minikube为kube-apiserver生成的服务端证书，我们根据这个证书看一下证书的机构。</p>
-<div class=highlight><div class=chroma>
+</a><figcaption class=image-caption>中间人攻击示例</figcaption></figure><p>那么如何避免中间人攻击呢？这就需要引出<strong>第三方认证</strong>了，即通过权威机构证明这个公钥是小丽的。</p><h2 id=认证>认证</h2><p>认证通俗来讲，就是通过一个第三方来验明某个人的身份，从而确认公钥就是这个人的，以避免中间人攻击。在流程上，一般是一方带着自己的身份信息向第三方机构去申请一个证书，第三方机构颁发一个带有自己签名的证书，该方将证书发送给对端进行验证。我们着重介绍一下<strong>数字证书</strong>和<strong>颁发机构</strong>这两个概念。</p><h3 id=数字证书>数字证书</h3><p>数字证书指在互联网通讯中标识通讯各方身份信息的一个数字认证，人们可以在网上用它来识别对方的身份。一般而言，证书需要包含如下内容：</p><ul>
+<li>持有者身份信息</li><li>证书颁发者信息</li><li><strong>持有者的公钥</strong></li><li><strong>认证机构的数字签名</strong></li></ul><p>认证机构验证持有者的身份（CSR）无误后，便向其发布一个带其签名的证书，以此来标识此证书中的公钥是可信的。</p><p>在TLS中，通常使用<strong>x509证书</strong>，下例演示了minikube为kube-apiserver生成的服务端证书，我们根据这个证书看一下证书的机构。</p><div class=highlight><div class=chroma>
 <table class=lntable><tr><td class=lntd>
 <pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
@@ -261,232 +160,111 @@
 </span><span class=lnt>56
 </span><span class=lnt>57
 </span><span class=lnt>58
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-text data-lang=text>Certificate:
-    Data:
-        Version: 3 (0x2)                         # x509证书版本号
-        Serial Number: 2 (0x2)                   # 序列号，每个证书唯一，用以与其他证书区分开
-    Signature Algorithm: sha256WithRSAEncryption # 签名使用的算法
-        Issuer: CN=minikubeCA                    # 颁发机构名称
-        Validity                                 # 证书有效期（不早于...不晚于...）
-            Not Before: Jul  9 02:57:51 2021 GMT
-            Not After : Jul 10 02:57:51 2022 GMT
-        Subject: O=system:masters, CN=minikube   # 持有者的名字
-        Subject Public Key Info:                 # 持有者的公钥信息
-            Public Key Algorithm: rsaEncryption
-                Public-Key: (2048 bit)
-                Modulus:
-                    00:b6:e3:24:20:ce:84:11:21:e5:a4:ee:fd:11:75:
-                    51:94:1e:bb:c6:18:3c:fa:e3:1f:16:d2:18:4d:98:
-                    e2:44:30:b4:aa:c4:7a:de:8a:f4:ec:c5:e9:a6:0b:
-                    ac:12:b2:03:e9:ca:16:f4:69:f7:08:bb:1c:0d:af:
-                    58:9a:51:39:30:cf:bc:0f:60:97:a9:a4:0a:f8:37:
-                    65:dd:b9:21:1f:da:0b:79:19:1d:6b:96:ff:98:57:
-                    36:3b:a3:e3:34:98:0d:70:92:5f:6f:0f:e8:a2:3b:
-                    88:d5:4c:3d:fb:e0:75:48:af:5e:e5:16:a8:50:d6:
-                    92:ef:be:d5:23:91:e1:c9:d5:9c:e6:ff:49:e7:ca:
-                    fb:ab:c7:72:0d:90:23:dc:0a:59:cf:8f:e4:f6:6a:
-                    fe:73:c0:8d:bb:23:8c:a8:0f:e7:90:61:e1:66:b1:
-                    ac:4d:96:23:c8:0b:43:25:a2:8a:4f:d5:ff:2d:57:
-                    8c:fb:16:d2:69:a0:80:d1:f9:f2:e1:a3:0a:40:7a:
-                    56:1b:3c:69:36:73:dd:b5:f6:9e:75:d4:91:5c:58:
-                    b4:e8:f7:a2:2f:1e:0c:4b:2d:d6:1e:6d:92:6f:d3:
-                    07:85:a6:9f:7c:20:0c:7c:e8:3c:0f:6b:c8:74:a4:
-                    8b:c6:d3:10:af:a7:dd:dc:90:ae:bc:f6:b7:b0:e1:
-                    1b:bb
-                Exponent: 65537 (0x10001)
-        X509v3 extensions:                      # 一堆x509扩展，后面会挑一些重要的说明
-            X509v3 Key Usage: critical
-                Digital Signature, Key Encipherment
-            X509v3 Extended Key Usage:
-                TLS Web Server Authentication, TLS Web Client Authentication
-            X509v3 Basic Constraints: critical
-                CA:FALSE
-            X509v3 Subject Alternative Name:
-                DNS:minikubeCA, DNS:control-plane.minikube.internal, DNS:kubernetes.default.svc.cluster.local, DNS:kubernetes.default.svc, DNS:kubernetes.default, DNS:kubernetes, DNS:localhost, IP Address:10.122.101.148, IP Address:172.17.0.40, IP Address:10.96.0.1, IP Address:127.0.0.1, IP Address:10.0.0.1
-    Signature Algorithm: sha256WithRSAEncryption                  # 签名信息
-         97:e6:66:a9:a4:fb:42:93:59:c2:2e:ea:77:9a:bf:46:99:11:
-         72:f6:e1:f7:ce:22:9b:35:7d:37:03:d6:ea:8d:c0:9a:9e:0b:
-         5c:70:93:e5:5c:e2:c8:43:df:e6:ee:ff:ba:90:8d:de:1f:e5:
-         4e:ee:72:a7:bc:9e:7a:a9:7f:58:2e:7e:6f:aa:91:60:02:c5:
-         51:71:1a:e0:80:8b:3d:08:34:a9:65:47:7a:89:7d:31:6d:1a:
-         1f:0f:0b:17:88:48:eb:e5:20:94:56:52:9a:e0:30:88:fb:cc:
-         62:12:ea:86:45:e2:a8:59:cd:d0:b1:d6:7b:a9:37:fa:24:b6:
-         34:d4:4d:aa:cd:28:2c:e2:57:90:6a:11:4f:c0:01:68:49:ef:
-         bd:54:68:7f:f8:2e:99:ba:d0:b1:01:c2:eb:7e:5a:ff:f9:dd:
-         6c:1b:43:b4:3b:10:fc:46:ef:5b:63:05:27:12:74:6d:2c:ec:
-         af:d6:66:2a:eb:45:ee:d9:d9:bd:73:2d:38:bd:bc:b5:38:7c:
-         90:9b:f0:11:ee:0a:93:1d:63:25:89:e6:c3:59:3c:7b:4a:4d:
-         53:d3:a1:a6:3e:82:64:f1:04:02:2c:ce:b9:68:5b:fc:1d:40:
-         c8:8f:9a:ce:04:9d:5a:c9:6c:94:8e:43:f5:e4:78:00:82:bb:
-         f4:5c:5b:d7
-</code></pre></td></tr></table>
-</div>
-</div><p>x509证书定义了一系列扩展，<strong>用于对证书进行约束及限制</strong>，常用的扩展列举如下：</p>
-<table>
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>Certificate:
+</span></span><span class=line><span class=cl>    Data:
+</span></span><span class=line><span class=cl>        Version: 3 (0x2)                         # x509证书版本号
+</span></span><span class=line><span class=cl>        Serial Number: 2 (0x2)                   # 序列号，每个证书唯一，用以与其他证书区分开
+</span></span><span class=line><span class=cl>    Signature Algorithm: sha256WithRSAEncryption # 签名使用的算法
+</span></span><span class=line><span class=cl>        Issuer: CN=minikubeCA                    # 颁发机构名称
+</span></span><span class=line><span class=cl>        Validity                                 # 证书有效期（不早于...不晚于...）
+</span></span><span class=line><span class=cl>            Not Before: Jul  9 02:57:51 2021 GMT
+</span></span><span class=line><span class=cl>            Not After : Jul 10 02:57:51 2022 GMT
+</span></span><span class=line><span class=cl>        Subject: O=system:masters, CN=minikube   # 持有者的名字
+</span></span><span class=line><span class=cl>        Subject Public Key Info:                 # 持有者的公钥信息
+</span></span><span class=line><span class=cl>            Public Key Algorithm: rsaEncryption
+</span></span><span class=line><span class=cl>                Public-Key: (2048 bit)
+</span></span><span class=line><span class=cl>                Modulus:
+</span></span><span class=line><span class=cl>                    00:b6:e3:24:20:ce:84:11:21:e5:a4:ee:fd:11:75:
+</span></span><span class=line><span class=cl>                    51:94:1e:bb:c6:18:3c:fa:e3:1f:16:d2:18:4d:98:
+</span></span><span class=line><span class=cl>                    e2:44:30:b4:aa:c4:7a:de:8a:f4:ec:c5:e9:a6:0b:
+</span></span><span class=line><span class=cl>                    ac:12:b2:03:e9:ca:16:f4:69:f7:08:bb:1c:0d:af:
+</span></span><span class=line><span class=cl>                    58:9a:51:39:30:cf:bc:0f:60:97:a9:a4:0a:f8:37:
+</span></span><span class=line><span class=cl>                    65:dd:b9:21:1f:da:0b:79:19:1d:6b:96:ff:98:57:
+</span></span><span class=line><span class=cl>                    36:3b:a3:e3:34:98:0d:70:92:5f:6f:0f:e8:a2:3b:
+</span></span><span class=line><span class=cl>                    88:d5:4c:3d:fb:e0:75:48:af:5e:e5:16:a8:50:d6:
+</span></span><span class=line><span class=cl>                    92:ef:be:d5:23:91:e1:c9:d5:9c:e6:ff:49:e7:ca:
+</span></span><span class=line><span class=cl>                    fb:ab:c7:72:0d:90:23:dc:0a:59:cf:8f:e4:f6:6a:
+</span></span><span class=line><span class=cl>                    fe:73:c0:8d:bb:23:8c:a8:0f:e7:90:61:e1:66:b1:
+</span></span><span class=line><span class=cl>                    ac:4d:96:23:c8:0b:43:25:a2:8a:4f:d5:ff:2d:57:
+</span></span><span class=line><span class=cl>                    8c:fb:16:d2:69:a0:80:d1:f9:f2:e1:a3:0a:40:7a:
+</span></span><span class=line><span class=cl>                    56:1b:3c:69:36:73:dd:b5:f6:9e:75:d4:91:5c:58:
+</span></span><span class=line><span class=cl>                    b4:e8:f7:a2:2f:1e:0c:4b:2d:d6:1e:6d:92:6f:d3:
+</span></span><span class=line><span class=cl>                    07:85:a6:9f:7c:20:0c:7c:e8:3c:0f:6b:c8:74:a4:
+</span></span><span class=line><span class=cl>                    8b:c6:d3:10:af:a7:dd:dc:90:ae:bc:f6:b7:b0:e1:
+</span></span><span class=line><span class=cl>                    1b:bb
+</span></span><span class=line><span class=cl>                Exponent: 65537 (0x10001)
+</span></span><span class=line><span class=cl>        X509v3 extensions:                      # 一堆x509扩展，后面会挑一些重要的说明
+</span></span><span class=line><span class=cl>            X509v3 Key Usage: critical
+</span></span><span class=line><span class=cl>                Digital Signature, Key Encipherment
+</span></span><span class=line><span class=cl>            X509v3 Extended Key Usage:
+</span></span><span class=line><span class=cl>                TLS Web Server Authentication, TLS Web Client Authentication
+</span></span><span class=line><span class=cl>            X509v3 Basic Constraints: critical
+</span></span><span class=line><span class=cl>                CA:FALSE
+</span></span><span class=line><span class=cl>            X509v3 Subject Alternative Name:
+</span></span><span class=line><span class=cl>                DNS:minikubeCA, DNS:control-plane.minikube.internal, DNS:kubernetes.default.svc.cluster.local, DNS:kubernetes.default.svc, DNS:kubernetes.default, DNS:kubernetes, DNS:localhost, IP Address:10.122.101.148, IP Address:172.17.0.40, IP Address:10.96.0.1, IP Address:127.0.0.1, IP Address:10.0.0.1
+</span></span><span class=line><span class=cl>    Signature Algorithm: sha256WithRSAEncryption                  # 签名信息
+</span></span><span class=line><span class=cl>         97:e6:66:a9:a4:fb:42:93:59:c2:2e:ea:77:9a:bf:46:99:11:
+</span></span><span class=line><span class=cl>         72:f6:e1:f7:ce:22:9b:35:7d:37:03:d6:ea:8d:c0:9a:9e:0b:
+</span></span><span class=line><span class=cl>         5c:70:93:e5:5c:e2:c8:43:df:e6:ee:ff:ba:90:8d:de:1f:e5:
+</span></span><span class=line><span class=cl>         4e:ee:72:a7:bc:9e:7a:a9:7f:58:2e:7e:6f:aa:91:60:02:c5:
+</span></span><span class=line><span class=cl>         51:71:1a:e0:80:8b:3d:08:34:a9:65:47:7a:89:7d:31:6d:1a:
+</span></span><span class=line><span class=cl>         1f:0f:0b:17:88:48:eb:e5:20:94:56:52:9a:e0:30:88:fb:cc:
+</span></span><span class=line><span class=cl>         62:12:ea:86:45:e2:a8:59:cd:d0:b1:d6:7b:a9:37:fa:24:b6:
+</span></span><span class=line><span class=cl>         34:d4:4d:aa:cd:28:2c:e2:57:90:6a:11:4f:c0:01:68:49:ef:
+</span></span><span class=line><span class=cl>         bd:54:68:7f:f8:2e:99:ba:d0:b1:01:c2:eb:7e:5a:ff:f9:dd:
+</span></span><span class=line><span class=cl>         6c:1b:43:b4:3b:10:fc:46:ef:5b:63:05:27:12:74:6d:2c:ec:
+</span></span><span class=line><span class=cl>         af:d6:66:2a:eb:45:ee:d9:d9:bd:73:2d:38:bd:bc:b5:38:7c:
+</span></span><span class=line><span class=cl>         90:9b:f0:11:ee:0a:93:1d:63:25:89:e6:c3:59:3c:7b:4a:4d:
+</span></span><span class=line><span class=cl>         53:d3:a1:a6:3e:82:64:f1:04:02:2c:ce:b9:68:5b:fc:1d:40:
+</span></span><span class=line><span class=cl>         c8:8f:9a:ce:04:9d:5a:c9:6c:94:8e:43:f5:e4:78:00:82:bb:
+</span></span><span class=line><span class=cl>         f4:5c:5b:d7
+</span></span></code></pre></td></tr></table></div></div><p>x509证书定义了一系列扩展，<strong>用于对证书进行约束及限制</strong>，常用的扩展列举如下：</p><table>
 <thead>
 <tr>
-<th>扩展名</th>
-<th>用途</th>
-<th>是否为critical</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody>
+<th>扩展名</th><th>用途</th><th>是否为critical</th><th>示例</th></tr></thead><tbody>
 <tr>
-<td><strong>X509v3 Basic Constraints</strong></td>
-<td>描述该证书是否属于CA，具有签署证书的能力</td>
-<td><strong>Y</strong></td>
-<td><strong>CA=false</strong>：此证书不是CA证书，不可签署其他证书</td>
-</tr>
-<tr>
-<td><strong>X509v3 Key Usage</strong></td>
-<td>限定了证书的用途</td>
-<td><strong>Y</strong></td>
-<td>Digital Signature, Key Encipherment表示可以用于数字签名及密钥加密</td>
-</tr>
-<tr>
-<td><strong>X509v3 Extended Key Usage</strong></td>
-<td>限定了证书的用途</td>
-<td><strong>N</strong></td>
-<td>TLS Web Server Authentication, TLS Web Client Authentication表示可以用于服务端及客户端认证</td>
-</tr>
-<tr>
-<td><strong>X509v3 CRL Distribution Points</strong></td>
-<td>提供了CRL地址列表</td>
-<td><strong>F</strong></td>
-<td>URI:http://crl.starfieldtech.com/sfs3-20.crl</td>
-</tr>
-<tr>
-<td><strong>Authority Information Access</strong></td>
-<td>提供OSCP地址；CA签发者的连接(用于获取中间证书)</td>
-<td><strong>F</strong></td>
-<td>OCSP - URI:http://ocsp.int-x3.letsencrypt.org CA Issuers - URI:http://cert.int-x3.letsencrypt.org/</td>
-</tr>
-<tr>
-<td><strong>X509v3 Subject Key Identifier</strong></td>
-<td>持有者的唯一标识</td>
-<td><strong>F</strong></td>
-<td></td>
-</tr>
-<tr>
-<td><strong>Authority Key Identifier</strong></td>
-<td>颁发者的标识</td>
-<td><strong>F</strong></td>
-<td>与颁发者的<strong>X509v3 Subject Key Identifier</strong>相等</td>
-</tr>
-<tr>
-<td><strong>X509v3 Subject Alternative Name</strong>（SAN）</td>
-<td>列出证书所有的合法域名，如果其不存在就回退到Common Name寻找</td>
-<td><strong>F</strong></td>
-<td><strong>DNS:localhost, IP Address:10.122.101.148</strong> 表示证书来源的dns为localhost或者Ip为10.122.100.148的是合法的，其他均不可信</td>
-</tr>
-</tbody>
-</table>
-<p>结合以上扩展可以列举出证书验证的失败的几个原因：</p>
-<ul>
-<li>证书过期了</li>
-<li>证书由不可信CA颁布</li>
-<li>证书被吊销了</li>
-<li>证书来源不在其SAN中</li>
-</ul>
-<div class="details admonition note open">
+<td><strong>X509v3 Basic Constraints</strong></td><td>描述该证书是否属于CA，具有签署证书的能力</td><td><strong>Y</strong></td><td><strong>CA=false</strong>：此证书不是CA证书，不可签署其他证书</td></tr><tr>
+<td><strong>X509v3 Key Usage</strong></td><td>限定了证书的用途</td><td><strong>Y</strong></td><td>Digital Signature, Key Encipherment表示可以用于数字签名及密钥加密</td></tr><tr>
+<td><strong>X509v3 Extended Key Usage</strong></td><td>限定了证书的用途</td><td><strong>N</strong></td><td>TLS Web Server Authentication, TLS Web Client Authentication表示可以用于服务端及客户端认证</td></tr><tr>
+<td><strong>X509v3 CRL Distribution Points</strong></td><td>提供了CRL地址列表</td><td><strong>F</strong></td><td>URI:http://crl.starfieldtech.com/sfs3-20.crl</td></tr><tr>
+<td><strong>Authority Information Access</strong></td><td>提供OSCP地址；CA签发者的连接(用于获取中间证书)</td><td><strong>F</strong></td><td>OCSP - URI:http://ocsp.int-x3.letsencrypt.org CA Issuers - URI:http://cert.int-x3.letsencrypt.org/</td></tr><tr>
+<td><strong>X509v3 Subject Key Identifier</strong></td><td>持有者的唯一标识</td><td><strong>F</strong></td><td></td></tr><tr>
+<td><strong>Authority Key Identifier</strong></td><td>颁发者的标识</td><td><strong>F</strong></td><td>与颁发者的<strong>X509v3 Subject Key Identifier</strong>相等</td></tr><tr>
+<td><strong>X509v3 Subject Alternative Name</strong>（SAN）</td><td>列出证书所有的合法域名，如果其不存在就回退到Common Name寻找</td><td><strong>F</strong></td><td><strong>DNS:localhost, IP Address:10.122.101.148</strong> 表示证书来源的dns为localhost或者Ip为10.122.100.148的是合法的，其他均不可信</td></tr></tbody></table><p>结合以上扩展可以列举出证书验证的失败的几个原因：</p><ul>
+<li>证书过期了</li><li>证书由不可信CA颁布</li><li>证书被吊销了</li><li>证书来源不在其SAN中</li></ul><div class="details admonition note open">
 <div class="details-summary admonition-title">
 <i class="icon fas fa-pencil-alt fa-fw"></i>critical作用<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div>
-<div class=details-content>
-<div class=admonition-content>有些扩展带有<strong>critical</strong>标识，其意义为所有的证书验证方必须理解它的含义，否则认定为认证失败。简单理解就是这些扩展要求必须能够被识别。</div>
-</div>
-</div>
-<h3 id=颁发机构ca>颁发机构（CA）</h3>
-<p>为避免中间人攻击，证书必须由第三方权威机构认证才可信，这里的权威机构就是CA。上面描述的数字证书就是申请者发送证书签署请求（CSR）给CA，由CA认证后用其私钥进行签名形成证书。可见CA的信誉直接影响着证书的可信度。</p>
-<p>那么CA又是怎么保证其是可信的呢？答案是通过更权威的CA进行认证，那么这个更权威的CA怎么保证是可信的呢？那就要找更更权威的CA认证&mldr;&mldr;现实情况下，这种情况对应着<strong>证书链</strong>认证，即认证是一级一级向上传递的。当然为了避免证书无休止的验证下去，是需要有一个最终信任源的，这个信任源又称为<strong>根证书</strong>。</p>
-<p>按下葫芦浮起瓢，CA的认证大致明确了，但是它又引入了两个问题：</p>
-<ul>
-<li>根证书是如何终止链式验证过程的？如何成为信任源的？如果私钥泄露怎么办？如果过期怎么办？</li>
-<li>为什么需要证书链，直接使用根证书进行用户证书的认证会有什么问题？</li>
-</ul>
-<p>上述两个问题并非是割裂的，而是息息相关的。</p>
-<p>根证书作为可信任的源头，其使用自己的私钥来签署自己的证书（这类证书又叫做<strong>自签名证书</strong>，其特点是Issuer与Subject信息一致），验证方只要持有该根证书的公钥便可对此根证书进行验证。而这些具有权威性的<strong>CA根证书会内置在浏览器及操作系统中</strong>，这样便可以对此类根证书进行验证。如果我们想信任某个第三方证书，那么只需要将其加入到浏览器/操作系统的证书信任列表中即可。</p>
-<p>根证书的有效期一般会比较长，如果根证书过期了，那么只能由该机构重新签发。而在临期时，便会借着操作系统/浏览器的更新而将新证书植入进去。另一方面，现在很多证书都采用了<a href=https://zh.wikipedia.org/wiki/X.509#%E8%AF%81%E4%B9%A6%E9%93%BE%E5%92%8C%E4%BA%A4%E5%8F%89%E8%AE%A4%E8%AF%81 target=_blank rel="noopener noreffer">交叉认证</a>，即使某个根证书过期了，也能确保其他链条上的认证成功。如果根证书的私钥泄露了，那么它就可以被用于发布非法证书，作为互联网的信任根源之一，带来的影响会是灾难性的。因此为了避免根证书私钥的安全，需要做到以下保证：</p>
-<ul>
-<li>私钥在计算上须是不可破解的，因为根证书有效期较长，如果私钥长度过短的话很有可能在有效期内被破解，因此需要是在计算上不可破解的。当前的x509证书可以保证这一点。</li>
-<li>用户证书不直接通过根证书签名颁发，而是通过中间证书颁发，建立起中间证书链进行认证。</li>
-</ul>
-<p>我们着重来说一下第二点，试想一下如果每个证书都需要根证书颁发的话，会不会增大私钥泄露的风险呢？从统计学角度看，如果签署的证书过多，其规律性信息量也会暴露越多，无论是泄露还是被破解的概率都会增大。因此通过追加一层中间证书来解决此问题，即<strong>中间证书颁发用户证书，根证书颁发中间证书</strong>。这样便构成了完整的证书链体系，从而减小根证书密钥泄露的风险。通常来讲，为了严格控制根证书私钥的安全性，其所在的机器通常是离线的，只有在需要签署/吊销中间证书时才会联网，将暴露的风险降到最低。</p>
-<div class="details admonition note open">
+</div><div class=details-content>
+<div class=admonition-content>有些扩展带有<strong>critical</strong>标识，其意义为所有的证书验证方必须理解它的含义，否则认定为认证失败。简单理解就是这些扩展要求必须能够被识别。</div></div></div><h3 id=颁发机构ca>颁发机构（CA）</h3><p>为避免中间人攻击，证书必须由第三方权威机构认证才可信，这里的权威机构就是CA。上面描述的数字证书就是申请者发送证书签署请求（CSR）给CA，由CA认证后用其私钥进行签名形成证书。可见CA的信誉直接影响着证书的可信度。</p><p>那么CA又是怎么保证其是可信的呢？答案是通过更权威的CA进行认证，那么这个更权威的CA怎么保证是可信的呢？那就要找更更权威的CA认证&mldr;&mldr;现实情况下，这种情况对应着<strong>证书链</strong>认证，即认证是一级一级向上传递的。当然为了避免证书无休止的验证下去，是需要有一个最终信任源的，这个信任源又称为<strong>根证书</strong>。</p><p>按下葫芦浮起瓢，CA的认证大致明确了，但是它又引入了两个问题：</p><ul>
+<li>根证书是如何终止链式验证过程的？如何成为信任源的？如果私钥泄露怎么办？如果过期怎么办？</li><li>为什么需要证书链，直接使用根证书进行用户证书的认证会有什么问题？</li></ul><p>上述两个问题并非是割裂的，而是息息相关的。</p><p>根证书作为可信任的源头，其使用自己的私钥来签署自己的证书（这类证书又叫做<strong>自签名证书</strong>，其特点是Issuer与Subject信息一致），验证方只要持有该根证书的公钥便可对此根证书进行验证。而这些具有权威性的<strong>CA根证书会内置在浏览器及操作系统中</strong>，这样便可以对此类根证书进行验证。如果我们想信任某个第三方证书，那么只需要将其加入到浏览器/操作系统的证书信任列表中即可。</p><p>根证书的有效期一般会比较长，如果根证书过期了，那么只能由该机构重新签发。而在临期时，便会借着操作系统/浏览器的更新而将新证书植入进去。另一方面，现在很多证书都采用了<a href=https://zh.wikipedia.org/wiki/X.509#%E8%AF%81%E4%B9%A6%E9%93%BE%E5%92%8C%E4%BA%A4%E5%8F%89%E8%AE%A4%E8%AF%81 target=_blank rel="noopener noreffer">交叉认证</a>，即使某个根证书过期了，也能确保其他链条上的认证成功。如果根证书的私钥泄露了，那么它就可以被用于发布非法证书，作为互联网的信任根源之一，带来的影响会是灾难性的。因此为了避免根证书私钥的安全，需要做到以下保证：</p><ul>
+<li>私钥在计算上须是不可破解的，因为根证书有效期较长，如果私钥长度过短的话很有可能在有效期内被破解，因此需要是在计算上不可破解的。当前的x509证书可以保证这一点。</li><li>用户证书不直接通过根证书签名颁发，而是通过中间证书颁发，建立起中间证书链进行认证。</li></ul><p>我们着重来说一下第二点，试想一下如果每个证书都需要根证书颁发的话，会不会增大私钥泄露的风险呢？从统计学角度看，如果签署的证书过多，其规律性信息量也会暴露越多，无论是泄露还是被破解的概率都会增大。因此通过追加一层中间证书来解决此问题，即<strong>中间证书颁发用户证书，根证书颁发中间证书</strong>。这样便构成了完整的证书链体系，从而减小根证书密钥泄露的风险。通常来讲，为了严格控制根证书私钥的安全性，其所在的机器通常是离线的，只有在需要签署/吊销中间证书时才会联网，将暴露的风险降到最低。</p><div class="details admonition note open">
 <div class="details-summary admonition-title">
 <i class="icon fas fa-pencil-alt fa-fw"></i>中间证书的特点<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div>
-<div class=details-content>
-<div class=admonition-content>中间证书不应是自签名的，即Issuer与Subject是不同的，其携带上一级证书的<strong>DN</strong> (Distinguished Name)，可以通过DN来找到上一级证书。此外中间证书是可以签发下级证书的，即<strong>X509v3 Basic Constraints</strong>扩展字段需设置为<code>CA=true</code>。最后中间证书的有效期一般比根证书的短很多，如果中间证书因私钥泄露等问题需要被吊销（可以通过CRL或者OCSP来查询证书是否被吊销）时，影响范围会小很多。</div>
-</div>
-</div>
-<figure><a class=lightgallery href=/posts/certification/cert-chain.png title=/posts/certification/cert-chain.png data-thumbnail=/posts/certification/cert-chain.png data-sub-html="<h2>证书链示意图</h2>">
+</div><div class=details-content>
+<div class=admonition-content>中间证书不应是自签名的，即Issuer与Subject是不同的，其携带上一级证书的<strong>DN</strong> (Distinguished Name)，可以通过DN来找到上一级证书。此外中间证书是可以签发下级证书的，即<strong>X509v3 Basic Constraints</strong>扩展字段需设置为<code>CA=true</code>。最后中间证书的有效期一般比根证书的短很多，如果中间证书因私钥泄露等问题需要被吊销（可以通过CRL或者OCSP来查询证书是否被吊销）时，影响范围会小很多。</div></div></div><figure><a class=lightgallery href=/posts/certification/cert-chain.png title=/posts/certification/cert-chain.png data-thumbnail=/posts/certification/cert-chain.png data-sub-html="<h2>证书链示意图</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=cert-chain.png data-srcset="/posts/certification/cert-chain.png, cert-chain.png 1.5x, /posts/certification/cert-chain.png 2x" data-sizes=auto alt=/posts/certification/cert-chain.png height=500 width=1000>
-</a><figcaption class=image-caption>证书链示意图</figcaption>
-</figure>
-<p>总结一下链式证书发布及验证过程：</p>
-<p>发布方</p>
-<ul>
-<li>权威CA生成自签名根证书，并将根证书置于操作系统/浏览器中</li>
-<li>权威CA使用根证书私钥签名中间证书</li>
-<li>CA使用中间证书采用其私钥签名用户证书</li>
-<li>用户使用其私钥签名数据摘要</li>
-</ul>
-<p>验证方</p>
-<ul>
-<li>采用中间证书验证用户证书</li>
-<li>如果有多层中间证书，则使用上一级中间证书验证当前中间证书</li>
-<li>通过内置的根证书验证中间证书</li>
-<li>通过用户证书中的公钥对数据摘要进行验签</li>
-</ul>
-<p>最后一个问题是在对用户证书进行验证时，<strong>如何获取中间证书呢</strong>？在SSL握手的过程中，是允许在将客户端/服务器证书发送后紧着着将中间证书发送出去的。但这并不是必须的，还有一些其他的方式获取中间证书，比如上述提到过的<strong>Authority Information Access</strong>扩展中可能会有颁发者的获取地址等。</p>
-<h2 id=总结>总结</h2>
-<p>本文介绍了网络安全面临哪些威胁，使用数据加密技术可以做到有效规避部分威胁。接着详细介绍了对称加密及非对称加密的特点。单方面的加密技术无法抵御中间人攻击，因此需要第三方认证以验明通信双方的身份。最后介绍了认证中的一些重要概念，如数字签名、数字证书、颁发机构等，并将这些概念在认证的流程中发挥的作用串联起来。此外，文章穿插着对TLS的认证及加密流程的介绍。</p>
-<p>网络安全远不止于此，加密与认证仅仅是保证了最基本的通信安全，而网络安全还涵盖很多的方面，诸如人为因素，准入机制，角色权限控制等。对加密/认证的概念有了初步的认识，后续会逐步深入地研究kubernetes中的<strong>认证、鉴权、准入</strong>的安全管理机制。</p>
-<h2 id=参考文献>参考文献</h2>
-<ol>
-<li><a href=https://zhaohuabing.com/post/2020-03-19-pki/ target=_blank rel="noopener noreffer">数字证书原理</a></li>
-<li><a href=https://www.openssl.org/docs/man1.1.1/man1/openssl-x509.html target=_blank rel="noopener noreffer">openssl x509证书</a></li>
-<li><a href=https://zhuanlan.zhihu.com/p/36832100 target=_blank rel="noopener noreffer">Wikipedia</a></li>
-<li><a href=https://www.feistyduck.com/library/openssl-cookbook/online/ target=_blank rel="noopener noreffer">openssl cookbook</a></li>
-</ol></div><div class=post-footer id=post-footer>
+</a><figcaption class=image-caption>证书链示意图</figcaption></figure><p>总结一下链式证书发布及验证过程：</p><p>发布方</p><ul>
+<li>权威CA生成自签名根证书，并将根证书置于操作系统/浏览器中</li><li>权威CA使用根证书私钥签名中间证书</li><li>CA使用中间证书采用其私钥签名用户证书</li><li>用户使用其私钥签名数据摘要</li></ul><p>验证方</p><ul>
+<li>采用中间证书验证用户证书</li><li>如果有多层中间证书，则使用上一级中间证书验证当前中间证书</li><li>通过内置的根证书验证中间证书</li><li>通过用户证书中的公钥对数据摘要进行验签</li></ul><p>最后一个问题是在对用户证书进行验证时，<strong>如何获取中间证书呢</strong>？在SSL握手的过程中，是允许在将客户端/服务器证书发送后紧着着将中间证书发送出去的。但这并不是必须的，还有一些其他的方式获取中间证书，比如上述提到过的<strong>Authority Information Access</strong>扩展中可能会有颁发者的获取地址等。</p><h2 id=总结>总结</h2><p>本文介绍了网络安全面临哪些威胁，使用数据加密技术可以做到有效规避部分威胁。接着详细介绍了对称加密及非对称加密的特点。单方面的加密技术无法抵御中间人攻击，因此需要第三方认证以验明通信双方的身份。最后介绍了认证中的一些重要概念，如数字签名、数字证书、颁发机构等，并将这些概念在认证的流程中发挥的作用串联起来。此外，文章穿插着对TLS的认证及加密流程的介绍。</p><p>网络安全远不止于此，加密与认证仅仅是保证了最基本的通信安全，而网络安全还涵盖很多的方面，诸如人为因素，准入机制，角色权限控制等。对加密/认证的概念有了初步的认识，后续会逐步深入地研究kubernetes中的<strong>认证、鉴权、准入</strong>的安全管理机制。</p><h2 id=参考文献>参考文献</h2><ol>
+<li><a href=https://zhaohuabing.com/post/2020-03-19-pki/ target=_blank rel="noopener noreffer">数字证书原理</a></li><li><a href=https://www.openssl.org/docs/man1.1.1/man1/openssl-x509.html target=_blank rel="noopener noreffer">openssl x509证书</a></li><li><a href=https://zhuanlan.zhihu.com/p/36832100 target=_blank rel="noopener noreffer">Wikipedia</a></li><li><a href=https://www.feistyduck.com/library/openssl-cookbook/online/ target=_blank rel="noopener noreffer">openssl cookbook</a></li></ol></div><div class=post-footer id=post-footer>
 <div class=post-info>
 <div class=post-info-line>
 <div class=post-info-mod>
 <span>更新于 2021-07-22</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md></div>
-<div class=post-info-share>
+</div><div class=post-info-license></div></div><div class=post-info-line>
+<div class=post-info-md></div><div class=post-info-share>
 <span></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/tls/>tls</a>,&nbsp;<a href=/tags/%E7%BD%91%E7%BB%9C/>网络</a></section>
-<section>
+</div></div></div><div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/tls/>tls</a>,&nbsp;<a href=/tags/%E7%BD%91%E7%BB%9C/>网络</a></section><section>
 <span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/minikube-tls/ class=prev rel=prev title=Minikube中的TLS认证探秘><i class="fas fa-angle-left fa-fw"></i>Minikube中的TLS认证探秘</a>
-<a href=/posts/oci/ class=next rel=next title="OCI 标准探究">OCI 标准探究<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=valine class=comment></div><noscript>
+</section></div><div class=post-nav><a href=/posts/minikube-tls/ class=prev rel=prev title=Minikube中的TLS认证探秘><i class="fas fa-angle-left fa-fw"></i>Minikube中的TLS认证探秘</a>
+<a href=/posts/oci/ class=next rel=next title="OCI 标准探究">OCI 标准探究<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>
 Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div>
-</div>
-</footer></div>
-<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+</noscript></div></article></div></main><footer class=footer>
+<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
 <i class="fas fa-arrow-up fa-fw"></i>
 </a><a href=# id=view-comments class=fixed-button title=查看评论>
 <i class="fas fa-comment fa-fw"></i>
 </a>
-</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
-</html>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
