@@ -1,0 +1,220 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
+<title>Go modules要点梳理 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Go modules要点梳理">
+<meta property="og:description" content="Modules are how Go manages dependencies.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://raygecao.github.io/posts/go-modules/"><meta property="og:image" content="https://raygecao.github.io/posts/go-modules/mvs.png"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2022-03-06T13:20:22+08:00">
+<meta property="article:modified_time" content="2022-03-06T13:20:22+08:00">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://raygecao.github.io/posts/go-modules/mvs.png">
+<meta name=twitter:title content="Go modules要点梳理">
+<meta name=twitter:description content="Modules are how Go manages dependencies.">
+<meta name=application-name content="拾遗之途">
+<meta name=apple-mobile-web-app-title content="拾遗之途">
+<meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/go-modules/><link rel=prev href=https://raygecao.github.io/posts/text-process-tool/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Go modules要点梳理","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/go-modules\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/go-modules\/mvs.png","width":1118,"height":578}],"genre":"posts","keywords":"go","wordcount":4714,"url":"https:\/\/raygecao.github.io\/posts\/go-modules\/","datePublished":"2022-03-06T13:20:22+08:00","dateModified":"2022-03-06T13:20:22+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div><div class=menu>
+<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a>
+</div></div></div></header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=拾遗之途>拾遗之途</a>
+</div><div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div></div><div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+取消
+</a>
+</div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a></div></div></header><div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div></div><main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Go modules要点梳理</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-03-06>2022-03-06</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4714 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 10 分钟&nbsp;<span id=/posts/go-modules/ class=leancloud_visitors data-flag-title="Go modules要点梳理">
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/go-modules/mvs.png data-srcset="/posts/go-modules/mvs.png, /posts/go-modules/mvs.png 1.5x, /posts/go-modules/mvs.png 2x" data-sizes=auto alt=/posts/go-modules/mvs.png title=/posts/go-modules/mvs.png></div><div class="details toc" id=toc-static kept>
+<div class="details-summary toc-title">
+<span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span>
+</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
+<ul>
+<li><a href=#术语介绍>术语介绍</a></li><li><a href=#model-path>Model Path</a></li><li><a href=#model-version>Model Version</a></li><li><a href=#mvs>MVS</a></li><li><a href=#workspace>Workspace</a></li><li><a href=#module-proxy>Module Proxy</a>
+<ul>
+<li><a href=#定位包所在的模块>定位包所在的模块</a></li></ul></li><li><a href=#module-cache>Module Cache</a>
+<ul>
+<li><a href=#go-get-底层api调用流程>go get 底层API调用流程</a></li></ul></li><li><a href=#module-authentication>Module Authentication</a></li><li><a href=#相关环境变量>相关环境变量</a></li><li><a href=#tips>Tips</a></li><li><a href=#references>References</a></li></ul></nav></div></div><div class=content id=content><p>Modules are how Go manages dependencies.</p><h2 id=术语介绍>术语介绍</h2><ul>
+<li>包（<strong>package</strong>）：相同目录下，一起编译的源文件集合，每个包会归属于某个模块</li><li>模块（<strong>module</strong>）：一组统一release并publish的包的集合</li><li>主模块（<strong>main module</strong>）：go命令被调用时所在的模块，主模块在当前目录下或者在其父目录下存在<code>go.mod</code>文件</li><li>依赖（<strong>dependency</strong>）
+<ul>
+<li>直接依赖（<strong>direct dependency</strong>）：主模块所显式import的包或者模块</li><li>间接依赖（<strong>indirect dependency</strong>）：主模块间接引入的包或者模块，未被主模块显式import。在<code>go.mod</code>中需要加上<code>//indirect</code> suffix</li></ul></li><li>模块图（<strong>module graph</strong>）：模块依赖构成的以主模块为root的有向图，每条边对应<code>go.mod</code>中一条require命令</li><li>主版本后缀（<strong>major version suffix</strong>）：一个major version子目录用于定义一个模块的新版本，一般当模块有较大的breaking change时引入</li><li>模块代理（<strong>module proxy</strong>）：实现GOPROXY标准的webserver，go命令从proxy下载模块相关信息</li><li>模块缓存（<strong>module cache</strong>）：一个存放下载模块的本地目录，直接serve此目录可以构建一个module proxy</li><li>最小版本选择算法（<strong>mvs</strong>）：构建时用以决定所有模块版本的算法，基准为<strong>选择满足约束的最小版本</strong></li><li>标准版本（<strong>canonical version</strong>）：由字母<code>v</code>加<code>semver</code>组成，不带meta的（+incompatible除外）版本，只有标准版本可以用于mvs</li></ul><h2 id=model-path>Model Path</h2><ul>
+<li>模块路径会在<code>go.mod</code>中声明，用于描述如何定位到对应的模块</li><li>模块路径是其包含的所有包路径的前缀</li><li>模块可能包含如下三部分：
+<ul>
+<li>repo root path，即模块所在的vcs仓库</li><li>repo root path下的一个子目录，当repo root path无法定位到模块时，可能引入了一个子目录后缀</li><li>一个major version suffix，如<code>golang.org/x/somemodule/v2</code></li></ul></li></ul><h2 id=model-version>Model Version</h2><ul>
+<li>遵循<a href=https://semver.org/ target=_blank rel="noopener noreffer">semver2.0</a>规范
+<ul>
+<li>打破后向兼容的change需要递增major version，并将minor/patch设置为0</li><li>未打破后向兼容的change需要递增minor version，并将patch设置为0</li><li>Bugfix或者小优化可以递增patch version</li><li>Pre-release会在patch后，使用<code>-</code>连接的部分信息。pre-release会比对应release版本号小。当存在release时，latest version不会匹配pre-release，即使此pre-release更晚发布</li><li>Metadata suffix指patch后，用<code>+</code>连接的部分，不用做version排序，只起到标识作用</li></ul></li><li><code>+incompatible</code>是用于表明兼容性的特殊metadata，标识所引的模块<strong>在迁移到module之前就已经release了<code>major>1</code>的版本</strong>，这个metadata表明会从对应版本tag的<strong>非major version suffix目录</strong>中去找模块
+<ul>
+<li>模块一定要在repo root directory中，即<strong>module path与repo root directory一致</strong></li><li>不应有<code>go.mod</code>文件</li></ul></li><li>伪版本(pseudo-versions)
+<ul>
+<li>是一种特殊的pre-release形式</li><li>伪版本一般用于如下场景
+<ul>
+<li>无semver tag的场景，此场景版本base一般为<code>v0.0.0</code></li><li>用于标识发布release tag之前的测试版本</li><li>指定branch/commit map对应的revision上无semver tag，此场景下版本base为最近的semver tag</li></ul></li><li>伪版本常见形式为<code>vX.Y.Z-yyyymmddhhmmss-abcdefabcdef</code>，一般编码如下信息：
+<ul>
+<li>下一个待发布的版本<code>vX.Y.Z</code></li><li>生成此伪版本的时间戳</li><li>模块仓库的revision（如git系统下的commit号）</li></ul></li></ul></li></ul><h2 id=mvs>MVS</h2><ul>
+<li>
+<p>操作实体是一个模块图</p><ul>
+<li>节点是模块名</li><li>边描述对模块<strong>所依赖的最小required version</strong>，由<code>go.mod</code>中require命令指定，会被replace/exclude等命令影响</li><li>mvs从主模块出发遍历图，跟踪每个模块<strong>被依赖的最大required version</strong>，这些模块及相应的版本构成了build list
+<figure><a class=lightgallery href=mvs.png title=mvs.png data-thumbnail=mvs.png data-sub-html="<h2>MVS版本选择算法</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=mvs.png data-srcset="mvs.png, mvs.png 1.5x, mvs.png 2x" data-sizes=auto alt=mvs.png height=400 width=800>
+</a><figcaption class=image-caption>MVS版本选择算法</figcaption></figure></li></ul></li></ul><h2 id=workspace>Workspace</h2><ul>
+<li>功能：在运行mvs时，<strong>将磁盘上的模块添加到主模块中</strong></li><li>由<code>go.work</code>声明，可以通过<code>-workfile=off</code>禁用；也可通过<code>-workfile=*.work</code>指定路径，否则会沿着当前目录及其祖先目录寻找<code>go.work</code>，核心命令如下：
+<ul>
+<li><code>use</code>：声明需要加入主模块的本地模块路径</li><li><code>replace</code>：进行指定模块的替换，<strong>适用于workspace内的所有模块</strong></li></ul></li></ul><h2 id=module-proxy>Module Proxy</h2><p>实现了如下GET api的http server：</p><table>
+<thead>
+<tr>
+<th style=text-align:left>Path</th><th>Required</th><th>Description</th></tr></thead><tbody>
+<tr>
+<td style=text-align:left><code>$base/$module/@v/list</code></td><td>T</td><td>返回<code>$module</code>的所有已知版本（不包含pseudo-versions）</td></tr><tr>
+<td style=text-align:left><code>$base/$module/@v/$version.info</code></td><td>T</td><td>返回包含canonical version相关信息，用于定位模块。<code>$version</code>与返回的canonical version并不需要一致，但大多数情况下会保持一致；Time字段可选</td></tr><tr>
+<td style=text-align:left><code>$base/$module/@v/$version.mod</code></td><td>T</td><td>返回模块指定版本的<code>go.mod</code>文件，如果没有此文件，则生成一个只有<code>module</code>命令的<code>go.mod</code></td></tr><tr>
+<td style=text-align:left><code>$base/$module/@v/$version.zip</code></td><td>T</td><td>返回模块指定版本的源码压缩包</td></tr><tr>
+<td style=text-align:left><code>$base/$module/@latest</code></td><td>F</td><td>返回latest version的info信息</td></tr></tbody></table><ul>
+<li>为了解决uri大小写不敏感的问题，使用<code>!m</code>替换<code>M</code></li><li>环境变量<code>GOPROXY</code>用于声明一组proxy url用于定位模块，其默认值为<code>https://proxy.golang.org,direct</code>，其中<code>direct</code>表明直接从源码仓库VCS去找模块</li></ul><h3 id=定位包所在的模块>定位包所在的模块</h3><ul>
+<li>根据<code>GOPROXY</code>遍历proxy list，对package path进行最长前缀匹配（匹配module path+subdirectory），如果匹配到了module并且包含对应的package，则记录对应的模块</li><li>如果匹配过程中报了权限等<strong>非404/410相关的错误</strong>则抛出错误（GOPROXY以<code>|</code>分隔proxy list则会继续遍历）</li><li>如果此proxy所有的可能模块路径request均返回404/410，继续遍历proxy list并执行第一步</li><li>如果proxy list遍历完也未找到对应的模块，直接报错</li><li>例：<code>GOPROXY=https://corp.example.com,https://proxy.golang.org</code>，搜索<code>golang.org/x/net/html</code>所在模块：
+<ul>
+<li>To <code>https://corp.example.com/</code>
+<ul>
+<li>Request for latest version of <code>golang.org/x/net/html</code></li><li>Request for latest version of <code>golang.org/x/net</code></li><li>Request for latest version of <code>golang.org/x</code></li><li>Request for latest version of <code>golang.org</code></li></ul></li><li>To <code>https://proxy.golang.org/</code>
+<ul>
+<li>Request for latest version of <code>golang.org/x/net/html</code></li><li>Request for latest version of <code>golang.org/x/net</code></li><li>Request for latest version of <code>golang.org/x</code></li><li>Request for latest version of <code>golang.org</code></li></ul></li></ul></li></ul><h2 id=module-cache>Module Cache</h2><ul>
+<li>存放已下载的模块文件，和build cache没有关系</li><li>cache在本机所有project中共享，接入是并发安全的</li><li>cache的模块是只读的</li><li>默认path为<code>$GOPATH/pkg/mod</code>，可以通过<code> go clean -modcache</code>将cache purge掉</li><li><code>cache/download</code>path下的布局是符合Module Proxy标准的，因此可以直接serve <code>cache/download</code>作为module proxy</li></ul><div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div><div class=details-content>
+<div class=admonition-content>module cache并不十分严格符合GOPROXY协议，比如模块cache了pseudo-version的话，<code>@v/list</code>会返回pseudo-version。</div></div></div><h3 id=go-get-底层api调用流程>go get 底层API调用流程</h3><p>Serve本地module cache作为proxy验证go get的api调用。</p><p>在域名为 <code>web.raygecao.cn</code>上下载<code>6.824-test</code>模块，并serve <code>cache/download</code>目录作为proxy：</p><div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># web.raygecao.cn server</span>
+</span></span><span class=line><span class=cl>$ go get github.com/raygecao/6.824-test
+</span></span><span class=line><span class=cl>go: finding github.com/raygecao/6.824-test v0.0.1
+</span></span><span class=line><span class=cl>go: downloading github.com/raygecao/6.824-test v0.0.1
+</span></span><span class=line><span class=cl>go: extracting github.com/raygecao/6.824-test v0.0.1
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>$ <span class=nb>cd</span> <span class=nv>$GOPATH</span>/pkg/mod/cache/download/ <span class=o>&amp;&amp;</span> sudo python3 -m http.server <span class=m>80</span>
+</span></span><span class=line><span class=cl>Serving HTTP on 0.0.0.0 port <span class=m>8000</span> <span class=o>(</span>http://0.0.0.0:8000/<span class=o>)</span> ...
+</span></span></code></pre></td></tr></table></div></div><p>在另一台机器上将<code>web.raygecao.cn</code>设置为GOPROXY，并获取此模块：</p><div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># client</span>
+</span></span><span class=line><span class=cl>$ go mod init <span class=nb>test</span>
+</span></span><span class=line><span class=cl>$ <span class=nv>GOPROXY</span><span class=o>=</span>http://web.raygecao.cn  <span class=nv>GOSUMDB</span><span class=o>=</span>off go get github.com/raygecao/6.824-test
+</span></span></code></pre></td></tr></table></div></div><p>因为客户端没有此模块的cache，因此在server端观察到的api调用流程为：</p><figure><a class=lightgallery href=/posts/go-modules/api-without-cache.png title=/posts/go-modules/api-without-cache.png data-thumbnail=/posts/go-modules/api-without-cache.png data-sub-html="<h2>模块未被cache时，server端观测的api调用</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=api-without-cache.png data-srcset="/posts/go-modules/api-without-cache.png, api-without-cache.png 1.5x, /posts/go-modules/api-without-cache.png 2x" data-sizes=auto alt=/posts/go-modules/api-without-cache.png height=400 width=800>
+</a><figcaption class=image-caption>模块未被cache时，server端观测的api调用</figcaption></figure><p>此时模块已下载并cache住，再次go get此模块时，api调用流程为：</p><figure><a class=lightgallery href=/posts/go-modules/api-with-cache.png title=/posts/go-modules/api-with-cache.png data-thumbnail=/posts/go-modules/api-with-cache.png data-sub-html="<h2>模块被cache后，server端观测的api调用</h2>">
+<img class=lazyload src=/svg/loading.min.svg data-src=api-with-cache.png data-srcset="/posts/go-modules/api-with-cache.png, api-with-cache.png 1.5x, /posts/go-modules/api-with-cache.png 2x" data-sizes=auto alt=/posts/go-modules/api-with-cache.png height=400 width=800>
+</a><figcaption class=image-caption>模块被cache后，server端观测的api调用</figcaption></figure><p><strong>总结完整的api调用流程如下：</strong></p><ul>
+<li>module path拆分，并发调用<code>@v/list</code>api以及最长前缀匹配去定位模块，调用<code>@v/list</code> api获取所有release/pre-release，选择latest version</li><li>【cached】调用<code>@v/info</code>api获取canonical version等信息</li><li>【cached】调用<code>mod</code>api获取依赖从而构建build list</li><li>【cached】调用<code>zip</code>api获取模块源码，从而加载相应的package</li></ul><div class="details admonition note open">
+<div class="details-summary admonition-title">
+<i class="icon fas fa-pencil-alt fa-fw"></i>@latest api用途<i class="details-icon fas fa-angle-right fa-fw"></i>
+</div><div class=details-content>
+<div class=admonition-content>由于<code>@v/list</code>只会获取release/pre-release，当模块repo里没有release/pre-release tag时，<code>@v/list</code>返回结果为空，此时会尝试调用<code>@latest</code>endpoint搜索latest pseudo-version，依然找不见则会自动生成。</div></div></div><h2 id=module-authentication>Module Authentication</h2><ul>
+<li>验证的主体<strong>包括zip文件和mod文件</strong>，可以使得不可信的proxy提供的包变得可信，此外cache提供的模块也需要经过验证</li><li>对于zip文件，计算hash是顺序无关的，并且不受其他metadata、alignment等影响</li><li>验证时会优先从<code>go.sum</code>中找，如果<code>go.sum</code>不存在，会向checksum database query，验证通过后记录到<code>go.sum</code>中</li><li>checksum校验失败的一个常见的原因是<strong>人为更改repo tag</strong></li></ul><h2 id=相关环境变量>相关环境变量</h2><table>
+<thead>
+<tr>
+<th>环境变量</th><th>默认值</th><th>类型</th><th>作用</th></tr></thead><tbody>
+<tr>
+<td><strong>GOMODCACHE</strong></td><td><code>$GOPATH/pkg/mod</code></td><td><strong>filepath</strong></td><td>指定下载的模块及相关文件存放的目录</td></tr><tr>
+<td><strong>GOINSECURE</strong></td><td>-</td><td>逗号分隔的<strong>glob patterns</strong></td><td>用于匹配模块前缀，当直接从VCS中fetch匹配的模块时，可以允许其使用insecure manner（<code>https</code>=><code>http</code>, <code>git+ssh://</code> => <code>git://</code>)</td></tr><tr>
+<td><strong>GONOPROXY</strong></td><td><code>$GOPRIVATE</code></td><td>逗号分隔的<strong>glob patterns</strong></td><td>用于匹配模块前缀，匹配的模块跳过query proxy，直接从VCS中获取</td></tr><tr>
+<td><strong>GONOSUMDB</strong></td><td><code>$GOPRIVATE</code></td><td>逗号分隔的<strong>glob patterns</strong></td><td>用于匹配模块前缀，匹配的模块跳过校验流程</td></tr><tr>
+<td><strong>GOPRIVATE</strong></td><td>-</td><td>逗号分隔的<strong>glob patterns</strong></td><td><code>GONOPROXY</code>与<code>GONOSUMDB</code>的默认值</td></tr><tr>
+<td><strong>GOPROXY</strong></td><td><code>https://proxy.golang.org,direct</code></td><td><strong>url list</strong></td><td>声明proxy列表，当前一个proxy返回<code>404/410</code>状态码时，follow next（针对逗号分隔的场景）</td></tr><tr>
+<td><strong>GOSUMDB</strong></td><td><code>sum.golang.org</code></td><td><strong>url</strong></td><td>指定checksum database，当<code>go.sum</code>不存在且未跳过校验流程时，从此url中获取hash用于校验</td></tr></tbody></table><h2 id=tips>Tips</h2><ul>
+<li>
+<p>主模块要求有<code>go.mod</code>文件，但是没有<code>go.mod</code>文件的模块可以用作依赖，在寻找此模块时，如果模块路径与repo root path一致时，go command会生成一个只有<code>module</code>命令的<code>go.mod</code>，以保证依赖方每次构建的确定性</p></li><li>
+<p>Go1.17相对于之前的版本在<code>go.mod</code>中显式地列出了所有主模块间接导入的包，而之前的版本对于间接依赖，只有在默认mvs选择的版本与被依赖的版本不一致时才会显式列出。这些额外的间接依赖的信息用于<strong>模块图剪枝</strong>及<strong>模块延迟加载</strong></p></li><li>
+<p>retract用法（始于go 1.16）</p><ul>
+<li>
+<p>声明本模块的一些版本不应被依赖，一般用于误发版本/版本存在fatal bug时</p></li><li>
+<p>被撤销的版本本身会存在，避免破坏已依赖此版本的模块构建</p></li><li>
+<p>用法示例：当前最新版本为<code>v0.9.1</code>，又发布了<code>v1.0.0</code>且有fatal bug，则需要发布<code>v1.0.1</code>并进行如下声明：</p><div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>retract (
+</span></span><span class=line><span class=cl>    v1.0.0 // Published accidentally.
+</span></span><span class=line><span class=cl>    v1.0.1 // Contains retractions only.
+</span></span><span class=line><span class=cl>)
+</span></span></code></pre></td></tr></table></div></div></li></ul></li><li>
+<p>一般来讲module path跟repo root path应是一致的（不考虑major version suffix），但有些情况下模块会定义在repo root path下的子目录中，一般用于<strong>monorepo中多个组件需要独立发版</strong>的case，这其中每个组件都应有个<code>go.mod</code>文件</p></li></ul><h2 id=references>References</h2><ul>
+<li><a href=https://go.dev/ref/mod target=_blank rel="noopener noreffer">https://go.dev/ref/mod</a></li><li><a href=https://go.dev/blog/using-go-modules target=_blank rel="noopener noreffer">https://go.dev/blog/using-go-modules</a></li><li><a href=https://github.com/golang/go/blob/go1.17.7/src/cmd/go/internal/modfetch/proxy.go target=_blank rel="noopener noreffer">https://github.com/golang/go/blob/go1.17.7/src/cmd/go/internal/modfetch/proxy.go</a></li><li><a href=https://github.com/golang/go/issues/32715 target=_blank rel="noopener noreffer">https://github.com/golang/go/issues/32715</a></li><li><a href=https://github.com/golang/go/issues/51391 target=_blank rel="noopener noreffer">https://github.com/golang/go/issues/51391</a></li></ul></div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>更新于 2022-03-06</span>
+</div><div class=post-info-license></div></div><div class=post-info-line>
+<div class=post-info-md></div><div class=post-info-share>
+<span></span>
+</div></div></div><div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/go/>go</a></section><section>
+<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
+</section></div><div class=post-nav><a href=/posts/text-process-tool/ class=prev rel=prev title=Linux文本处理工具><i class="fas fa-angle-left fa-fw"></i>Linux文本处理工具</a></div></div><div id=comments><div id=valine class=comment></div><noscript>
+Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
+</noscript></div></article></div></main><footer class=footer>
+<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+<i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论>
+<i class="fas fa-comment fa-fw"></i>
+</a>
+</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
