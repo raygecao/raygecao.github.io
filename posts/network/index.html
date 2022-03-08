@@ -18,7 +18,7 @@
 <meta name=apple-mobile-web-app-title content="拾遗之途">
 <meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
 <link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/network/><link rel=prev href=https://raygecao.github.io/posts/asm/><link rel=next href=https://raygecao.github.io/posts/minikube-tls/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"《计算机网络》纲要整理","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/network\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/network\/featured-image.png","width":471,"height":210}],"genre":"posts","keywords":"网络","wordcount":10657,"url":"https:\/\/raygecao.github.io\/posts\/network\/","datePublished":"2021-06-27T15:20:32+08:00","dateModified":"2021-06-27T15:20:32+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/network/><link rel=prev href=https://raygecao.github.io/posts/asm/><link rel=next href=https://raygecao.github.io/posts/minikube-tls/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"《计算机网络》纲要整理","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/network\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/network\/featured-image.png","width":471,"height":210}],"genre":"posts","keywords":"网络","wordcount":10654,"url":"https:\/\/raygecao.github.io\/posts\/network\/","datePublished":"2021-06-27T15:20:32+08:00","dateModified":"2021-06-27T15:20:32+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
 <div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
 <div class=header-wrapper>
 <div class=header-title>
@@ -67,7 +67,7 @@
 <div id=search-dropdown-mobile></div></div><main class=main>
 <div class=container><div class=toc id=toc-auto>
 <h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">《计算机网络》纲要整理</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-06-27>2021-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 10657 字&nbsp;
+<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-06-27>2021-06-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 10654 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 22 分钟&nbsp;<span id=/posts/network/ class=leancloud_visitors data-flag-title=《计算机网络》纲要整理>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
 </span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/network/featured-image.png data-srcset="/posts/network/featured-image.png, /posts/network/featured-image.png 1.5x, /posts/network/featured-image.png 2x" data-sizes=auto alt=/posts/network/featured-image.png title=/posts/network/featured-image.png></div><div class="details toc" id=toc-static kept>
@@ -143,7 +143,7 @@
 <li>
 <p>以太网上的站点不知道帧会经过哪几个网桥，这类网桥一旦接入局域网，无需经过人工配置转发表就可以工作。</p></li><li>
 <p>透明网桥的自学习</p><ul>
-<li>初始时转发表为空。</li><li>网桥每收到一个帧时，就会记录其源地址和来源端口，构建转发表**（盲转发）**。</li><li>收到一个帧时，会先查转发表，如果目的地址存在，则向对应的端口转发，否则向除来源外的所有端口转发。</li><li>转发表项中会记录更新时间，在站地址发生变更时能够使得相关表项过期掉。</li><li>透明网桥使用生成树算法，避免帧在网络中兜圈子。
+<li>初始时转发表为空。</li><li>网桥每收到一个帧时，就会记录其源地址和来源端口，构建转发表（盲转发）。</li><li>收到一个帧时，会先查转发表，如果目的地址存在，则向对应的端口转发，否则向除来源外的所有端口转发。</li><li>转发表项中会记录更新时间，在站地址发生变更时能够使得相关表项过期掉。</li><li>透明网桥使用生成树算法，避免帧在网络中兜圈子。
 <figure><a class=lightgallery href=/posts/network/self-learn.png title=/posts/network/self-learn.png data-thumbnail=/posts/network/self-learn.png data-sub-html="<h2>自学习示意图</h2>">
 <img class=lazyload src=/svg/loading.min.svg data-src=self-learn.png data-srcset="/posts/network/self-learn.png, self-learn.png 1.5x, /posts/network/self-learn.png 2x" data-sizes=auto alt=/posts/network/self-learn.png height=200 width=600>
 </a><figcaption class=image-caption>自学习示意图</figcaption></figure></li></ul></li><li>
@@ -177,14 +177,14 @@
 <ul>
 <li>每条路由记录着 <strong>（目的网络地址，下一跳地址）</strong>。</li><li><strong>路由表中记录着网络地址而非主机地址</strong>的原因是避免路由表过大，导致查表时引入较大的开销。</li><li>会有一些特例，在路由表中的地址是特定主机的地址，称为<strong>特定主机路由</strong>，一般用于排查问题。</li><li>在路由表中没有找到网络地址时，会走<strong>默认路由</strong>。</li><li>路由转发时，不会改变数据报的源地址与目的地址，而是通过ARP协议将路由表中的网络地址转为MAC地址进行转发，IP地址屏蔽了底层帧传输细节。</li></ul></li><li>分组转发算法
 <ul>
-<li>从数据报首部获取目的IP地址<code>D</code>，得到网络地址<code>N</code>。</li><li>若网络<code>N</code>与该路由器直接相连，则直接交付到特点的主机。</li><li>若路由表中有地址<code>D</code>的特定路由，则直接把数据报转发给下一跳所对应的路由器。</li><li>若路由表中有到达网络<code>D</code>的路由，则把数据报转发给下一跳所对应的路由器。</li><li>若路由表中有默认路由，则将数据报转发给默认路由器。</li><li>以上均不满足则报错。</li></ul></li></ul><h3 id=子网与超网>子网与超网</h3><ul>
+<li>从数据报首部获取目的IP地址<code>D</code>，得到网络地址<code>N</code>。</li><li>若网络<code>N</code>与该路由器直接相连，则直接交付到特点的主机。</li><li>若路由表中有地址<code>D</code>的特定路由，则直接把数据报转发给下一跳所对应的路由器。</li><li>若路由表中有到达网络<code>N</code>的路由，则把数据报转发给下一跳所对应的路由器。</li><li>若路由表中有默认路由，则将数据报转发给默认路由器。</li><li>以上均不满足则报错。</li></ul></li></ul><h3 id=子网与超网>子网与超网</h3><ul>
 <li>子网出现的原因
 <ul>
 <li>IP地址空间利用率低。</li><li>每个物理网络一个网络号会使路由表太大导致性能变坏。</li><li>两级IP地址不够灵活</li></ul></li><li>子网特点
 <ul>
-<li>原物理网络基础上，划分出若干个子网，由两级变三级。</li><li>对外仍变现为一个网络，减少外网路由表的条目数，通过多分一级变线性为乘法。</li><li>划分子网后，路由表多了一列子网掩码，在路由查找时会多一步将IP地址与子网掩码进行与运算获取网络地址，再进行匹配查找。</li></ul></li><li>超网（CIDR，无分类编址）特点
+<li>原物理网络基础上，划分出若干个子网，由两级变三级。</li><li>对外仍表现为一个网络，减少外网路由表的条目数，通过多分一级变线性为乘法。</li><li>划分子网后，路由表多了一列子网掩码，在路由查找时会多一步将IP地址与子网掩码进行与运算获取网络地址，再进行匹配查找。</li></ul></li><li>超网（CIDR，无分类编址）特点
 <ul>
-<li>消除了A,B,C类地址及划分子网的概念，通过引入<strong>网络前缀</strong>的概念使得网络的划分更灵活。</li><li>从三级编址**&lt;网络号，子网掩码，主机号><strong>回到了两级编址</strong>&lt;网络前缀，主机号>**。</li><li>采用<strong>最长前缀匹配</strong>从而进行能匹配得更具体。</li><li>通过<strong>二叉查找树</strong>的数据结构提升路由查找效率。</li></ul></li><li>超网出现的原因
+<li>消除了A,B,C类地址及划分子网的概念，通过引入<strong>网络前缀</strong>的概念使得网络的划分更灵活。</li><li>从三级编址&lt;网络号，子网掩码，主机号>回到了两级编址&lt;网络前缀，主机号>。</li><li>采用<strong>最长前缀匹配</strong>从而进行能匹配得更具体。</li><li>通过<strong>二叉查找树</strong>的数据结构提升路由查找效率。</li></ul></li><li>超网出现的原因
 <ul>
 <li>为解决传统IP分类及子网划分引起的IP地址分配不灵活，从而降低IP地址利用率低的问题。</li></ul></li></ul><h3 id=路由协议>路由协议</h3><ul>
 <li>
@@ -264,7 +264,7 @@
 <ul>
 <li>结点缓存的容量太小，导致到达该结点的分组被丢弃。</li><li>处理机处理时间太慢，导致队列逐渐被灌满，后到达的请求会被丢弃。此外处理速度慢，可能导致驻留在队列时间过长，超过了超时重传间隔，引起重传。</li></ul></li><li>拥塞控制的核心思想在于通过控制发送方发送速率，防止过多数据注入到网络，避免网络中的路由器或链路出现过载。</li><li>拥塞控制的方法
 <ul>
-<li><strong>慢开始</strong>：发送方维护一个<strong>拥塞窗口</strong>，发送起始窗口值为1，之后每轮窗口值翻倍，直到超过了<strong>慢开始门限 ssthresh</strong>。当发生拥塞时，ssthresh减半（<strong>乘法减小</strong>），从头进行慢开始。</li><li><strong>拥塞避免</strong>：当拥塞窗口达到了ssthresh，窗口值开始逐1递增（<strong>加法增大</strong>），以降低发送增速。</li><li><strong>快重传</strong>：当收端收到一个失序的报文就立即发送一个<strong>重复确认</strong>，当收端连续收到3个重复确认就立即重传报文，而<strong>无需等待此报文的重传计时器到期</strong>。快重传用于尽早重传未被确认的报文段，快速发现拥塞。</li><li><strong>快恢复</strong>：当发生乘法减小时，并不从头执行慢开始，而是将拥塞窗口设为ssthresh的一半，之后开始进行加法增大。</li></ul></li><li>全局同步
+<li><strong>慢开始</strong>：发送方维护一个<strong>拥塞窗口</strong>，发送起始窗口值为1，之后每轮窗口值翻倍，直到超过了<strong>慢开始门限 ssthresh</strong>。当发生拥塞时，ssthresh减半（<strong>乘法减小</strong>），从头进行慢开始。</li><li><strong>拥塞避免</strong>：当拥塞窗口达到了ssthresh，窗口值开始逐1递增（<strong>加法增大</strong>），以降低发送增速。</li><li><strong>快重传</strong>：当收端收到一个失序的报文就立即发送一个<strong>重复确认</strong>，当发端连续收到3个重复确认就立即重传报文，而<strong>无需等待此报文的重传计时器到期</strong>。快重传用于尽早重传未被确认的报文段，快速发现拥塞。</li><li><strong>快恢复</strong>：当发生乘法减小时，并不从头执行慢开始，而是将拥塞窗口设为ssthresh的一半，之后开始进行加法增大。</li></ul></li><li>全局同步
 <ul>
 <li>当网络拥塞发生时，缓存队列已满，新来的分组全部被丢弃（<strong>尾部丢弃策略</strong>），此时所有TCP连接都会触发重传，从而触发乘法减小，这就导致了TCP中的<strong>全局同步</strong>问题。</li><li>全局同步导致全网通信量可能瞬时减小很多，而一段时间后又会增大很多。</li><li>可以通过<strong>随机早期检测RED</strong>策略来改善全局同步问题，此策略核心是设置<strong>软硬门限</strong>；在软门限内，不丢弃任何报文，而在软门限和硬门限间，以一个自适应概率丢弃报文；当超过了硬门限，则采用尾部丢弃策略。RED可以将<strong>批量的乘法减小</strong>预打散，以缓解全局同步问题。</li></ul></li></ul><h4 id=tcp的连接管理>TCP的连接管理</h4><ul>
 <li>
@@ -289,11 +289,11 @@
 <p>域名服务器</p><ul>
 <li>分类
 <ul>
-<li><strong>根域名服务器</strong>，知道所有顶级域名服务器的域名和IP地址，是最高层次的域名服务器。</li><li><strong>顶级域名服务器</strong>，负载管理在该顶级域名服务器注册的所有二级域名。</li><li><strong>权限域名服务器</strong>，负责一个区的域名服务器，一个域下可能会有多个区。</li><li><strong>本地域名服务器</strong>，也称为默认域名服务器，离用户较近，可以解析同一个ISP下的所有域名，是向外查询的入口。</li></ul></li><li>解析方式
+<li><strong>根域名服务器</strong>，知道所有顶级域名服务器的域名和IP地址，是最高层次的域名服务器。</li><li><strong>顶级域名服务器</strong>，负责管理在该顶级域名服务器注册的所有二级域名。</li><li><strong>权限域名服务器</strong>，负责一个区的域名服务器，一个域下可能会有多个区。</li><li><strong>本地域名服务器</strong>，也称为默认域名服务器，离用户较近，可以解析同一个ISP下的所有域名，是向外查询的入口。</li></ul></li><li>解析方式
 <ul>
 <li>递归查询
 <ul>
-<li>如果DNS服务器不知道被查询域名的IP地址，那么其就以DNS client身份向其他根域名服务器发出查询请求报文，而不是告知主机下一个查询DNS服务器的地址让主机自己查询。</li><li>一般用于主机向本地域名服务器的查询。</li></ul></li><li>迭代查询
+<li>如果DNS服务器不知道被查询域名的IP地址，那么其就以DNS client身份向根域名服务器发出查询请求报文，而不是告知主机下一个查询DNS服务器的地址让主机自己查询。</li><li>一般用于主机向本地域名服务器的查询。</li></ul></li><li>迭代查询
 <ul>
 <li>当域名服务器收到迭代查询请求报文时，要么给出所要查询的IP地址，要么告诉本地域名服务器下一步应向那个域名服务器进行查询，并不充当DNS client帮其查询。</li><li>一般用于本地域名服务器向根域名服务器的查询。</li></ul></li></ul></li><li>高速缓存
 <ul>
@@ -305,7 +305,7 @@
 <p>FTP通过<strong>复制整个文件</strong>以实现文件共享，如果需要修改文件，需要先获取文件的一个本地副本，在副本上进行修改，然后再将修改后的文件传回。</p></li><li>
 <p>FTP基本原理</p><ul>
 <li>一个主进程负责接收新的请求。</li><li>若干从属进程，负责处理单个请求。</li><li>FTP的客户端与服务器间要建立两个并行的TCP连接，<strong>控制连接</strong>和<strong>数据连接</strong>，控制连接在会话期间一直打开，客户端传输请求通过控制连接发送给服务端的控制进程，控制连接不用于传输文件；数据连接用于传输文件，服务端控制进程收到客户端的请求后便会<strong>创建数据传输进程和数据连接</strong>，用来传输文件。FTP的数据面与控制面相互分离。</li><li>熟知端口是21（监听）和20（传输）。</li></ul></li><li>
-<p>FTP缺陷：复制整个文件实现共享不够灵活，当需要在原有的文件作出一点修改时，传输整个文件。而<strong>NFS可以允许应用进程打开一个原地文件</strong>，并在该文件的某个特定位置开始读写数据，因此在网络上传输的只是少量的修改数据。</p></li><li>
+<p>FTP缺陷：复制整个文件实现共享不够灵活。即便只需要在原有的文件作出一点修改时，也得传输整个文件。而<strong>NFS可以允许应用进程打开一个本地文件</strong>，并在该文件的某个特定位置开始读写数据，因此在网络上传输的只是少量的修改数据。</p></li><li>
 <p>TFTP工作原理</p><ul>
 <li>类似停止等待协议，发送数据需要确认。</li><li>熟知端口是69。</li></ul></li></ul><h3 id=万维网www>万维网WWW</h3><ul>
 <li>
@@ -314,16 +314,16 @@
 <p>超文本传输协议 HTTP</p><ul>
 <li>
 <p><strong>无状态</strong>，使用TCP传输。</p></li><li>
-<p>从浏览器点击一个连接发生的事件：</p><ul>
+<p>从浏览器点击一个链接发生的事件：</p><ul>
 <li>浏览器分析URL并通过DNS解析出IP。</li><li>浏览器向此IP服务器建立TCP链接。</li><li>浏览器发送读取文件的命令。</li><li>服务器将对应的文件以HTTP response的方式返回给浏览器。</li><li>释放TCP连接。</li><li>浏览器将收到的数据进行渲染，将结果返回给用户。</li></ul></li><li>
-<p>HTTP 1.1 vs HTTP 1.0</p><ul>
+<p>HTTP 1.0 vs HTTP 1.1 vs HTTP 2.0</p><ul>
 <li>在HTTP 1.0中每个http请求都会创建一个TCP连接，因此一个GET命令需要<strong>2RTT</strong>；此外，短连接的频繁创建与销毁会影响数据传输效率，因为每次创建后数据的发送都会历经一个慢开始的过程。</li><li>HTTP 1.1支持了长连接，减少了频繁建立TCP连接的开销。此外还支持pipeline技术，以缩短TCP连接空闲时间，提升服务器资源利用率。</li><li>HTTP 2.0在HTTP 1.1 pipeline基础上又提升了复用程度，此外消息的传输从明文变为二进制字节流，提升传输效率。</li></ul></li><li>
-<p>代理服务器可用作万维网高速缓存，用户的请求到达proxy后，如果发现有缓存则直接传递。否则proxy充当http client向服务器发起请求，并将响应缓存起来。</p></li><li>
+<p>代理服务器可用作万维网高速缓存，用户的请求到达proxy后，如果发现有缓存则直接返回。否则proxy充当http client向服务器发起请求，并将响应缓存起来。</p></li><li>
 <p>Cookie：由服务器返回给浏览器，记录一些用户信息，在下次发http请求时连同此信息发送给服务器。存在的核心原因是<strong>http是无状态的</strong>。</p></li></ul></li><li>
 <p>检索系统</p><ul>
 <li>搜索引擎分类
 <ul>
-<li>全文搜索引擎：通过蜘蛛在网络链接间爬行，建立一个大型的在线数据库，用户输入<strong>关键词</strong>在此数据库中搜索结果。</li><li>分类目录搜索引擎：数据库是按目录分类组织的，用户需要按设计好的目录逐级查询。</li><li>垂直所有引擎：相比全文所有引擎，更加针对某一特定领域、特定人群或特定需求提供搜索服务，即<strong>在某个行业知识上下文中进行关键词搜索。</strong></li><li>元搜索引擎：将用户请求发到多个独立的搜索引擎上搜索，将结果统一处理，称为<strong>搜索引擎之上的搜索引擎</strong>。</li></ul></li></ul></li></ul><h3 id=电子邮件>电子邮件</h3><ul>
+<li>全文搜索引擎：通过蜘蛛在网络链接间爬行，建立一个大型的在线数据库，用户输入<strong>关键词</strong>在此数据库中搜索结果。</li><li>分类目录搜索引擎：数据库是按目录分类组织的，用户需要按设计好的目录逐级查询。</li><li>垂直搜索引擎：相比全文搜索引擎，更加针对某一特定领域、特定人群或特定需求提供搜索服务，即<strong>在某个行业知识上下文中进行关键词搜索。</strong></li><li>元搜索引擎：将用户请求发到多个独立的搜索引擎上搜索，将结果统一处理，称为<strong>搜索引擎之上的搜索引擎</strong>。</li></ul></li></ul></li></ul><h3 id=电子邮件>电子邮件</h3><ul>
 <li>
 <p>主要构成组件</p><ul>
 <li>用户代理（UA）</li><li>邮件服务器</li><li>邮件发送协议（如SMTP）及邮件读取协议(如POP3)</li></ul></li><li>
