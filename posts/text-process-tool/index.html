@@ -1,259 +1,65 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>Linux文本处理工具 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Linux文本处理工具">
-<meta property="og:description" content="grep, sed, awk被称为linux文本处理三剑客，分别侧重于文本搜索，流式编辑和格式化文本。">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://raygecao.github.io/posts/text-process-tool/"><meta property="og:image" content="https://raygecao.github.io/posts/text-process-tool/featured-image.png"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2022-03-05T16:39:25+08:00">
-<meta property="article:modified_time" content="2022-03-05T16:39:25+08:00">
-<meta name=twitter:card content="summary_large_image">
-<meta name=twitter:image content="https://raygecao.github.io/posts/text-process-tool/featured-image.png">
-<meta name=twitter:title content="Linux文本处理工具">
-<meta name=twitter:description content="grep, sed, awk被称为linux文本处理三剑客，分别侧重于文本搜索，流式编辑和格式化文本。">
-<meta name=application-name content="拾遗之途">
-<meta name=apple-mobile-web-app-title content="拾遗之途">
-<meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/text-process-tool/><link rel=prev href=https://raygecao.github.io/posts/iptables/><link rel=next href=https://raygecao.github.io/posts/go-modules/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Linux文本处理工具","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/text-process-tool\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/text-process-tool\/featured-image.png","width":1325,"height":457}],"genre":"posts","keywords":"linux","wordcount":2635,"url":"https:\/\/raygecao.github.io\/posts\/text-process-tool\/","datePublished":"2022-03-05T16:39:25+08:00","dateModified":"2022-03-05T16:39:25+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=拾遗之途>拾遗之途</a>
-</div><div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Linux文本处理工具 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Linux文本处理工具"><meta property="og:description" content="grep, sed, awk被称为linux文本处理三剑客，分别侧重于文本搜索，流式编辑和格式化文本。"><meta property="og:type" content="article"><meta property="og:url" content="https://raygecao.github.io/posts/text-process-tool/"><meta property="og:image" content="https://raygecao.github.io/posts/text-process-tool/featured-image.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-03-05T16:39:25+08:00"><meta property="article:modified_time" content="2022-03-05T16:39:25+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://raygecao.github.io/posts/text-process-tool/featured-image.png"><meta name=twitter:title content="Linux文本处理工具"><meta name=twitter:description content="grep, sed, awk被称为linux文本处理三剑客，分别侧重于文本搜索，流式编辑和格式化文本。"><meta name=application-name content="拾遗之途"><meta name=apple-mobile-web-app-title content="拾遗之途"><meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/text-process-tool/><link rel=prev href=https://raygecao.github.io/posts/iptables/><link rel=next href=https://raygecao.github.io/posts/go-modules/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Linux文本处理工具","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/text-process-tool\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/text-process-tool\/featured-image.png","width":1325,"height":457}],"genre":"posts","keywords":"linux","wordcount":2635,"url":"https:\/\/raygecao.github.io\/posts\/text-process-tool\/","datePublished":"2022-03-05T16:39:25+08:00","dateModified":"2022-03-05T16:39:25+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div></div></div></header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=拾遗之途>拾遗之途</a>
-</div><div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div></div><div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></header><div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div></div><main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Linux文本处理工具</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-03-05>2022-03-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2635 字&nbsp;
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Linux文本处理工具</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B4%E7%90%86%E4%B8%8E%E6%80%BB%E7%BB%93/><i class="far fa-folder fa-fw"></i>整理与总结</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-03-05>2022-03-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2635 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 6 分钟&nbsp;<span id=/posts/text-process-tool/ class=leancloud_visitors data-flag-title=Linux文本处理工具>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
-</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/text-process-tool/featured-image.png data-srcset="/posts/text-process-tool/featured-image.png, /posts/text-process-tool/featured-image.png 1.5x, /posts/text-process-tool/featured-image.png 2x" data-sizes=auto alt=/posts/text-process-tool/featured-image.png title=/posts/text-process-tool/featured-image.png></div><div class="details toc" id=toc-static kept>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
-<ul>
-<li><a href=#grep>grep</a>
-<ul>
-<li><a href=#options>Options</a></li><li><a href=#tips>Tips</a></li></ul></li><li><a href=#sed>sed</a>
-<ul>
-<li><a href=#options-1>Options</a></li><li><a href=#commands>Commands</a></li><li><a href=#地址匹配>地址匹配</a></li><li><a href=#tips-1>Tips</a></li></ul></li><li><a href=#awk>awk</a>
-<ul>
-<li><a href=#基本用法>基本用法</a></li><li><a href=#特殊模式>特殊模式</a></li><li><a href=#tips-2>Tips</a></li></ul></li><li><a href=#参考文档>参考文档</a></li></ul></nav></div></div><div class=content id=content><p>grep, sed, awk被称为linux文本处理三剑客，分别侧重于<strong>文本搜索</strong>，<strong>流式编辑</strong>和<strong>格式化文本</strong>。</p><h2 id=grep>grep</h2><ul>
-<li>
-<p><strong>文本搜索工具</strong></p></li><li>
-<p>Schema：<code>grep [option...] [patterns] [file...]</code></p></li></ul><h3 id=options>Options</h3><table>
-<thead>
-<tr>
-<th>短选项</th><th>长选项</th><th>作用</th></tr></thead><tbody>
-<tr>
-<td><code>-e pattern</code></td><td><code>--regexp=pattern</code></td><td>指定搜索pattern，可以不显式指定</td></tr><tr>
-<td><code>-f file</code></td><td><code>--file=file</code></td><td>从file中获取pattern进行搜索</td></tr><tr>
-<td><code>-i/-y</code></td><td><code>ignore-case</code></td><td>匹配忽略大小写</td></tr><tr>
-<td><code>-v</code></td><td><code>--invert-match</code></td><td>匹配反选</td></tr><tr>
-<td><code>-w</code></td><td><code>--word-regexp</code></td><td>指定单词完整匹配，其边界为行首或者除字母、数字、下划线以外的字符</td></tr><tr>
-<td><code>-x</code></td><td><code>--line-regexp</code></td><td>行完整匹配</td></tr><tr>
-<td><code>-c</code></td><td><code>--count</code></td><td>不打印匹配行，只打印匹配行数</td></tr><tr>
-<td><code>-L</code> <code>-l</code></td><td><code>--files-without-match</code> <code>--files-with-matches</code></td><td>不打印匹配行，只打印完全不匹配/存在匹配的文件名</td></tr><tr>
-<td><code>-m num</code></td><td><code>--max-count=num</code></td><td>指定最大匹配次数</td></tr><tr>
-<td><code>-o</code></td><td><code>--only-matching</code></td><td>只打印完整的匹配内容，不打印匹配行</td></tr><tr>
-<td><code>-q</code></td><td><code>--quiet/silent</code></td><td>不打印任何内容，只以返回码来描述是否存在匹配</td></tr><tr>
-<td><code>-h</code> <code>-H</code></td><td><code>--no-filename</code> <code>--with-filename</code></td><td>不打印/打印匹配的文件名前缀，默认为打印(<code>-H</code>)</td></tr><tr>
-<td><code>-n</code></td><td><code>--line-number</code></td><td>打印匹配的行号前缀</td></tr><tr>
-<td><code>-A num</code></td><td><code>--after-context=num</code></td><td>打印匹配行，及其以后的num行</td></tr><tr>
-<td><code>-B num</code></td><td><code>--before-context=num</code></td><td>打印匹配行，及其以前的num行</td></tr><tr>
-<td><code>-C num</code></td><td><code>-context=num/-num</code></td><td>打印匹配行，及其前后的各num行</td></tr><tr>
-<td><code>-R</code></td><td><code>--dereference-recursive</code></td><td>递归的匹配目录下所有文件，遇到符号链接正常递归</td></tr></tbody></table><h3 id=tips>Tips</h3><ul>
-<li>grep不支持换行符的匹配</li></ul><h2 id=sed>sed</h2><ul>
-<li>
-<p><strong>流编辑器</strong>，用于逐行地对输入流进行基本的文本转换</p></li><li>
-<p>schema：<code>sed SCRIPT INPUTFILE</code></p><ul>
-<li><code>INPUTFILE</code>未指定或者指定为<code>-</code>时，表示从stdin读取内容</li><li>默认输出为stdout，可以通过<code>w</code> cmd/重定向符保存到文件，可以指定<code>-i</code>在文件内原地修改</li></ul></li><li>
-<p>多个cmd可以通过<code>;</code>或换行来指定，或者<code>-e</code>指定。（<code>a,c,i</code>命令中不应使用<code>;</code>，会将其当做plain text）</p></li><li>
-<p>data buffer</p><ul>
-<li><strong>模式空间</strong>（Pattern space）：数据处理空间，sed读取每行到模式空间，进行地址匹配并执行命令</li><li><strong>保持空间</strong>（Hold space）：辅助暂存空间，在复杂处理过程中，作为数据的暂存区域</li></ul></li></ul><h3 id=options-1>Options</h3><table>
-<thead>
-<tr>
-<th>短选项</th><th>长选项</th><th>作用</th></tr></thead><tbody>
-<tr>
-<td><code>-n</code></td><td><code>--quiet/--silent</code></td><td>禁掉打印模式空间的内容，一般结合<code>p</code>命令打印处理过的行</td></tr><tr>
-<td><code>-f</code></td><td><code>--file</code></td><td>指定sed脚本文件路径，命令形式指定则对应选项<code>-e</code>，一般无需显式指定<code>-e</code></td></tr><tr>
-<td><code>-i</code></td><td><code>--in-place=[suffix]</code></td><td>原地修改文件，如指定suffix会拼接到原文件名作为原文件内容的backup</td></tr><tr>
-<td><code>-E/-r</code></td><td><code>--regexp-entended</code></td><td>使用扩展正则表达式</td></tr><tr>
-<td><code>-s</code></td><td><code>--seperate</code></td><td>指定操作多个独立的文件</td></tr><tr>
-<td></td><td><code>--posix</code></td><td>严格限定posix，禁用GNU扩展，便于简化可移植脚本的编写</td></tr></tbody></table><h3 id=commands>Commands</h3><p>基本形式：<code>[addr]X[options]</code>，其中<code>addr</code>为地址匹配模式，<code>X</code>为单字符命令，<code>options</code>指一些命令需要的额外选项。</p><ul>
-<li><strong>s命令</strong>：替换字符串
-<ul>
-<li><code>s/regexp/replacement/flags</code></li><li>根据regexp去模式空间找匹配，匹配成功后用replacement去替换掉regexp</li><li>特殊符号需插入<code>\</code>转义</li><li>常用flag：
-<ul>
-<li><code>g</code>：所有匹配均替换</li><li><code>number</code>：只替换第<code>number</code>个匹配</li><li><code>p</code>：如果发生匹配，打印替换后的模式空间</li><li><code>i/I</code>：匹配忽略字母大小写</li><li><code>m/M</code>：支持多行匹配</li></ul></li></ul></li><li>其他常见命令</li></ul><table>
-<thead>
-<tr>
-<th>cmd</th><th>作用</th></tr></thead><tbody>
-<tr>
-<td><code>d</code></td><td>删除模式空间内容，并开始下一轮匹配</td></tr><tr>
-<td><code>p</code></td><td>匹配成功时，打印模式空间，一般配合<code>-n</code>选项使用</td></tr><tr>
-<td><code>n</code></td><td>读取下一行替换当前模式空间的行，执行下一条处理命令而非第一条命令。一般用于周期性替换，如偶数行替换 <code>seq 6 | sed 'n;s/./x/'</code>。<code>N</code>命令在此基础上支持换行处理</td></tr><tr>
-<td><code>{}</code></td><td>封装一组命令用以执行</td></tr><tr>
-<td><code>a text</code></td><td>在一行后添加text</td></tr><tr>
-<td><code>i text</code></td><td>在一行前插入text</td></tr><tr>
-<td><code>c text</code></td><td>使用text替换行</td></tr><tr>
-<td><code>y/source-chars/dest-chars</code></td><td>执行字符的替换，如使用<code>0-9</code>替换<code>a-j</code>：<code>echo hello | sed 'y/abcdefghij/0123456789/'</code></td></tr><tr>
-<td><code>r filename</code></td><td>读取文件</td></tr><tr>
-<td><code>w filename</code></td><td>将模式空间内容写入到文件</td></tr><tr>
-<td><code>b label</code></td><td>类似于<code>if-else</code>的分支命令，goto label，如跳过第一行的替换：<code>printf '%s\n' a1 a2 a3 | sed -E '/1/bx ; s/a/z/ ; :x'</code></td></tr></tbody></table><ul>
-<li>与保持空间相关的命令</li></ul><table>
-<thead>
-<tr>
-<th>cmd</th><th>作用</th></tr></thead><tbody>
-<tr>
-<td><code>g</code></td><td>使用保持空间的内容替换模式空间的内容</td></tr><tr>
-<td><code>G</code></td><td>添加一个新行，并将保持空间的内容追加到模式空间</td></tr><tr>
-<td><code>h</code></td><td>使用模式空间的内容替换保持空间的内容</td></tr><tr>
-<td><code>H</code></td><td>添加一个新行，并将模式空间的内容追加到保持空间</td></tr><tr>
-<td><code>x</code></td><td>交换保持空间和模式空间的内容</td></tr></tbody></table><h3 id=地址匹配>地址匹配</h3><ul>
-<li>行号匹配
-<ul>
-<li><strong>number</strong>：第几行</li><li><strong>$</strong>: 最后一行</li><li><strong>first~step</strong>：从first开始，每隔step匹配</li></ul></li><li>正则匹配</li><li>范围匹配
-<ul>
-<li><strong>addr1,+N</strong>：匹配<code>[addr1, addr1+N]</code>行</li><li><strong>addr1,~N</strong>：匹配<code>[addr1, addr1+addr1%N]</code>行</li></ul></li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/text-process-tool/featured-image.png data-srcset="/posts/text-process-tool/featured-image.png, /posts/text-process-tool/featured-image.png 1.5x, /posts/text-process-tool/featured-image.png 2x" data-sizes=auto alt=/posts/text-process-tool/featured-image.png title=/posts/text-process-tool/featured-image.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#grep>grep</a><ul><li><a href=#options>Options</a></li><li><a href=#tips>Tips</a></li></ul></li><li><a href=#sed>sed</a><ul><li><a href=#options-1>Options</a></li><li><a href=#commands>Commands</a></li><li><a href=#地址匹配>地址匹配</a></li><li><a href=#tips-1>Tips</a></li></ul></li><li><a href=#awk>awk</a><ul><li><a href=#基本用法>基本用法</a></li><li><a href=#特殊模式>特殊模式</a></li><li><a href=#tips-2>Tips</a></li></ul></li><li><a href=#参考文档>参考文档</a></li></ul></nav></div></div><div class=content id=content><p>grep, sed, awk被称为linux文本处理三剑客，分别侧重于<strong>文本搜索</strong>，<strong>流式编辑</strong>和<strong>格式化文本</strong>。</p><h2 id=grep>grep</h2><ul><li><p><strong>文本搜索工具</strong></p></li><li><p>Schema：<code>grep [option...] [patterns] [file...]</code></p></li></ul><h3 id=options>Options</h3><table><thead><tr><th>短选项</th><th>长选项</th><th>作用</th></tr></thead><tbody><tr><td><code>-e pattern</code></td><td><code>--regexp=pattern</code></td><td>指定搜索pattern，可以不显式指定</td></tr><tr><td><code>-f file</code></td><td><code>--file=file</code></td><td>从file中获取pattern进行搜索</td></tr><tr><td><code>-i/-y</code></td><td><code>ignore-case</code></td><td>匹配忽略大小写</td></tr><tr><td><code>-v</code></td><td><code>--invert-match</code></td><td>匹配反选</td></tr><tr><td><code>-w</code></td><td><code>--word-regexp</code></td><td>指定单词完整匹配，其边界为行首或者除字母、数字、下划线以外的字符</td></tr><tr><td><code>-x</code></td><td><code>--line-regexp</code></td><td>行完整匹配</td></tr><tr><td><code>-c</code></td><td><code>--count</code></td><td>不打印匹配行，只打印匹配行数</td></tr><tr><td><code>-L</code> <code>-l</code></td><td><code>--files-without-match</code> <code>--files-with-matches</code></td><td>不打印匹配行，只打印完全不匹配/存在匹配的文件名</td></tr><tr><td><code>-m num</code></td><td><code>--max-count=num</code></td><td>指定最大匹配次数</td></tr><tr><td><code>-o</code></td><td><code>--only-matching</code></td><td>只打印完整的匹配内容，不打印匹配行</td></tr><tr><td><code>-q</code></td><td><code>--quiet/silent</code></td><td>不打印任何内容，只以返回码来描述是否存在匹配</td></tr><tr><td><code>-h</code> <code>-H</code></td><td><code>--no-filename</code> <code>--with-filename</code></td><td>不打印/打印匹配的文件名前缀，默认为打印(<code>-H</code>)</td></tr><tr><td><code>-n</code></td><td><code>--line-number</code></td><td>打印匹配的行号前缀</td></tr><tr><td><code>-A num</code></td><td><code>--after-context=num</code></td><td>打印匹配行，及其以后的num行</td></tr><tr><td><code>-B num</code></td><td><code>--before-context=num</code></td><td>打印匹配行，及其以前的num行</td></tr><tr><td><code>-C num</code></td><td><code>-context=num/-num</code></td><td>打印匹配行，及其前后的各num行</td></tr><tr><td><code>-R</code></td><td><code>--dereference-recursive</code></td><td>递归的匹配目录下所有文件，遇到符号链接正常递归</td></tr></tbody></table><h3 id=tips>Tips</h3><ul><li>grep不支持换行符的匹配</li></ul><h2 id=sed>sed</h2><ul><li><p><strong>流编辑器</strong>，用于逐行地对输入流进行基本的文本转换</p></li><li><p>schema：<code>sed SCRIPT INPUTFILE</code></p><ul><li><code>INPUTFILE</code>未指定或者指定为<code>-</code>时，表示从stdin读取内容</li><li>默认输出为stdout，可以通过<code>w</code> cmd/重定向符保存到文件，可以指定<code>-i</code>在文件内原地修改</li></ul></li><li><p>多个cmd可以通过<code>;</code>或换行来指定，或者<code>-e</code>指定。（<code>a,c,i</code>命令中不应使用<code>;</code>，会将其当做plain text）</p></li><li><p>data buffer</p><ul><li><strong>模式空间</strong>（Pattern space）：数据处理空间，sed读取每行到模式空间，进行地址匹配并执行命令</li><li><strong>保持空间</strong>（Hold space）：辅助暂存空间，在复杂处理过程中，作为数据的暂存区域</li></ul></li></ul><h3 id=options-1>Options</h3><table><thead><tr><th>短选项</th><th>长选项</th><th>作用</th></tr></thead><tbody><tr><td><code>-n</code></td><td><code>--quiet/--silent</code></td><td>禁掉打印模式空间的内容，一般结合<code>p</code>命令打印处理过的行</td></tr><tr><td><code>-f</code></td><td><code>--file</code></td><td>指定sed脚本文件路径，命令形式指定则对应选项<code>-e</code>，一般无需显式指定<code>-e</code></td></tr><tr><td><code>-i</code></td><td><code>--in-place=[suffix]</code></td><td>原地修改文件，如指定suffix会拼接到原文件名作为原文件内容的backup</td></tr><tr><td><code>-E/-r</code></td><td><code>--regexp-entended</code></td><td>使用扩展正则表达式</td></tr><tr><td><code>-s</code></td><td><code>--seperate</code></td><td>指定操作多个独立的文件</td></tr><tr><td></td><td><code>--posix</code></td><td>严格限定posix，禁用GNU扩展，便于简化可移植脚本的编写</td></tr></tbody></table><h3 id=commands>Commands</h3><p>基本形式：<code>[addr]X[options]</code>，其中<code>addr</code>为地址匹配模式，<code>X</code>为单字符命令，<code>options</code>指一些命令需要的额外选项。</p><ul><li><strong>s命令</strong>：替换字符串<ul><li><code>s/regexp/replacement/flags</code></li><li>根据regexp去模式空间找匹配，匹配成功后用replacement去替换掉regexp</li><li>特殊符号需插入<code>\</code>转义</li><li>常用flag：<ul><li><code>g</code>：所有匹配均替换</li><li><code>number</code>：只替换第<code>number</code>个匹配</li><li><code>p</code>：如果发生匹配，打印替换后的模式空间</li><li><code>i/I</code>：匹配忽略字母大小写</li><li><code>m/M</code>：支持多行匹配</li></ul></li></ul></li><li>其他常见命令</li></ul><table><thead><tr><th>cmd</th><th>作用</th></tr></thead><tbody><tr><td><code>d</code></td><td>删除模式空间内容，并开始下一轮匹配</td></tr><tr><td><code>p</code></td><td>匹配成功时，打印模式空间，一般配合<code>-n</code>选项使用</td></tr><tr><td><code>n</code></td><td>读取下一行替换当前模式空间的行，执行下一条处理命令而非第一条命令。一般用于周期性替换，如偶数行替换 <code>seq 6 | sed 'n;s/./x/'</code>。<code>N</code>命令在此基础上支持换行处理</td></tr><tr><td><code>{}</code></td><td>封装一组命令用以执行</td></tr><tr><td><code>a text</code></td><td>在一行后添加text</td></tr><tr><td><code>i text</code></td><td>在一行前插入text</td></tr><tr><td><code>c text</code></td><td>使用text替换行</td></tr><tr><td><code>y/source-chars/dest-chars</code></td><td>执行字符的替换，如使用<code>0-9</code>替换<code>a-j</code>：<code>echo hello | sed 'y/abcdefghij/0123456789/'</code></td></tr><tr><td><code>r filename</code></td><td>读取文件</td></tr><tr><td><code>w filename</code></td><td>将模式空间内容写入到文件</td></tr><tr><td><code>b label</code></td><td>类似于<code>if-else</code>的分支命令，goto label，如跳过第一行的替换：<code>printf '%s\n' a1 a2 a3 | sed -E '/1/bx ; s/a/z/ ; :x'</code></td></tr></tbody></table><ul><li>与保持空间相关的命令</li></ul><table><thead><tr><th>cmd</th><th>作用</th></tr></thead><tbody><tr><td><code>g</code></td><td>使用保持空间的内容替换模式空间的内容</td></tr><tr><td><code>G</code></td><td>添加一个新行，并将保持空间的内容追加到模式空间</td></tr><tr><td><code>h</code></td><td>使用模式空间的内容替换保持空间的内容</td></tr><tr><td><code>H</code></td><td>添加一个新行，并将模式空间的内容追加到保持空间</td></tr><tr><td><code>x</code></td><td>交换保持空间和模式空间的内容</td></tr></tbody></table><h3 id=地址匹配>地址匹配</h3><ul><li>行号匹配<ul><li><strong>number</strong>：第几行</li><li><strong>$</strong>: 最后一行</li><li><strong>first~step</strong>：从first开始，每隔step匹配</li></ul></li><li>正则匹配</li><li>范围匹配<ul><li><strong>addr1,+N</strong>：匹配<code>[addr1, addr1+N]</code>行</li><li><strong>addr1,~N</strong>：匹配<code>[addr1, addr1+addr1%N]</code>行</li></ul></li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># examples</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># examples</span>
 </span></span><span class=line><span class=cl>sed <span class=s1>&#39;4,17s/hello/world/&#39;</span> input.txt <span class=c1># 第4-17行将所有hello替换成world</span>
 </span></span><span class=line><span class=cl>sed <span class=s1>&#39;/apple/s/hello/world/&#39;</span> input.txt <span class=c1># 所有包含apple的行将hello替换为world</span>
 </span></span><span class=line><span class=cl>sed <span class=s1>&#39;2!s/hello/world/&#39;</span> input.txt &gt; output.txt <span class=c1># 除第二行以外将所有hello替换为world</span>
-</span></span></code></pre></td></tr></table></div></div><h3 id=tips-1>Tips</h3><ul>
-<li>
-<p><code>-i</code>可以指定可选参数，所以其后不应有其他的短选项</p><ul>
-<li><code>sed -Ei ...</code> => <code>sed -E -i ...</code></li><li><code>sed -iE ...</code> => <code>sed --in-place=E ...</code></li></ul></li><li>
-<p><code>label</code>用作循环处理文本，一般会配合<code>n/N</code>使用，如多行合并的示例：<code>seq 6 | sed ':x; N;s/\n//; bx;'</code></p></li><li>
-<p><code>D,G,H,N,P</code>支持多行处理，每个命令的作用与其小写命令相同</p></li></ul><h2 id=awk>awk</h2><p><strong>文本格式化工具</strong>，多用于格式化文本，生成报表。</p><h3 id=基本用法>基本用法</h3><p><strong>schema</strong></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>awk <span class=o>[</span>options<span class=o>]</span> <span class=s1>&#39;Pattern{Action}&#39;</span> file
-</span></span></code></pre></td></tr></table></div></div><p><strong>普通格式化</strong></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h3 id=tips-1>Tips</h3><ul><li><p><code>-i</code>可以指定可选参数，所以其后不应有其他的短选项</p><ul><li><code>sed -Ei ...</code> => <code>sed -E -i ...</code></li><li><code>sed -iE ...</code> => <code>sed --in-place=E ...</code></li></ul></li><li><p><code>label</code>用作循环处理文本，一般会配合<code>n/N</code>使用，如多行合并的示例：<code>seq 6 | sed ':x; N;s/\n//; bx;'</code></p></li><li><p><code>D,G,H,N,P</code>支持多行处理，每个命令的作用与其小写命令相同</p></li></ul><h2 id=awk>awk</h2><p><strong>文本格式化工具</strong>，多用于格式化文本，生成报表。</p><h3 id=基本用法>基本用法</h3><p><strong>schema</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>awk <span class=o>[</span>options<span class=o>]</span> <span class=s1>&#39;Pattern{Action}&#39;</span> file
+</span></span></code></pre></td></tr></table></div></div><p><strong>普通格式化</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># $0表示完整行，$1表示第一列，$NF表示最后一列，$(NF-1)表示倒数第二列</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># $0表示完整行，$1表示第一列，$NF表示最后一列，$(NF-1)表示倒数第二列</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;{print $1, $2}&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><p><strong>设置分隔符</strong></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p><strong>设置分隔符</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 输入字段分隔符，可以使用-F: 或者-v FS=:的形式设置</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 输入字段分隔符，可以使用-F: 或者-v FS=:的形式设置</span>
 </span></span><span class=line><span class=cl>cat /etc/passwd <span class=p>|</span> awk -F: <span class=s1>&#39;{print $1}
 </span></span></span><span class=line><span class=cl><span class=s1>
 </span></span></span><span class=line><span class=cl><span class=s1># 输出字段分隔符，可以使用-v OFS=@的形式设置
 </span></span></span><span class=line><span class=cl><span class=s1>cat /etc/passwd | awk -v FS=: -v OFS=@ &#39;</span><span class=o>{</span>print <span class=nv>$1</span>, <span class=nv>$3</span><span class=o>}</span><span class=err>&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><p><strong>内置变量</strong></p><table>
-<thead>
-<tr>
-<th>变量名</th><th>作用</th><th>默认值</th></tr></thead><tbody>
-<tr>
-<td><strong>FS</strong></td><td>输入字段分隔符</td><td>空格</td></tr><tr>
-<td><strong>OFS</strong></td><td>输出字段分隔符</td><td>空格</td></tr><tr>
-<td><strong>RS</strong></td><td>输入换行符（记录分隔符）</td><td>\n</td></tr><tr>
-<td><strong>ORS</strong></td><td>输出换行符</td><td>\n</td></tr><tr>
-<td><strong>NF</strong></td><td>字段数目</td><td></td></tr><tr>
-<td><strong>NR</strong></td><td>行号</td><td></td></tr><tr>
-<td><strong>FNR</strong></td><td>文件序号</td><td></td></tr><tr>
-<td><strong>FILENAME</strong></td><td>当前文件名</td><td></td></tr><tr>
-<td><strong>ARGC</strong></td><td>命令行参数的个数</td><td></td></tr><tr>
-<td><strong>ARGV</strong></td><td>命令行参数组成的数组</td><td></td></tr></tbody></table><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p><strong>内置变量</strong></p><table><thead><tr><th>变量名</th><th>作用</th><th>默认值</th></tr></thead><tbody><tr><td><strong>FS</strong></td><td>输入字段分隔符</td><td>空格</td></tr><tr><td><strong>OFS</strong></td><td>输出字段分隔符</td><td>空格</td></tr><tr><td><strong>RS</strong></td><td>输入换行符（记录分隔符）</td><td>\n</td></tr><tr><td><strong>ORS</strong></td><td>输出换行符</td><td>\n</td></tr><tr><td><strong>NF</strong></td><td>字段数目</td><td></td></tr><tr><td><strong>NR</strong></td><td>行号</td><td></td></tr><tr><td><strong>FNR</strong></td><td>文件序号</td><td></td></tr><tr><td><strong>FILENAME</strong></td><td>当前文件名</td><td></td></tr><tr><td><strong>ARGC</strong></td><td>命令行参数的个数</td><td></td></tr><tr><td><strong>ARGV</strong></td><td>命令行参数组成的数组</td><td></td></tr></tbody></table><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 打印行号，变量在action里不应加$，加$表示获取对应列的内容</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 打印行号，变量在action里不应加$，加$表示获取对应列的内容</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;{print NR, $2}&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><p><strong>自定义变量</strong></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p><strong>自定义变量</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 使用-v设置</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 使用-v设置</span>
 </span></span><span class=line><span class=cl>awk -v <span class=nv>a</span><span class=o>=</span><span class=s2>&#34;b&#34;</span> <span class=s1>&#39;BEGIN {print a}&#39;</span>
 </span></span><span class=line><span class=cl><span class=c1># 在action中设置，并用分号分隔</span>
 </span></span><span class=line><span class=cl>awk <span class=s1>&#39;BEGIN {a=&#34;b&#34;; print a}&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><h3 id=特殊模式>特殊模式</h3><ul>
-<li><strong>BEGIN</strong>表示在处理文本前执行action，可用于打印表头</li><li><strong>END</strong>表示在处理文本后执行action，可用于打印表尾</li></ul><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;BEGIN{print &#34;开始时执行&#34;} {print $1} END{print &#34;结束时执行&#34;}&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><p><strong>条件匹配</strong></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h3 id=特殊模式>特殊模式</h3><ul><li><strong>BEGIN</strong>表示在处理文本前执行action，可用于打印表头</li><li><strong>END</strong>表示在处理文本后执行action，可用于打印表尾</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;BEGIN{print &#34;开始时执行&#34;} {print $1} END{print &#34;结束时执行&#34;}&#39;</span>
+</span></span></code></pre></td></tr></table></div></div><p><strong>条件匹配</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 打印第2行，第一列的内容</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 打印第2行，第一列的内容</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;NR == 2 {print $1}&#39;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1># 如果第3行的值大于0，打印完整行</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;$3&gt;0 {print}&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><p><strong>正则相关</strong></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p><strong>正则相关</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -264,8 +70,7 @@
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 打印/dev开头的行</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 打印/dev开头的行</span>
 </span></span><span class=line><span class=cl><span class=c1># 正则模式采用awk &#39;/regexp1/{action}&#39;的形式</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;/^\/dev/{print}&#39;</span> 
 </span></span><span class=line><span class=cl>
@@ -276,41 +81,18 @@
 </span></span><span class=line><span class=cl><span class=c1># 打印最后一列从/d开头到/p开头之间的行</span>
 </span></span><span class=line><span class=cl><span class=c1># 范围模式采用 awk &#39;/regexp1/, /regexp2/ {action}&#39;形式</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;$NF~/^\/d/,$NF~/^\/p/{print}&#39;</span>
-</span></span></code></pre></td></tr></table></div></div><p><strong>分支动作</strong></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p><strong>分支动作</strong></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 判断分支</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 判断分支</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;{ if($2&gt;0){print &#34;大于0&#34;}else{print &#34;小于0&#34;} }&#39;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1># 循环分支</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;{ for(i=1; i&lt;3; i++){print $i}}&#39;</span>
 </span></span><span class=line><span class=cl>df <span class=p>|</span> awk <span class=s1>&#39;{ i=0; while(i&lt;4){print $0; i++}}&#39;</span> <span class=c1># 将每行打印4遍</span>
-</span></span></code></pre></td></tr></table></div></div><h3 id=tips-2>Tips</h3><ul>
-<li><code>{}</code>意味着代码块，可以通过<code>;</code>将语句划归到同一代码块中</li><li>print动作如果使用<code>,</code>分隔两列，则输出会以输出字段分隔符将两列连接起来，如果以空格分隔，则输出会将两列直接拼接打印</li><li>awk支持三元运算符</li></ul><h2 id=参考文档>参考文档</h2><ul>
-<li><a href=https://www.gnu.org/software/grep/manual/grep.html target=_blank rel="noopener noreffer">https://www.gnu.org/software/grep/manual/grep.html</a></li><li><a href=https://www.gnu.org/software/sed/manual/sed.html target=_blank rel="noopener noreffer">https://www.gnu.org/software/sed/manual/sed.html</a></li><li><a href=https://www.gnu.org/software/gawk/manual/gawk.html target=_blank rel="noopener noreffer">https://www.gnu.org/software/gawk/manual/gawk.html</a></li></ul></div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2022-03-05</span>
-</div><div class=post-info-license></div></div><div class=post-info-line>
-<div class=post-info-md></div><div class=post-info-share>
-<span></span>
-</div></div></div><div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/linux/>linux</a></section><section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section></div><div class=post-nav><a href=/posts/iptables/ class=prev rel=prev title=Iptables概要整理><i class="fas fa-angle-left fa-fw"></i>Iptables概要整理</a>
-<a href=/posts/go-modules/ class=next rel=next title="Go modules要点梳理">Go modules要点梳理<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
-</noscript></div></article></div></main><footer class=footer>
-<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
+</span></span></code></pre></td></tr></table></div></div><h3 id=tips-2>Tips</h3><ul><li><code>{}</code>意味着代码块，可以通过<code>;</code>将语句划归到同一代码块中</li><li>print动作如果使用<code>,</code>分隔两列，则输出会以输出字段分隔符将两列连接起来，如果以空格分隔，则输出会将两列直接拼接打印</li><li>awk支持三元运算符</li></ul><h2 id=参考文档>参考文档</h2><ul><li><a href=https://www.gnu.org/software/grep/manual/grep.html target=_blank rel="noopener noreffer">https://www.gnu.org/software/grep/manual/grep.html</a></li><li><a href=https://www.gnu.org/software/sed/manual/sed.html target=_blank rel="noopener noreffer">https://www.gnu.org/software/sed/manual/sed.html</a></li><li><a href=https://www.gnu.org/software/gawk/manual/gawk.html target=_blank rel="noopener noreffer">https://www.gnu.org/software/gawk/manual/gawk.html</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2022-03-05</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/linux/>linux</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/iptables/ class=prev rel=prev title=Iptables概要整理><i class="fas fa-angle-left fa-fw"></i>Iptables概要整理</a>
+<a href=/posts/go-modules/ class=next rel=next title="Go modules要点梳理">Go modules要点梳理<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span><span class=icp-splitter>&nbsp;|&nbsp;</span><br class=icp-br><span class=icp><a href=http://beian.miit.gov.cn/>京ICP备2021034884号-1</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

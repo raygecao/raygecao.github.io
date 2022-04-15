@@ -1,90 +1,17 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>Telepresence——本地调试k8s服务利器 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Telepresence——本地调试k8s服务利器">
-<meta property="og:description" content="Telepresence用于在本地轻松开发和调试服务，同时将服务代理到远程 Kubernetes 集群。 使用 telepresence 可以为本地服务使用自定义工具（如调试器和 IDE）， 并提供对 Configmap、Secret 和远程集群上运行的服务的完全访问。">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://raygecao.github.io/posts/telepresence/"><meta property="og:image" content="https://raygecao.github.io/posts/telepresence/featured-image.png"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-10-02T10:16:55+08:00">
-<meta property="article:modified_time" content="2021-10-02T10:16:55+08:00">
-<meta name=twitter:card content="summary_large_image">
-<meta name=twitter:image content="https://raygecao.github.io/posts/telepresence/featured-image.png">
-<meta name=twitter:title content="Telepresence——本地调试k8s服务利器">
-<meta name=twitter:description content="Telepresence用于在本地轻松开发和调试服务，同时将服务代理到远程 Kubernetes 集群。 使用 telepresence 可以为本地服务使用自定义工具（如调试器和 IDE）， 并提供对 Configmap、Secret 和远程集群上运行的服务的完全访问。">
-<meta name=application-name content="拾遗之途">
-<meta name=apple-mobile-web-app-title content="拾遗之途">
-<meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/telepresence/><link rel=prev href=https://raygecao.github.io/posts/container-from-scratch/><link rel=next href=https://raygecao.github.io/posts/storage-driver/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Telepresence——本地调试k8s服务利器","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/telepresence\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/telepresence\/featured-image.png","width":501,"height":261}],"genre":"posts","keywords":"k8s","wordcount":3860,"url":"https:\/\/raygecao.github.io\/posts\/telepresence\/","datePublished":"2021-10-02T10:16:55+08:00","dateModified":"2021-10-02T10:16:55+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=拾遗之途>拾遗之途</a>
-</div><div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Telepresence——本地调试k8s服务利器 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Telepresence——本地调试k8s服务利器"><meta property="og:description" content="Telepresence用于在本地轻松开发和调试服务，同时将服务代理到远程 Kubernetes 集群。 使用 telepresence 可以为本地服务使用自定义工具（如调试器和 IDE）， 并提供对 Configmap、Secret 和远程集群上运行的服务的完全访问。"><meta property="og:type" content="article"><meta property="og:url" content="https://raygecao.github.io/posts/telepresence/"><meta property="og:image" content="https://raygecao.github.io/posts/telepresence/featured-image.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-10-02T10:16:55+08:00"><meta property="article:modified_time" content="2021-10-02T10:16:55+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://raygecao.github.io/posts/telepresence/featured-image.png"><meta name=twitter:title content="Telepresence——本地调试k8s服务利器"><meta name=twitter:description content="Telepresence用于在本地轻松开发和调试服务，同时将服务代理到远程 Kubernetes 集群。 使用 telepresence 可以为本地服务使用自定义工具（如调试器和 IDE）， 并提供对 Configmap、Secret 和远程集群上运行的服务的完全访问。"><meta name=application-name content="拾遗之途"><meta name=apple-mobile-web-app-title content="拾遗之途"><meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/telepresence/><link rel=prev href=https://raygecao.github.io/posts/container-from-scratch/><link rel=next href=https://raygecao.github.io/posts/storage-driver/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Telepresence——本地调试k8s服务利器","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/telepresence\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/telepresence\/featured-image.png","width":501,"height":261}],"genre":"posts","keywords":"k8s","wordcount":3860,"url":"https:\/\/raygecao.github.io\/posts\/telepresence\/","datePublished":"2021-10-02T10:16:55+08:00","dateModified":"2021-10-02T10:16:55+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div></div></div></header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=拾遗之途>拾遗之途</a>
-</div><div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div></div><div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></header><div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div></div><main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Telepresence——本地调试k8s服务利器</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-10-02>2021-10-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3860 字&nbsp;
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Telepresence——本地调试k8s服务利器</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-10-02>2021-10-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3860 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;<span id=/posts/telepresence/ class=leancloud_visitors data-flag-title=Telepresence——本地调试k8s服务利器>
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
-</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/telepresence/featured-image.png data-srcset="/posts/telepresence/featured-image.png, /posts/telepresence/featured-image.png 1.5x, /posts/telepresence/featured-image.png 2x" data-sizes=auto alt=/posts/telepresence/featured-image.png title=/posts/telepresence/featured-image.png></div><div class="details toc" id=toc-static kept>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
-<ul>
-<li><a href=#背景>背景</a></li><li><a href=#架构>架构</a></li><li><a href=#使用>使用</a>
-<ul>
-<li><a href=#准备工作>准备工作</a></li><li><a href=#连接到集群>连接到集群</a></li><li><a href=#服务全量拦截>服务全量拦截</a></li><li><a href=#拦截preview-url>拦截Preview URL</a></li></ul></li><li><a href=#参考文献>参考文献</a></li></ul></nav></div></div><div class=content id=content><p>Telepresence用于在本地轻松开发和调试服务，同时将服务代理到远程 Kubernetes 集群。 使用 telepresence 可以为本地服务使用自定义工具（如调试器和 IDE）， 并提供对 Configmap、Secret 和远程集群上运行的服务的完全访问。</p><h2 id=背景>背景</h2><p>应用容器化带来了高效率、强扩展性等优势的的同时也带来一些复杂性。尤其对于开发人员，需要将修改部署到容器中（<strong>构建容器->发布到registry->部署到集群中</strong>）。如果使用k8s这种容器平台，还需要维护容器编排及配置从而延长开发迭代周期。总之，在容器化应用中，研发要对软件的整个生命周期负责。</p><p>为了提升开发效率，需要引入将远程k8s集群与本地开发桥接起来的方法，以此减少反馈时间，提升debug效率。加速反馈的最佳实现方式是<strong>单个本地服务，其他依赖服务都是远程</strong>的，telepresence便是基于此思想的一个加速反馈， 便于调试及协作的开发者工具。</p><p>Telepresence被设计为让k8s<strong>开发者的笔记本如同加入到了k8s集群中</strong>一样，能够将服务在本地运行，并且被proxy到远端集群中。</p><h2 id=架构>架构</h2><figure><a class=lightgallery href=/posts/telepresence/architecture.svg title=/posts/telepresence/architecture.svg data-thumbnail=/posts/telepresence/architecture.svg data-sub-html="<h2>Telepresence架构图</h2>">
-<img class=lazyload src=/svg/loading.min.svg data-src=architecture.svg data-srcset="/posts/telepresence/architecture.svg, architecture.svg 1.5x, /posts/telepresence/architecture.svg 2x" data-sizes=auto alt=/posts/telepresence/architecture.svg height=200 width=800>
-</a><figcaption class=image-caption>Telepresence架构图</figcaption></figure><ul>
-<li>
-<p><strong>Telepresence CLI</strong>：用于编排出所有其他的组件，如telepresence daemon，traffic manager，授权Ambassador Cloud等。既起到bootstrap作用，又起到发送控制命令作用。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/telepresence/featured-image.png data-srcset="/posts/telepresence/featured-image.png, /posts/telepresence/featured-image.png 1.5x, /posts/telepresence/featured-image.png 2x" data-sizes=auto alt=/posts/telepresence/featured-image.png title=/posts/telepresence/featured-image.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#背景>背景</a></li><li><a href=#架构>架构</a></li><li><a href=#使用>使用</a><ul><li><a href=#准备工作>准备工作</a></li><li><a href=#连接到集群>连接到集群</a></li><li><a href=#服务全量拦截>服务全量拦截</a></li><li><a href=#拦截preview-url>拦截Preview URL</a></li></ul></li><li><a href=#参考文献>参考文献</a></li></ul></nav></div></div><div class=content id=content><p>Telepresence用于在本地轻松开发和调试服务，同时将服务代理到远程 Kubernetes 集群。 使用 telepresence 可以为本地服务使用自定义工具（如调试器和 IDE）， 并提供对 Configmap、Secret 和远程集群上运行的服务的完全访问。</p><h2 id=背景>背景</h2><p>应用容器化带来了高效率、强扩展性等优势的的同时也带来一些复杂性。尤其对于开发人员，需要将修改部署到容器中（<strong>构建容器->发布到registry->部署到集群中</strong>）。如果使用k8s这种容器平台，还需要维护容器编排及配置从而延长开发迭代周期。总之，在容器化应用中，研发要对软件的整个生命周期负责。</p><p>为了提升开发效率，需要引入将远程k8s集群与本地开发桥接起来的方法，以此减少反馈时间，提升debug效率。加速反馈的最佳实现方式是<strong>单个本地服务，其他依赖服务都是远程</strong>的，telepresence便是基于此思想的一个加速反馈， 便于调试及协作的开发者工具。</p><p>Telepresence被设计为让k8s<strong>开发者的笔记本如同加入到了k8s集群中</strong>一样，能够将服务在本地运行，并且被proxy到远端集群中。</p><h2 id=架构>架构</h2><figure><a class=lightgallery href=/posts/telepresence/architecture.svg title=/posts/telepresence/architecture.svg data-thumbnail=/posts/telepresence/architecture.svg data-sub-html="<h2>Telepresence架构图</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=architecture.svg data-srcset="/posts/telepresence/architecture.svg, architecture.svg 1.5x, /posts/telepresence/architecture.svg 2x" data-sizes=auto alt=/posts/telepresence/architecture.svg height=200 width=800></a><figcaption class=image-caption>Telepresence架构图</figcaption></figure><ul><li><p><strong>Telepresence CLI</strong>：用于编排出所有其他的组件，如telepresence daemon，traffic manager，授权Ambassador Cloud等。既起到bootstrap作用，又起到发送控制命令作用。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -92,8 +19,7 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 首次执行telepresence list cli</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 首次执行telepresence list cli</span>
 </span></span><span class=line><span class=cl>$ telepresence list
 </span></span><span class=line><span class=cl>Launching Telepresence Daemon v2.3.2 <span class=o>(</span>api v3<span class=o>)</span>
 </span></span><span class=line><span class=cl>Connecting to traffic manager...
@@ -101,17 +27,7 @@
 </span></span><span class=line><span class=cl>frontend      : ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
 </span></span><span class=line><span class=cl>redis-follower: ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
 </span></span><span class=line><span class=cl>redis-leader  : ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>上例可以看到，在初次执行telepresence cli时，其先启动了telepresence daemon，紧接着安装并连接traffic manager，最后才返回对应cmd的结果。</p></li><li>
-<p><strong>Telepresence Daemon</strong>：是开发者本地的代理点。</p></li><li>
-<p><strong>Traffic Manager</strong>：集群流量入口点，也是流量控制的中枢代理。同时它会与Ambassador Cloud交互以支持<strong>Preview URL</strong>的特性。</p></li><li>
-<p><strong>Traffic Agent</strong>：用于流量代理的sidecar，主要根据拦截规则判断到达的请求，要么将请求直接交付给pod对应的端口，要么路由到traffic manager以转发到本地服务中。</p></li></ul><div class="details admonition note open">
-<div class="details-summary admonition-title">
-<i class="icon fas fa-pencil-alt fa-fw"></i>拦截方式<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div><div class=details-content>
-<div class=admonition-content>目前主要的拦截方式有两种：<strong>全量拦截</strong>和<strong>preview URL</strong>，前者traffic agent会全量地路由给traffic manager；后者会对请求进行判断，只有preview URL请求会路由到traffic manager，其他请求交付给pod内的服务。</div></div></div><ul>
-<li><strong>Ambassador Cloud</strong>：产生临时域名，将preview URL从授权的用户路由到traffic manager。</li></ul><h2 id=使用>使用</h2><h3 id=准备工作>准备工作</h3><p><a href=https://www.telepresence.io/docs/latest/install/ target=_blank rel="noopener noreffer">安装telepresence</a></p><p><a href=https://kubernetes.io/docs/tutorials/stateless-application/guestbook/ target=_blank rel="noopener noreffer">k8s集群中安装guestbook demo</a></p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>上例可以看到，在初次执行telepresence cli时，其先启动了telepresence daemon，紧接着安装并连接traffic manager，最后才返回对应cmd的结果。</p></li><li><p><strong>Telepresence Daemon</strong>：是开发者本地的代理点。</p></li><li><p><strong>Traffic Manager</strong>：集群流量入口点，也是流量控制的中枢代理。同时它会与Ambassador Cloud交互以支持<strong>Preview URL</strong>的特性。</p></li><li><p><strong>Traffic Agent</strong>：用于流量代理的sidecar，主要根据拦截规则判断到达的请求，要么将请求直接交付给pod对应的端口，要么路由到traffic manager以转发到本地服务中。</p></li></ul><div class="details admonition note open"><div class="details-summary admonition-title"><i class="icon fas fa-pencil-alt fa-fw"></i>拦截方式<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content>目前主要的拦截方式有两种：<strong>全量拦截</strong>和<strong>preview URL</strong>，前者traffic agent会全量地路由给traffic manager；后者会对请求进行判断，只有preview URL请求会路由到traffic manager，其他请求交付给pod内的服务。</div></div></div><ul><li><strong>Ambassador Cloud</strong>：产生临时域名，将preview URL从授权的用户路由到traffic manager。</li></ul><h2 id=使用>使用</h2><h3 id=准备工作>准备工作</h3><p><a href=https://www.telepresence.io/docs/latest/install/ target=_blank rel="noopener noreffer">安装telepresence</a></p><p><a href=https://kubernetes.io/docs/tutorials/stateless-application/guestbook/ target=_blank rel="noopener noreffer">k8s集群中安装guestbook demo</a></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -119,8 +35,7 @@
 </span><span class=lnt>6
 </span><span class=lnt>7
 </span><span class=lnt>8
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl get pod
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl get pod
 </span></span><span class=line><span class=cl>NAME                             READY   STATUS    RESTARTS   AGE
 </span></span><span class=line><span class=cl>frontend-7bcb4574cb-j2wwz        1/1     Running   <span class=m>0</span>          39s
 </span></span><span class=line><span class=cl>frontend-7bcb4574cb-rbxkj        1/1     Running   <span class=m>0</span>          41s
@@ -128,31 +43,23 @@
 </span></span><span class=line><span class=cl>redis-follower-dd4df4648-pvd2c   1/1     Running   <span class=m>5</span>          50d
 </span></span><span class=line><span class=cl>redis-follower-dd4df4648-wzf54   1/1     Running   <span class=m>5</span>          50d
 </span></span><span class=line><span class=cl>redis-leader-6d7765b8f6-mbzm8    1/1     Running   <span class=m>5</span>          50d
-</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl get svc
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl get svc
 </span></span><span class=line><span class=cl>NAME             TYPE        CLUSTER-IP      EXTERNAL-IP   PORT<span class=o>(</span>S<span class=o>)</span>    AGE
 </span></span><span class=line><span class=cl>frontend         ClusterIP   10.111.60.121   &lt;none&gt;        80/TCP     50d
 </span></span><span class=line><span class=cl>kubernetes       ClusterIP   10.96.0.1       &lt;none&gt;        443/TCP    50d
 </span></span><span class=line><span class=cl>redis-follower   ClusterIP   10.96.4.108     &lt;none&gt;        6379/TCP   50d
 </span></span><span class=line><span class=cl>redis-leader     ClusterIP   10.101.93.34    &lt;none&gt;        6379/TCP   50d
-</span></span></code></pre></td></tr></table></div></div><p>由于k8s环境是通过minikube虚拟机搭建的，为了方便在宿主机访问集群内部服务，我们使用port-forward进行端口转发。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>由于k8s环境是通过minikube虚拟机搭建的，为了方便在宿主机访问集群内部服务，我们使用port-forward进行端口转发。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 集群服务器148开端口转发，将148宿主机上12180端口的流量转发到集群内frontend service中</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 集群服务器148开端口转发，将148宿主机上12180端口的流量转发到集群内frontend service中</span>
 </span></span><span class=line><span class=cl>$ kubectl port-forward svc/frontend 12180:80 --address<span class=o>=</span>0.0.0.0
-</span></span></code></pre></td></tr></table></div></div><p>验证一下frontend service提供的是guestbook服务。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>验证一下frontend service提供的是guestbook服务。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -179,8 +86,7 @@
 </span><span class=lnt>25
 </span><span class=lnt>26
 </span><span class=lnt>27
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ curl 10.122.101.148:12180
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ curl 10.122.101.148:12180
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>&lt;html ng-app<span class=o>=</span><span class=s2>&#34;redis&#34;</span>&gt;
 </span></span><span class=line><span class=cl>  &lt;head&gt;
@@ -207,38 +113,27 @@
 </span></span><span class=line><span class=cl>    &lt;/div&gt;
 </span></span><span class=line><span class=cl>  &lt;/body&gt;
 </span></span><span class=line><span class=cl>&lt;/html&gt;
-</span></span></code></pre></td></tr></table></div></div><h3 id=连接到集群>连接到集群</h3><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><h3 id=连接到集群>连接到集群</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence connect
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence connect
 </span></span><span class=line><span class=cl>Launching Telepresence Daemon v2.3.2 <span class=o>(</span>api v3<span class=o>)</span>
 </span></span><span class=line><span class=cl>Connecting to traffic manager...
 </span></span><span class=line><span class=cl>Connected to context minikube <span class=o>(</span>https://10.122.101.148:38443<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>需要确保<code>kubeconfig</code>的配置，示例中的context连接到的apiserver为<code>10.122.101.148:38443</code></p><h3 id=服务全量拦截>服务全量拦截</h3><p>查看可拦截的服务列表：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>需要确保<code>kubeconfig</code>的配置，示例中的context连接到的apiserver为<code>10.122.101.148:38443</code></p><h3 id=服务全量拦截>服务全量拦截</h3><p>查看可拦截的服务列表：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence list
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence list
 </span></span><span class=line><span class=cl>frontend      : ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
 </span></span><span class=line><span class=cl>redis-follower: ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
 </span></span><span class=line><span class=cl>redis-leader  : ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>结果中可以看出有三个service可以拦截，并且都没有安装traffic agent。不过不用担心，我们在进行服务拦截时会自动向pod内注入traffic agent。</p><p>拦截frontend留言板服务，拦截前我们先本地18888端口起一个nginx服务。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>结果中可以看出有三个service可以拦截，并且都没有安装traffic agent。不过不用担心，我们在进行服务拦截时会自动向pod内注入traffic agent。</p><p>拦截frontend留言板服务，拦截前我们先本地18888端口起一个nginx服务。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ docker run --rm --name nginx-test -p 18888:80 -d nginx:1.21.1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ docker run --rm --name nginx-test -p 18888:80 -d nginx:1.21.1
 </span></span><span class=line><span class=cl>9d514b006d2c386b7d3676bb40d1dafcbf9211ba9737e213e0dac180496c8d3a
-</span></span></code></pre></td></tr></table></div></div><p>验证一下nginx可以正常访问。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>验证一下nginx可以正常访问。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -264,8 +159,7 @@
 </span><span class=lnt>24
 </span><span class=lnt>25
 </span><span class=lnt>26
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ curl localhost:18888
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ curl localhost:18888
 </span></span><span class=line><span class=cl>&lt;!DOCTYPE html&gt;
 </span></span><span class=line><span class=cl>&lt;html&gt;
 </span></span><span class=line><span class=cl>&lt;head&gt;
@@ -291,9 +185,7 @@
 </span></span><span class=line><span class=cl>&lt;p&gt;&lt;em&gt;Thank you <span class=k>for</span> using nginx.&lt;/em&gt;&lt;/p&gt;
 </span></span><span class=line><span class=cl>&lt;/body&gt;
 </span></span><span class=line><span class=cl>&lt;/html&gt;
-</span></span></code></pre></td></tr></table></div></div><p>下面我们来看看如何使用本地的nginx service来拦截集群中的frontend service。其实不过在本地执行一句简单的命令：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>下面我们来看看如何使用本地的nginx service来拦截集群中的frontend service。其实不过在本地执行一句简单的命令：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -304,8 +196,7 @@
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># telepresence intercept &lt;service-name&gt; --port &lt;local-port&gt;[:&lt;remote-port&gt;] --env-file &lt;path-to-env-file&gt;</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># telepresence intercept &lt;service-name&gt; --port &lt;local-port&gt;[:&lt;remote-port&gt;] --env-file &lt;path-to-env-file&gt;</span>
 </span></span><span class=line><span class=cl>$ telepresence intercept frontend --port 18888:80 --env-file frontend-svc.env
 </span></span><span class=line><span class=cl>Using Deployment frontend
 </span></span><span class=line><span class=cl>intercepted
@@ -316,24 +207,19 @@
 </span></span><span class=line><span class=cl>    Service Port Identifier: <span class=m>80</span>
 </span></span><span class=line><span class=cl>    Volume Mount Error     : sshfs is not installed on your <span class=nb>local</span> machine
 </span></span><span class=line><span class=cl>    Intercepting           : all TCP connections
-</span></span></code></pre></td></tr></table></div></div><p>这样，我们便将对<code>frontend:80</code>的访问就会被转发到<code>localhost:18888</code>，即访问到的是nginx服务。验证一下：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>这样，我们便将对<code>frontend:80</code>的访问就会被转发到<code>localhost:18888</code>，即访问到的是nginx服务。验证一下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>curl 10.122.101.148:12180 <span class=p>|</span> head -5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>curl 10.122.101.148:12180 <span class=p>|</span> head -5
 </span></span><span class=line><span class=cl>&lt;!DOCTYPE html&gt;
 </span></span><span class=line><span class=cl>&lt;html&gt;
 </span></span><span class=line><span class=cl>&lt;head&gt;
 </span></span><span class=line><span class=cl>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
 </span></span><span class=line><span class=cl>&lt;style&gt;
-</span></span></code></pre></td></tr></table></div></div><p>使用telepresence cli可以查看到服务的拦截状态：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>使用telepresence cli可以查看到服务的拦截状态：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -343,8 +229,7 @@
 </span><span class=lnt> 8
 </span><span class=lnt> 9
 </span><span class=lnt>10
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence list
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence list
 </span></span><span class=line><span class=cl>frontend      : intercepted
 </span></span><span class=line><span class=cl>    Intercept name         : frontend
 </span></span><span class=line><span class=cl>    State                  : ACTIVE
@@ -354,9 +239,7 @@
 </span></span><span class=line><span class=cl>    Intercepting           : all TCP connections
 </span></span><span class=line><span class=cl>redis-follower: ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
 </span></span><span class=line><span class=cl>redis-leader  : ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>此外，frontend service的endpoints也从80端口（frontend container）切换到了9900端口（traffic agent）。这意味着pod内访问9900端口（traffic agent）会经由traffic manager转发到本地nginx服务中。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>此外，frontend service的endpoints也从80端口（frontend container）切换到了9900端口（traffic agent）。这意味着pod内访问9900端口（traffic agent）会经由traffic manager转发到本地nginx服务中。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -373,8 +256,7 @@
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl describe svc frontend
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl describe svc frontend
 </span></span><span class=line><span class=cl>Name:              frontend
 </span></span><span class=line><span class=cl>Namespace:         default
 </span></span><span class=line><span class=cl>Labels:            <span class=nv>app</span><span class=o>=</span>guestbook
@@ -391,13 +273,7 @@
 </span></span><span class=line><span class=cl>Endpoints:         172.18.0.2:9900,172.18.0.7:9900,172.18.0.8:9900  <span class=c1># 端口从80切换到了9900</span>
 </span></span><span class=line><span class=cl>Session Affinity:  None
 </span></span><span class=line><span class=cl>Events:            &lt;none&gt;
-</span></span></code></pre></td></tr></table></div></div><div class="details admonition info open">
-<div class="details-summary admonition-title">
-<i class="icon fas fa-info-circle fa-fw"></i>信息<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div><div class=details-content>
-<div class=admonition-content><p>上面提及到在执行<code>telepresence intercept</code>时会自动注入traffic agent这个sidecar，可以观察一下frontend svc对应的endpoint pod的信息。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><div class="details admonition info open"><div class="details-summary admonition-title"><i class="icon fas fa-info-circle fa-fw"></i>信息<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content><p>上面提及到在执行<code>telepresence intercept</code>时会自动注入traffic agent这个sidecar，可以观察一下frontend svc对应的endpoint pod的信息。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -420,8 +296,7 @@
 </span><span class=lnt>21
 </span><span class=lnt>22
 </span><span class=lnt>23
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl get pod
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ kubectl get pod
 </span></span><span class=line><span class=cl>NAME                             READY   STATUS    RESTARTS   AGE
 </span></span><span class=line><span class=cl>frontend-698684655-bfd2l         2/2     Running   <span class=m>0</span>          7m50s
 </span></span><span class=line><span class=cl>frontend-698684655-ddh4c         2/2     Running   <span class=m>0</span>          7m54s
@@ -444,9 +319,7 @@
 </span></span><span class=line><span class=cl>    Port:          9900/TCP
 </span></span><span class=line><span class=cl>    ...
 </span></span><span class=line><span class=cl>......
-</span></span></code></pre></td></tr></table></div></div></div></div></div><h3 id=拦截preview-url>拦截Preview URL</h3><p>一般在开发环境中，会有多个开发人员协同工作。上述的拦截方案的最大问题是<strong>traffic agent无脑将请求全部转发给traffic manger，从而将流量全部转发到本地</strong>。这势必会造成对其他开发人员的影响，因此我们需要能够在不影响其他人的情况下进行拦截调试。实现上利用了context 传递来实现可控的拦截，借助<strong>Ambassador Cloud的preview URL</strong>给我们提供了可控拦截的能力。</p><p>Preview URL需要与ingress配合使用，所以第一步我们先创建一个ingress：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div></div></div></div><h3 id=拦截preview-url>拦截Preview URL</h3><p>一般在开发环境中，会有多个开发人员协同工作。上述的拦截方案的最大问题是<strong>traffic agent无脑将请求全部转发给traffic manger，从而将流量全部转发到本地</strong>。这势必会造成对其他开发人员的影响，因此我们需要能够在不影响其他人的情况下进行拦截调试。实现上利用了context 传递来实现可控的拦截，借助<strong>Ambassador Cloud的preview URL</strong>给我们提供了可控拦截的能力。</p><p>Preview URL需要与ingress配合使用，所以第一步我们先创建一个ingress：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -483,8 +356,7 @@
 </span><span class=lnt>35
 </span><span class=lnt>36
 </span><span class=lnt>37
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ cat ingress.yaml
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ cat ingress.yaml
 </span></span><span class=line><span class=cl>apiVersion: networking.k8s.io/v1
 </span></span><span class=line><span class=cl>kind: Ingress
 </span></span><span class=line><span class=cl>metadata:
@@ -521,22 +393,17 @@
 </span></span><span class=line><span class=cl>  Type    Reason  Age                  From                      Message
 </span></span><span class=line><span class=cl>  ----    ------  ----                 ----                      -------
 </span></span><span class=line><span class=cl>  Normal  UPDATE  3m54s <span class=o>(</span>x2 over 20d<span class=o>)</span>  nginx-ingress-controller  Ingress default/demo-ingress
-</span></span></code></pre></td></tr></table></div></div><p>然后我们清理掉之前的拦截。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>然后我们清理掉之前的拦截。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence leave frontend
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence leave frontend
 </span></span><span class=line><span class=cl>$ telepresence list
 </span></span><span class=line><span class=cl>frontend      : ready to intercept <span class=o>(</span>traffic-agent already installed<span class=o>)</span>
 </span></span><span class=line><span class=cl>redis-follower: ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
 </span></span><span class=line><span class=cl>redis-leader  : ready to intercept <span class=o>(</span>traffic-agent not yet installed<span class=o>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>注册并登陆Ambassador Cloud，然后重新进行拦截：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>注册并登陆Ambassador Cloud，然后重新进行拦截：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -572,8 +439,7 @@
 </span><span class=lnt>34
 </span><span class=lnt>35
 </span><span class=lnt>36
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence intercept frontend --port 18888:80 --env-file frontend-svc.env
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ telepresence intercept frontend --port 18888:80 --env-file frontend-svc.env
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>To create a preview URL, telepresence needs to know how cluster
 </span></span><span class=line><span class=cl>ingress works <span class=k>for</span> this service.  Please Confirm the ingress to use.
@@ -609,15 +475,7 @@
 </span></span><span class=line><span class=cl>      <span class=s1>&#39;x-telepresence-intercept-id: 2da7518d-ce3f-4732-9c02-f144de3443a8:frontend&#39;</span>
 </span></span><span class=line><span class=cl>    Preview URL            : https://musing-kirch-7616.preview.edgestack.me
 </span></span><span class=line><span class=cl>    Layer <span class=m>5</span> Hostname       : frontend.raygecao.com
-</span></span></code></pre></td></tr></table></div></div><div class="details admonition note open">
-<div class="details-summary admonition-title">
-<i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div><div class=details-content>
-<div class=admonition-content><p>由于之前拦截时配置过一次，因此这一次一路默认就好，第一次配置需要结合自身的ingress来配置。</p><p>为了使hostname可以访问到集群内的服务，需要手动添加一条DNS记录将hostname resolve到ingress节点上（即在hosts文件中添加一条<code>172.17.0.40 frontend.raygecao.com</code>）。或者利用ingress路由请求的原理，直接将hostname指定到<code>Host</code>header进行路由。</p></div></div></div><p>可以看到，Ambassador Cloud为我们生成了一个preview URL <code>https://musing-kirch-7616.preview.edgestack.me</code>，并且添加了转发规则：所有包含<code>'x-telepresence-intercept-id: 2da7518d-ce3f-4732-9c02-f144de3443a8:frontend'</code>header并且host是<strong>frontend.raygecao.com</strong>的request会被本地nginx服务拦截。</p><figure><a class=lightgallery href=/posts/telepresence/ambassador.png title=/posts/telepresence/ambassador.png data-thumbnail=/posts/telepresence/ambassador.png data-sub-html="<h2>Ambassador Cloud进行服务拦截管理</h2>">
-<img class=lazyload src=/svg/loading.min.svg data-src=ambassador.png data-srcset="/posts/telepresence/ambassador.png, ambassador.png 1.5x, /posts/telepresence/ambassador.png 2x" data-sizes=auto alt=/posts/telepresence/ambassador.png height=200 width=800>
-</a><figcaption class=image-caption>Ambassador Cloud进行服务拦截管理</figcaption></figure><p>从效果上看，添加了这种特殊的header，就会将流量导到preview URL上，这正是ambassador cloud给予我们的便利。我们验证一下具体的拦截情况。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><div class="details admonition note open"><div class="details-summary admonition-title"><i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content><p>由于之前拦截时配置过一次，因此这一次一路默认就好，第一次配置需要结合自身的ingress来配置。</p><p>为了使hostname可以访问到集群内的服务，需要手动添加一条DNS记录将hostname resolve到ingress节点上（即在hosts文件中添加一条<code>172.17.0.40 frontend.raygecao.com</code>）。或者利用ingress路由请求的原理，直接将hostname指定到<code>Host</code>header进行路由。</p></div></div></div><p>可以看到，Ambassador Cloud为我们生成了一个preview URL <code>https://musing-kirch-7616.preview.edgestack.me</code>，并且添加了转发规则：所有包含<code>'x-telepresence-intercept-id: 2da7518d-ce3f-4732-9c02-f144de3443a8:frontend'</code>header并且host是<strong>frontend.raygecao.com</strong>的request会被本地nginx服务拦截。</p><figure><a class=lightgallery href=/posts/telepresence/ambassador.png title=/posts/telepresence/ambassador.png data-thumbnail=/posts/telepresence/ambassador.png data-sub-html="<h2>Ambassador Cloud进行服务拦截管理</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=ambassador.png data-srcset="/posts/telepresence/ambassador.png, ambassador.png 1.5x, /posts/telepresence/ambassador.png 2x" data-sizes=auto alt=/posts/telepresence/ambassador.png height=200 width=800></a><figcaption class=image-caption>Ambassador Cloud进行服务拦截管理</figcaption></figure><p>从效果上看，添加了这种特殊的header，就会将流量导到preview URL上，这正是ambassador cloud给予我们的便利。我们验证一下具体的拦截情况。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -634,8 +492,7 @@
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 正常的请求不会被本地的nginx服务拦截</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 正常的请求不会被本地的nginx服务拦截</span>
 </span></span><span class=line><span class=cl>$ curl 10.122.101.148:9999 -H <span class=s1>&#39;Host: frontend.raygecao.com&#39;</span> <span class=p>|</span> head -5
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>&lt;html ng-app<span class=o>=</span><span class=s2>&#34;redis&#34;</span>&gt;
@@ -652,25 +509,6 @@
 </span></span><span class=line><span class=cl>&lt;head&gt;
 </span></span><span class=line><span class=cl>&lt;title&gt;Welcome to nginx!&lt;/title&gt;
 </span></span><span class=line><span class=cl>&lt;style&gt;
-</span></span></code></pre></td></tr></table></div></div><h2 id=参考文献>参考文献</h2><ul>
-<li><a href=https://www.telepresence.io/ target=_blank rel="noopener noreffer">Telepresence官方文档</a></li></ul></div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2021-10-02</span>
-</div><div class=post-info-license></div></div><div class=post-info-line>
-<div class=post-info-md></div><div class=post-info-share>
-<span></span>
-</div></div></div><div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/k8s/>k8s</a></section><section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section></div><div class=post-nav><a href=/posts/container-from-scratch/ class=prev rel=prev title="Containers from scratch探究"><i class="fas fa-angle-left fa-fw"></i>Containers from scratch探究</a>
-<a href=/posts/storage-driver/ class=next rel=next title="浅谈Docker Storage Driver">浅谈Docker Storage Driver<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
-</noscript></div></article></div></main><footer class=footer>
-<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
+</span></span></code></pre></td></tr></table></div></div><h2 id=参考文献>参考文献</h2><ul><li><a href=https://www.telepresence.io/ target=_blank rel="noopener noreffer">Telepresence官方文档</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2021-10-02</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/k8s/>k8s</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/container-from-scratch/ class=prev rel=prev title="Containers from scratch探究"><i class="fas fa-angle-left fa-fw"></i>Containers from scratch探究</a>
+<a href=/posts/storage-driver/ class=next rel=next title="浅谈Docker Storage Driver">浅谈Docker Storage Driver<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span><span class=icp-splitter>&nbsp;|&nbsp;</span><br class=icp-br><span class=icp><a href=http://beian.miit.gov.cn/>京ICP备2021034884号-1</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>

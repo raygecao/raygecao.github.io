@@ -1,91 +1,17 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>Containers from scratch探究 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Containers from scratch探究">
-<meta property="og:description" content="通过隔离namespace与cgroup构建出一个小型容器，项目来源：containers-from-scratch">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://raygecao.github.io/posts/container-from-scratch/"><meta property="og:image" content="https://raygecao.github.io/posts/container-from-scratch/featured-image.png"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-09-27T20:38:46+08:00">
-<meta property="article:modified_time" content="2021-09-27T20:38:46+08:00">
-<meta name=twitter:card content="summary_large_image">
-<meta name=twitter:image content="https://raygecao.github.io/posts/container-from-scratch/featured-image.png">
-<meta name=twitter:title content="Containers from scratch探究">
-<meta name=twitter:description content="通过隔离namespace与cgroup构建出一个小型容器，项目来源：containers-from-scratch">
-<meta name=application-name content="拾遗之途">
-<meta name=apple-mobile-web-app-title content="拾遗之途">
-<meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/container-from-scratch/><link rel=prev href=https://raygecao.github.io/posts/oras/><link rel=next href=https://raygecao.github.io/posts/telepresence/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Containers from scratch探究","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/featured-image.png","width":776,"height":290}],"genre":"posts","keywords":"container","wordcount":4209,"url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/","datePublished":"2021-09-27T20:38:46+08:00","dateModified":"2021-09-27T20:38:46+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=拾遗之途>拾遗之途</a>
-</div><div class=menu>
-<div class=menu-inner><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Containers from scratch探究 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Containers from scratch探究"><meta property="og:description" content="通过隔离namespace与cgroup构建出一个小型容器，项目来源：containers-from-scratch"><meta property="og:type" content="article"><meta property="og:url" content="https://raygecao.github.io/posts/container-from-scratch/"><meta property="og:image" content="https://raygecao.github.io/posts/container-from-scratch/featured-image.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-09-27T20:38:46+08:00"><meta property="article:modified_time" content="2021-09-27T20:38:46+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://raygecao.github.io/posts/container-from-scratch/featured-image.png"><meta name=twitter:title content="Containers from scratch探究"><meta name=twitter:description content="通过隔离namespace与cgroup构建出一个小型容器，项目来源：containers-from-scratch"><meta name=application-name content="拾遗之途"><meta name=apple-mobile-web-app-title content="拾遗之途"><meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/container-from-scratch/><link rel=prev href=https://raygecao.github.io/posts/oras/><link rel=next href=https://raygecao.github.io/posts/telepresence/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Containers from scratch探究","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/featured-image.png","width":776,"height":290}],"genre":"posts","keywords":"container","wordcount":4209,"url":"https:\/\/raygecao.github.io\/posts\/container-from-scratch\/","datePublished":"2021-09-27T20:38:46+08:00","dateModified":"2021-09-27T20:38:46+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div></div></div></header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=拾遗之途>拾遗之途</a>
-</div><div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div></div><div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div></div></header><div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div></div><main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Containers from scratch探究</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-09-27>2021-09-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4209 字&nbsp;
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Containers from scratch探究</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-09-27>2021-09-27</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 4209 字&nbsp;
 <i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 9 分钟&nbsp;<span id=/posts/container-from-scratch/ class=leancloud_visitors data-flag-title="Containers from scratch探究">
 <i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
-</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/container-from-scratch/featured-image.png data-srcset="/posts/container-from-scratch/featured-image.png, /posts/container-from-scratch/featured-image.png 1.5x, /posts/container-from-scratch/featured-image.png 2x" data-sizes=auto alt=/posts/container-from-scratch/featured-image.png title=/posts/container-from-scratch/featured-image.png></div><div class="details toc" id=toc-static kept>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
-<ul>
-<li><a href=#概述>概述</a></li><li><a href=#代码分析>代码分析</a></li><li><a href=#视频讲解>视频讲解</a></li><li><a href=#实践探究>实践探究</a>
-<ul>
-<li><a href=#准备ubuntufs>准备ubuntufs</a></li><li><a href=#运行容器并验证namespace隔离情况>运行容器并验证namespace隔离情况</a></li><li><a href=#验证cgourp设置>验证Cgourp设置</a></li></ul></li><li><a href=#功能扩展>功能扩展</a>
-<ul>
-<li><a href=#支持bind-mount>支持bind mount</a></li><li><a href=#cgroup资源扩展memorycpu>Cgroup资源扩展（Memory/CPU）</a></li><li><a href=#使用pivot_root系统调用替换chroot>使用pivot_root系统调用替换chroot</a></li></ul></li><li><a href=#知识延伸>知识延伸</a>
-<ul>
-<li><a href=#挂载传播>挂载传播</a></li><li><a href=#unshare>Unshare</a></li></ul></li><li><a href=#参考文献>参考文献</a></li></ul></nav></div></div><div class=content id=content><p>通过隔离namespace与cgroup构建出一个小型容器，项目来源：<a href=https://github.com/lizrice/containers-from-scratch target=_blank rel="noopener noreffer">containers-from-scratch</a></p><h2 id=概述>概述</h2><p>本项目以几十行代码搭建起了一个最简单的container，包含如下特点：</p><ul>
-<li>Mount namespace隔离，通过<code>chroot</code>将container的文件系统隔离到宿主机的单个目录层次结构中。</li><li>Pid namespace隔离，保证container与host的pid相互独立。</li><li>使用独立的cgroup限制容器内的资源使用。</li></ul><h2 id=代码分析>代码分析</h2><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/container-from-scratch/featured-image.png data-srcset="/posts/container-from-scratch/featured-image.png, /posts/container-from-scratch/featured-image.png 1.5x, /posts/container-from-scratch/featured-image.png 2x" data-sizes=auto alt=/posts/container-from-scratch/featured-image.png title=/posts/container-from-scratch/featured-image.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#概述>概述</a></li><li><a href=#代码分析>代码分析</a></li><li><a href=#视频讲解>视频讲解</a></li><li><a href=#实践探究>实践探究</a><ul><li><a href=#准备ubuntufs>准备ubuntufs</a></li><li><a href=#运行容器并验证namespace隔离情况>运行容器并验证namespace隔离情况</a></li><li><a href=#验证cgourp设置>验证Cgourp设置</a></li></ul></li><li><a href=#功能扩展>功能扩展</a><ul><li><a href=#支持bind-mount>支持bind mount</a></li><li><a href=#cgroup资源扩展memorycpu>Cgroup资源扩展（Memory/CPU）</a></li><li><a href=#使用pivot_root系统调用替换chroot>使用pivot_root系统调用替换chroot</a></li></ul></li><li><a href=#知识延伸>知识延伸</a><ul><li><a href=#挂载传播>挂载传播</a></li><li><a href=#unshare>Unshare</a></li></ul></li><li><a href=#参考文献>参考文献</a></li></ul></nav></div></div><div class=content id=content><p>通过隔离namespace与cgroup构建出一个小型容器，项目来源：<a href=https://github.com/lizrice/containers-from-scratch target=_blank rel="noopener noreffer">containers-from-scratch</a></p><h2 id=概述>概述</h2><p>本项目以几十行代码搭建起了一个最简单的container，包含如下特点：</p><ul><li>Mount namespace隔离，通过<code>chroot</code>将container的文件系统隔离到宿主机的单个目录层次结构中。</li><li>Pid namespace隔离，保证container与host的pid相互独立。</li><li>使用独立的cgroup限制容器内的资源使用。</li></ul><h2 id=代码分析>代码分析</h2><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -161,8 +87,7 @@
 </span><span class=lnt>74
 </span><span class=lnt>75
 </span><span class=lnt>76
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>package</span> <span class=nx>main</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kn>package</span> <span class=nx>main</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=kn>import</span> <span class=p>(</span>
 </span></span><span class=line><span class=cl>	<span class=s>&#34;fmt&#34;</span>
@@ -238,38 +163,19 @@
 </span></span><span class=line><span class=cl>		<span class=nb>panic</span><span class=p>(</span><span class=nx>err</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>	<span class=p>}</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>run函数中主要有两个工作：
-<ul>
-<li><strong>Fork出子进程并调用child函数</strong>：<code>/proc/self/exe</code> 表明当前的程序，即fork出一份子进程执行当前程序的child命令。</li><li><strong>设置Clone隔离属性</strong>：<code>Cloneflags</code>通过设置<code>syscall.CLONE_NEWUTS</code>,<code>syscall.CLONE_NEWPID</code>,<code>syscall.CLONE_NEWNS</code>分别隔离了uts, pid及mount namespace。<code>Unshareflags</code>设置了<code>syscall.CLONE_NEWNS</code>用以禁用<strong>挂载传播</strong>。</li></ul></li><li>child函数中主要做了四件事：
-<ul>
-<li><strong>为子进程设置cgroup</strong>，设置当前cgroup总的进程数上限为20。</li><li><strong>更新子进程的hostname</strong>，用以验证uts namespace隔离。</li><li><strong>更新子进程的root目录</strong>，将container文件系统隔离到宿主机中的单个目录中。</li><li><strong>挂载proc及tmpfs</strong>，用以验证pid隔离以及mount隔离。</li></ul></li></ul><h2 id=视频讲解>视频讲解</h2><div style=position:relative;padding-bottom:56.25%;height:0;overflow:hidden>
-<iframe src=https://www.youtube.com/embed/MHv6cWjvQjM style=position:absolute;top:0;left:0;width:100%;height:100%;border:0 allowfullscreen title="YouTube Video"></iframe>
-</div><p>视频基本上将代码的核心模块全部手敲了一遍，核心内容解释的较为清晰，但存在如下问题：</p><ul>
-<li>
-<p>视频中run方法中并未设置<code>cmd.SysProcAttr.Unshareflags=syscall.CLONE_NEWNS</code>，在实践中发现，未指定此flag会导致容器内的挂载会泄露到宿主机上，这与挂载传播相关，笔者系统上默认使用<strong>shared</strong>传播类型，猜测Liz的系统默认使用<strong>private</strong>传播类型。</p></li><li>
-<p>视频中在Liz退出容器时会触发panic，报错内容为<strong>No such file or directory</strong>，探索后发现是在第59行卸载thing时出错，看一下syscall关系Mount和Unmount的api：</p></li><li>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li>run函数中主要有两个工作：<ul><li><strong>Fork出子进程并调用child函数</strong>：<code>/proc/self/exe</code> 表明当前的程序，即fork出一份子进程执行当前程序的child命令。</li><li><strong>设置Clone隔离属性</strong>：<code>Cloneflags</code>通过设置<code>syscall.CLONE_NEWUTS</code>,<code>syscall.CLONE_NEWPID</code>,<code>syscall.CLONE_NEWNS</code>分别隔离了uts, pid及mount namespace。<code>Unshareflags</code>设置了<code>syscall.CLONE_NEWNS</code>用以禁用<strong>挂载传播</strong>。</li></ul></li><li>child函数中主要做了四件事：<ul><li><strong>为子进程设置cgroup</strong>，设置当前cgroup总的进程数上限为20。</li><li><strong>更新子进程的hostname</strong>，用以验证uts namespace隔离。</li><li><strong>更新子进程的root目录</strong>，将container文件系统隔离到宿主机中的单个目录中。</li><li><strong>挂载proc及tmpfs</strong>，用以验证pid隔离以及mount隔离。</li></ul></li></ul><h2 id=视频讲解>视频讲解</h2><div style=position:relative;padding-bottom:56.25%;height:0;overflow:hidden><iframe src=https://www.youtube.com/embed/MHv6cWjvQjM style=position:absolute;top:0;left:0;width:100%;height:100%;border:0 allowfullscreen title="YouTube Video"></iframe></div><p>视频基本上将代码的核心模块全部手敲了一遍，核心内容解释的较为清晰，但存在如下问题：</p><ul><li><p>视频中run方法中并未设置<code>cmd.SysProcAttr.Unshareflags=syscall.CLONE_NEWNS</code>，在实践中发现，未指定此flag会导致容器内的挂载会泄露到宿主机上，这与挂载传播相关，笔者系统上默认使用<strong>shared</strong>传播类型，猜测Liz的系统默认使用<strong>private</strong>传播类型。</p></li><li><p>视频中在Liz退出容器时会触发panic，报错内容为<strong>No such file or directory</strong>，探索后发现是在第59行卸载thing时出错，看一下syscall关系Mount和Unmount的api：</p></li><li><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=nf>Mount</span><span class=p>(</span><span class=nx>source</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>target</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>fstype</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>flags</span> <span class=kt>uintptr</span><span class=p>,</span> <span class=nx>data</span> <span class=kt>string</span><span class=p>)</span> <span class=p>(</span><span class=nx>err</span> <span class=kt>error</span><span class=p>)</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=nf>Mount</span><span class=p>(</span><span class=nx>source</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>target</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>fstype</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>flags</span> <span class=kt>uintptr</span><span class=p>,</span> <span class=nx>data</span> <span class=kt>string</span><span class=p>)</span> <span class=p>(</span><span class=nx>err</span> <span class=kt>error</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>Unmount</span><span class=p>(</span><span class=nx>target</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>flags</span> <span class=kt>int</span><span class=p>)</span> <span class=p>(</span><span class=nx>err</span> <span class=kt>error</span><span class=p>)</span>
-</span></span></code></pre></td></tr></table></div></div><p>尽管<code>umount</code>命令支持使用设备文件或者挂载点，但从报错信息及syscall api上看到，比较稳妥的方式是通过挂载点卸载，因此<code>Line:59</code>建议改成<code>must(syscall.Unmount("mytemp", 0))</code>。</p></li></ul><h2 id=实践探究>实践探究</h2><h3 id=准备ubuntufs>准备ubuntufs</h3><p>实现所需的ubuntufs是container的rootfs，为其提供必要的指令。笔者采用从ubuntu container中将整个文件系统拷贝出来。</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>尽管<code>umount</code>命令支持使用设备文件或者挂载点，但从报错信息及syscall api上看到，比较稳妥的方式是通过挂载点卸载，因此<code>Line:59</code>建议改成<code>must(syscall.Unmount("mytemp", 0))</code>。</p></li></ul><h2 id=实践探究>实践探究</h2><h3 id=准备ubuntufs>准备ubuntufs</h3><p>实现所需的ubuntufs是container的rootfs，为其提供必要的指令。笔者采用从ubuntu container中将整个文件系统拷贝出来。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>docker run -it --rm ubuntu:21.04
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>docker run -it --rm ubuntu:21.04
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>docker cp <span class=si>${</span><span class=nv>UBUNTU_IMAGE_ID</span><span class=si>}</span>:/ ~/ubuntufs
-</span></span></code></pre></td></tr></table></div></div><p>准备完需要更新<code>Line:51</code>chroot的path为ubuntufs所在的路径。</p><h3 id=运行容器并验证namespace隔离情况>运行容器并验证namespace隔离情况</h3><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>准备完需要更新<code>Line:51</code>chroot的path为ubuntufs所在的路径。</p><h3 id=运行容器并验证namespace隔离情况>运行容器并验证namespace隔离情况</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -290,8 +196,7 @@
 </span><span class=lnt>19
 </span><span class=lnt>20
 </span><span class=lnt>21
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 容器内</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 容器内</span>
 </span></span><span class=line><span class=cl>root@container:/# ls -l /proc/self/ns/
 </span></span><span class=line><span class=cl>total <span class=m>0</span>
 </span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> root root <span class=m>0</span> Sep <span class=m>24</span> 05:57 cgroup -&gt; <span class=s1>&#39;cgroup:[4026531835]&#39;</span>
@@ -312,32 +217,21 @@
 </span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 pid -&gt; pid:<span class=o>[</span>4026531836<span class=o>]</span>
 </span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 user -&gt; user:<span class=o>[</span>4026531837<span class=o>]</span>
 </span></span><span class=line><span class=cl>lrwxrwxrwx <span class=m>1</span> ubuntu ubuntu <span class=m>0</span> Sep <span class=m>24</span> 13:57 uts -&gt; uts:<span class=o>[</span>4026531838<span class=o>]</span>
-</span></span></code></pre></td></tr></table></div></div><p>由此可知，container内的mnt, pid, uts namespace与host的均不同。</p><h3 id=验证cgourp设置>验证Cgourp设置</h3><p>Cgroups的设置也生效，在后台起若干个sleep进程后，新起的进程被cgroup限制了。</p><figure><a class=lightgallery href=/posts/container-from-scratch/cgroup.png title=/posts/container-from-scratch/cgroup.png data-thumbnail=/posts/container-from-scratch/cgroup.png data-sub-html="<h2>Cgroup限制最大进程数</h2>">
-<img class=lazyload src=/svg/loading.min.svg data-src=cgroup.png data-srcset="/posts/container-from-scratch/cgroup.png, cgroup.png 1.5x, /posts/container-from-scratch/cgroup.png 2x" data-sizes=auto alt=/posts/container-from-scratch/cgroup.png height=200 width=600>
-</a><figcaption class=image-caption>Cgroup限制最大进程数</figcaption></figure><p>Liz在测试时使用了fork bomb <code>:(){ :|:& };:</code>，这种形式本质上是shell实现的一个自身指数递归调用，其简化形式为：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>由此可知，container内的mnt, pid, uts namespace与host的均不同。</p><h3 id=验证cgourp设置>验证Cgourp设置</h3><p>Cgroups的设置也生效，在后台起若干个sleep进程后，新起的进程被cgroup限制了。</p><figure><a class=lightgallery href=/posts/container-from-scratch/cgroup.png title=/posts/container-from-scratch/cgroup.png data-thumbnail=/posts/container-from-scratch/cgroup.png data-sub-html="<h2>Cgroup限制最大进程数</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=cgroup.png data-srcset="/posts/container-from-scratch/cgroup.png, cgroup.png 1.5x, /posts/container-from-scratch/cgroup.png 2x" data-sizes=auto alt=/posts/container-from-scratch/cgroup.png height=200 width=600></a><figcaption class=image-caption>Cgroup限制最大进程数</figcaption></figure><p>Liz在测试时使用了fork bomb <code>:(){ :|:& };:</code>，这种形式本质上是shell实现的一个自身指数递归调用，其简化形式为：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>bomb<span class=o>()</span> <span class=o>{</span> 
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>bomb<span class=o>()</span> <span class=o>{</span> 
 </span></span><span class=line><span class=cl> bomb <span class=p>|</span> bomb <span class=p>&amp;</span>
 </span></span><span class=line><span class=cl><span class=o>}</span><span class=p>;</span> bomb
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li><code>:()</code>定义了一个名字叫<code>:</code>的函数。</li><li><code>{}</code>声明了函数体。</li><li><code>:|:</code>表示函数递归调用并pipe到自身，从而实现进程数指数增长。</li><li><code>&</code>表示进程在后台运行。</li><li><code>;</code>表示函数调用结束。</li><li><code>:</code>运行此函数，触发fork bomb。</li></ul><h2 id=功能扩展>功能扩展</h2><h3 id=支持bind-mount>支持bind mount</h3><p><strong>Bind mount</strong>将宿主目录映射到容器内，实现上比较简单，即在<code>chroot jail</code>前进行bind即可。示例代码如下：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li><code>:()</code>定义了一个名字叫<code>:</code>的函数。</li><li><code>{}</code>声明了函数体。</li><li><code>:|:</code>表示函数递归调用并pipe到自身，从而实现进程数指数增长。</li><li><code>&</code>表示进程在后台运行。</li><li><code>;</code>表示函数调用结束。</li><li><code>:</code>运行此函数，触发fork bomb。</li></ul><h2 id=功能扩展>功能扩展</h2><h3 id=支持bind-mount>支持bind mount</h3><p><strong>Bind mount</strong>将宿主目录映射到容器内，实现上比较简单，即在<code>chroot jail</code>前进行bind即可。示例代码如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>        <span class=c1>// bind mount
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>        <span class=c1>// bind mount
 </span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nx>testBindPath</span> <span class=o>:=</span> <span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=s>&#34;test&#34;</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=nx>os</span><span class=p>.</span><span class=nf>Mkdir</span><span class=p>(</span><span class=nx>testBindPath</span><span class=p>,</span> <span class=mo>0755</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=nf>must</span><span class=p>(</span><span class=nx>syscall</span><span class=p>.</span><span class=nf>Mount</span><span class=p>(</span><span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%s/test&#34;</span><span class=p>,</span> <span class=nx>homePath</span><span class=p>),</span> <span class=nx>testBindPath</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>MS_BIND</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>))</span>
-</span></span></code></pre></td></tr></table></div></div><p>上例将家目录下的test目录bind mount到rootfs的test目录，从而在容器内部可见。</p><h3 id=cgroup资源扩展memorycpu>Cgroup资源扩展（Memory/CPU）</h3><p>在memory和cpu下创建两个cgroup，设置好限制内容，并将container pid加入到这两个cgroup中：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>上例将家目录下的test目录bind mount到rootfs的test目录，从而在容器内部可见。</p><h3 id=cgroup资源扩展memorycpu>Cgroup资源扩展（Memory/CPU）</h3><p>在memory和cpu下创建两个cgroup，设置好限制内容，并将container pid加入到这两个cgroup中：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -352,8 +246,7 @@
 </span><span class=lnt>13
 </span><span class=lnt>14
 </span><span class=lnt>15
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>        <span class=c1>// Add cpu limitation for 0.3 core
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>        <span class=c1>// Add cpu limitation for 0.3 core
 </span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nx>cpu</span> <span class=o>:=</span> <span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cgroups</span><span class=p>,</span> <span class=s>&#34;cpu&#34;</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=nx>os</span><span class=p>.</span><span class=nf>Mkdir</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cpu</span><span class=p>,</span> <span class=s>&#34;liz&#34;</span><span class=p>),</span> <span class=mo>0755</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>cpu</span><span class=p>,</span> <span class=s>&#34;liz/cpu.cfs_period_us&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;100000&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
@@ -368,10 +261,7 @@
 </span></span><span class=line><span class=cl>        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz/memory.swappiness&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;0&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
 </span></span><span class=line><span class=cl>        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz/notify_on_release&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=s>&#34;1&#34;</span><span class=p>),</span> <span class=mo>0700</span><span class=p>))</span>
 </span></span><span class=line><span class=cl>        <span class=nf>must</span><span class=p>(</span><span class=nx>ioutil</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>mem</span><span class=p>,</span> <span class=s>&#34;liz/cgroup.procs&#34;</span><span class=p>),</span> <span class=p>[]</span><span class=nb>byte</span><span class=p>(</span><span class=nx>strconv</span><span class=p>.</span><span class=nf>Itoa</span><span class=p>(</span><span class=nx>os</span><span class=p>.</span><span class=nf>Getpid</span><span class=p>())),</span> <span class=mo>0700</span><span class=p>))</span>
-</span></span></code></pre></td></tr></table></div></div><p>上例分别对cpu与memory进行了限制：</p><ul>
-<li><strong>CPU</strong>: 限制container最大使用核数为0.3</li><li><strong>Memory</strong>: 限制物理内存上限为100M，且禁用swap，即内容使用超过了100M的话立刻触发OOM。</li></ul><p>验证cgroup隔离效果：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>上例分别对cpu与memory进行了限制：</p><ul><li><strong>CPU</strong>: 限制container最大使用核数为0.3</li><li><strong>Memory</strong>: 限制物理内存上限为100M，且禁用swap，即内容使用超过了100M的话立刻触发OOM。</li></ul><p>验证cgroup隔离效果：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -385,8 +275,7 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>root@container:/# cat /proc/self/cgroup
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>root@container:/# cat /proc/self/cgroup
 </span></span><span class=line><span class=cl>12:perf_event:/
 </span></span><span class=line><span class=cl>11:cpuset:/
 </span></span><span class=line><span class=cl>10:devices:/user.slice
@@ -400,13 +289,7 @@
 </span></span><span class=line><span class=cl>2:cpu,cpuacct:/liz
 </span></span><span class=line><span class=cl>1:name<span class=o>=</span>systemd:/user.slice/user-1000.slice/session-12.scope
 </span></span><span class=line><span class=cl>0::/user.slice/user-1000.slice/session-12.scope
-</span></span></code></pre></td></tr></table></div></div><p>使用<code>while : ; do : ; done</code> 压测cpu limitation：</p><figure><a class=lightgallery href=/posts/container-from-scratch/cpu-limit.png title=/posts/container-from-scratch/cpu-limit.png data-thumbnail=/posts/container-from-scratch/cpu-limit.png data-sub-html="<h2>CPU使用被限制在0.3Core</h2>">
-<img class=lazyload src=/svg/loading.min.svg data-src=cpu-limit.png data-srcset="/posts/container-from-scratch/cpu-limit.png, cpu-limit.png 1.5x, /posts/container-from-scratch/cpu-limit.png 2x" data-sizes=auto alt=/posts/container-from-scratch/cpu-limit.png height=200 width=1000>
-</a><figcaption class=image-caption>CPU使用被限制在0.3Core</figcaption></figure><p>验证memory limitation：</p><figure><a class=lightgallery href=/posts/container-from-scratch/mem-limit.png title=/posts/container-from-scratch/mem-limit.png data-thumbnail=/posts/container-from-scratch/mem-limit.png data-sub-html="<h2>分配400M内存导致OOM</h2>">
-<img class=lazyload src=/svg/loading.min.svg data-src=mem-limit.png data-srcset="/posts/container-from-scratch/mem-limit.png, mem-limit.png 1.5x, /posts/container-from-scratch/mem-limit.png 2x" data-sizes=auto alt=/posts/container-from-scratch/mem-limit.png height=200 width=1000>
-</a><figcaption class=image-caption>分配400M内存导致OOM</figcaption></figure><h3 id=使用pivot_root系统调用替换chroot>使用pivot_root系统调用替换chroot</h3><p>pivot_root与chroot作用类似，都是将rootfs jail到一个目录上。区别在于<strong>前者更改此mount namespace下的所有进程的rootfs，后者仅更改当前进程的rootfs</strong>。</p><p>pivot_root核心思想是将root mount更改为<strong>new_root</strong>，并且原root mount会移到<strong>put_old</strong>中。其定义了一系列限制，列举如下：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>使用<code>while : ; do : ; done</code> 压测cpu limitation：</p><figure><a class=lightgallery href=/posts/container-from-scratch/cpu-limit.png title=/posts/container-from-scratch/cpu-limit.png data-thumbnail=/posts/container-from-scratch/cpu-limit.png data-sub-html="<h2>CPU使用被限制在0.3Core</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=cpu-limit.png data-srcset="/posts/container-from-scratch/cpu-limit.png, cpu-limit.png 1.5x, /posts/container-from-scratch/cpu-limit.png 2x" data-sizes=auto alt=/posts/container-from-scratch/cpu-limit.png height=200 width=1000></a><figcaption class=image-caption>CPU使用被限制在0.3Core</figcaption></figure><p>验证memory limitation：</p><figure><a class=lightgallery href=/posts/container-from-scratch/mem-limit.png title=/posts/container-from-scratch/mem-limit.png data-thumbnail=/posts/container-from-scratch/mem-limit.png data-sub-html="<h2>分配400M内存导致OOM</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=mem-limit.png data-srcset="/posts/container-from-scratch/mem-limit.png, mem-limit.png 1.5x, /posts/container-from-scratch/mem-limit.png 2x" data-sizes=auto alt=/posts/container-from-scratch/mem-limit.png height=200 width=1000></a><figcaption class=image-caption>分配400M内存导致OOM</figcaption></figure><h3 id=使用pivot_root系统调用替换chroot>使用pivot_root系统调用替换chroot</h3><p>pivot_root与chroot作用类似，都是将rootfs jail到一个目录上。区别在于<strong>前者更改此mount namespace下的所有进程的rootfs，后者仅更改当前进程的rootfs</strong>。</p><p>pivot_root核心思想是将root mount更改为<strong>new_root</strong>，并且原root mount会移到<strong>put_old</strong>中。其定义了一系列限制，列举如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -421,8 +304,7 @@
 </span><span class=lnt>13
 </span><span class=lnt>14
 </span><span class=lnt>15
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>       -  new_root and put_old must be directories.
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>       -  new_root and put_old must be directories.
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>       -  new_root and put_old must not be on the same mount as the current root.
 </span></span><span class=line><span class=cl>
@@ -437,9 +319,7 @@
 </span></span><span class=line><span class=cl>          strictions ensure that pivot_root() never propagates any changes to another mount namespace.
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>       -  The current root directory must be a mount point.
-</span></span></code></pre></td></tr></table></div></div><p>参考 <a href=https://github.com/opencontainers/runc/blob/v1.0.2/libcontainer/rootfs_linux.go#L817 target=_blank rel="noopener noreffer">runc pivotRoot func</a> 对代码进行修改：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></span></code></pre></td></tr></table></div></div><p>参考 <a href=https://github.com/opencontainers/runc/blob/v1.0.2/libcontainer/rootfs_linux.go#L817 target=_blank rel="noopener noreffer">runc pivotRoot func</a> 对代码进行修改：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -452,8 +332,7 @@
 </span><span class=lnt>11
 </span><span class=lnt>12
 </span><span class=lnt>13
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>        <span class=nf>must</span><span class=p>(</span><span class=nx>syscall</span><span class=p>.</span><span class=nf>Mount</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=nx>rootPath</span><span class=p>,</span> <span class=s>&#34;bind&#34;</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>MS_BIND</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>))</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl>        <span class=nf>must</span><span class=p>(</span><span class=nx>syscall</span><span class=p>.</span><span class=nf>Mount</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=nx>rootPath</span><span class=p>,</span> <span class=s>&#34;bind&#34;</span><span class=p>,</span> <span class=nx>syscall</span><span class=p>.</span><span class=nx>MS_BIND</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>))</span>
 </span></span><span class=line><span class=cl>        <span class=c1>// jail rootfs with pivot_root syscall
 </span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=c1>// ref: https://github.com/opencontainers/runc/blob/v1.0.2/libcontainer/rootfs_linux.go#L817
 </span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nx>putOldPath</span> <span class=o>:=</span> <span class=nx>filepath</span><span class=p>.</span><span class=nf>Join</span><span class=p>(</span><span class=nx>rootPath</span><span class=p>,</span> <span class=s>&#34;put_old&#34;</span><span class=p>)</span>
@@ -466,34 +345,15 @@
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
 </span></span><span class=line><span class=cl>        <span class=c1>//must(syscall.Chroot(&#34;fmt.Sprintf(&#34;%s/ubuntufs&#34;, homePath))
 </span></span></span><span class=line><span class=cl><span class=c1></span>        <span class=nf>must</span><span class=p>(</span><span class=nx>os</span><span class=p>.</span><span class=nf>Chdir</span><span class=p>(</span><span class=s>&#34;/&#34;</span><span class=p>))</span>
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li>为满足第二条限制，<code>new_root</code>以bind mount形式脱离current root filesystem。</li><li>由于存在process使用原root mount下的文件，因此无法直接unmount掉<code>put_old</code>。这里使用<strong>lazy unmount</strong>（通过<strong>syscall.MNT_DETACH</strong> flag）的方式卸载掉。Lazy unmount使新的进程看不到此挂载点（隐藏掉），并且当接入此mount的进程全部退出后将其真正卸载掉。</li></ul><div class="details admonition note open">
-<div class="details-summary admonition-title">
-<i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i>
-</div><div class=details-content>
-<div class=admonition-content><strong>上述扩展的完整代码参考<a href=https://github.com/raygecao/containers-from-scratch/pull/1/files target=_blank rel="noopener noreffer">这里</a>。</strong></div></div></div><h2 id=知识延伸>知识延伸</h2><p>为探究<code>Line:34</code> Unshareflags对挂载的影响，我们了解一下挂载传播。</p><h3 id=挂载传播>挂载传播</h3><p>Mount namespace有时会因提供太强的隔离性导致便捷性降低的问题，比如将一个新磁盘加载到一个光驱驱动器中，当有多个mount namespace时，需要将该磁盘挂载到每个namespace中。为了<strong>只使用一次挂载命令就可以将磁盘挂载到所有的mount namespace</strong>，Linux 从2.6.15起引入了<strong>共享子树特性（Shared Subtrees）</strong>，即<strong>允许在namespace之间自动、可控地传播挂载和卸载事件</strong>。</p><p>此特性下，每个挂载点都有一个<strong>传播类型</strong>，此类型决定在此挂载点下创建/删除的挂载点能否传播到其他挂载点下，传播类型有如下四种：</p><table>
-<thead>
-<tr>
-<th>传播类型</th><th>作用</th></tr></thead><tbody>
-<tr>
-<td><code>MS_SHARED</code></td><td>该挂载点下同一对等组中的挂载点<strong>双向共享</strong>挂载和卸载事件</td></tr><tr>
-<td><code>MS_SLAVE</code></td><td>该挂载点下同一对等组中的主挂载点可以将挂载或卸载事件<strong>单向传播</strong>到从属挂载点</td></tr><tr>
-<td><code>MS_PRIVATE</code></td><td>挂载点<strong>不会将事件传播给任何对等方</strong>，同时也不会接收事件</td></tr><tr>
-<td><code>MS_UNBINDABLE</code></td><td>在<code>MS_PRIVATE</code>基础上<strong>不能作为绑定挂载操作的源</strong></td></tr></tbody></table><p>判断挂载点的默认类型基本方法如下：</p><ul>
-<li>如果挂载点非根挂载点，且其父节点传播类型是<code>MS_SHARED</code>，则新挂载点的传播类型也是<code>MS_SHARED</code>。</li><li>否则挂载点的传播类型是<code>MS_PRIVATE</code>。</li></ul><p>有了这个概念，我们验证一下这个<code>Unshareflag</code>加与不加的区别：</p><p>添加<code>Unshareflags</code>：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><ul><li>为满足第二条限制，<code>new_root</code>以bind mount形式脱离current root filesystem。</li><li>由于存在process使用原root mount下的文件，因此无法直接unmount掉<code>put_old</code>。这里使用<strong>lazy unmount</strong>（通过<strong>syscall.MNT_DETACH</strong> flag）的方式卸载掉。Lazy unmount使新的进程看不到此挂载点（隐藏掉），并且当接入此mount的进程全部退出后将其真正卸载掉。</li></ul><div class="details admonition note open"><div class="details-summary admonition-title"><i class="icon fas fa-pencil-alt fa-fw"></i>注意<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content><strong>上述扩展的完整代码参考<a href=https://github.com/raygecao/containers-from-scratch/pull/1/files target=_blank rel="noopener noreffer">这里</a>。</strong></div></div></div><h2 id=知识延伸>知识延伸</h2><p>为探究<code>Line:34</code> Unshareflags对挂载的影响，我们了解一下挂载传播。</p><h3 id=挂载传播>挂载传播</h3><p>Mount namespace有时会因提供太强的隔离性导致便捷性降低的问题，比如将一个新磁盘加载到一个光驱驱动器中，当有多个mount namespace时，需要将该磁盘挂载到每个namespace中。为了<strong>只使用一次挂载命令就可以将磁盘挂载到所有的mount namespace</strong>，Linux 从2.6.15起引入了<strong>共享子树特性（Shared Subtrees）</strong>，即<strong>允许在namespace之间自动、可控地传播挂载和卸载事件</strong>。</p><p>此特性下，每个挂载点都有一个<strong>传播类型</strong>，此类型决定在此挂载点下创建/删除的挂载点能否传播到其他挂载点下，传播类型有如下四种：</p><table><thead><tr><th>传播类型</th><th>作用</th></tr></thead><tbody><tr><td><code>MS_SHARED</code></td><td>该挂载点下同一对等组中的挂载点<strong>双向共享</strong>挂载和卸载事件</td></tr><tr><td><code>MS_SLAVE</code></td><td>该挂载点下同一对等组中的主挂载点可以将挂载或卸载事件<strong>单向传播</strong>到从属挂载点</td></tr><tr><td><code>MS_PRIVATE</code></td><td>挂载点<strong>不会将事件传播给任何对等方</strong>，同时也不会接收事件</td></tr><tr><td><code>MS_UNBINDABLE</code></td><td>在<code>MS_PRIVATE</code>基础上<strong>不能作为绑定挂载操作的源</strong></td></tr></tbody></table><p>判断挂载点的默认类型基本方法如下：</p><ul><li>如果挂载点非根挂载点，且其父节点传播类型是<code>MS_SHARED</code>，则新挂载点的传播类型也是<code>MS_SHARED</code>。</li><li>否则挂载点的传播类型是<code>MS_PRIVATE</code>。</li></ul><p>有了这个概念，我们验证一下这个<code>Unshareflag</code>加与不加的区别：</p><p>添加<code>Unshareflags</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 容器中</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 容器中</span>
 </span></span><span class=line><span class=cl>root@container:/# cat /proc/self/mountinfo
 </span></span><span class=line><span class=cl><span class=m>4153</span> <span class=m>4751</span> 0:610 / /proc rw,relatime - proc proc rw
 </span></span><span class=line><span class=cl><span class=m>4223</span> <span class=m>4751</span> 0:642 / /mytemp rw,relatime - tmpfs thing rw
-</span></span></code></pre></td></tr></table></div></div><p>未添加<code>Unshareflags</code>：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></span></code></pre></td></tr></table></div></div><p>未添加<code>Unshareflags</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -502,8 +362,7 @@
 </span><span class=lnt>7
 </span><span class=lnt>8
 </span><span class=lnt>9
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 容器中</span>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl><span class=c1># 容器中</span>
 </span></span><span class=line><span class=cl>root@container:/# cat /proc/self/mountinfo
 </span></span><span class=line><span class=cl><span class=m>4750</span> <span class=m>4223</span> 0:610 / /proc rw,relatime shared:304 - proc proc rw
 </span></span><span class=line><span class=cl><span class=m>4753</span> <span class=m>4223</span> 0:642 / /mytemp rw,relatime shared:312 - tmpfs thing rw
@@ -512,33 +371,8 @@
 </span></span><span class=line><span class=cl>$ cat /proc/self/mountinfo <span class=p>|</span> grep ubuntufs
 </span></span><span class=line><span class=cl><span class=m>4751</span> <span class=m>25</span> 0:610 / ~/ubuntufs/proc rw,relatime shared:304 - proc proc rw
 </span></span><span class=line><span class=cl><span class=m>4754</span> <span class=m>25</span> 0:642 / ~/ubuntufs/mytemp rw,relatime shared:312 - tmpfs thing rw
-</span></span></code></pre></td></tr></table></div></div><p>由于实验系统根挂载点是<code>MS_SHARED</code>类型，新建子挂载点的默认类型为<code>MS_SHARED</code>，因此container内的挂载会共享到host。</p><p>解决办法有两种:</p><ul>
-<li>如代码展示那样，加入<code>Unshareflags=syscall.CLONE_NEWNS</code> 参考 <a href=https://go-review.googlesource.com/c/go/+/38471 target=_blank rel="noopener noreffer">issue-38471</a>。</li><li>指定根挂载为<code>MS_PRIVATE</code>类型，如<code>must(syscall.Mount("", "/", "", syscall.MS_PRIVATE|syscall.MS_REC, ""))</code>。</li></ul><h3 id=unshare>Unshare</h3><p>Linux <code>unshare</code> 指令可以新建namespace，并在namespace中运行程序，支持的命名空间类型有：</p><ul>
-<li>Mount namespace，默认使用<strong>private</strong>传播类型。</li><li>UTS namespace</li><li>IPC namespace</li><li>Network namespace</li><li>Pid namespace</li><li>User namespace</li></ul><p>欲达到上述的隔离效果，可以通过如下命令来进行：</p><div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td><td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo unshare --fork --pid --mount-proc --uts /bin/bash
-</span></span></code></pre></td></tr></table></div></div><ul>
-<li><code>--pid</code>声明了pid namespace隔离。</li><li><code>--mount-proc</code>挂载了proc，并声明了mount namespace隔离。</li><li><code>--uts</code>声明了uts namespace隔离。</li></ul><h2 id=参考文献>参考文献</h2><ul>
-<li><a href=https://github.com/lizrice/containers-from-scratch target=_blank rel="noopener noreffer">containers-from-scratch</a></li><li><a href=https://cloud.tencent.com/developer/article/1531989 target=_blank rel="noopener noreffer">挂载命名空间和共享子树</a></li><li><a href=https://man7.org/linux/man-pages/man1/unshare.1.html target=_blank rel="noopener noreffer">unshare(1)</a></li></ul></div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2021-09-27</span>
-</div><div class=post-info-license></div></div><div class=post-info-line>
-<div class=post-info-md></div><div class=post-info-share>
-<span></span>
-</div></div></div><div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/container/>container</a></section><section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section></div><div class=post-nav><a href=/posts/oras/ class=prev rel=prev title=私有化交付下的应用打包方案><i class="fas fa-angle-left fa-fw"></i>私有化交付下的应用打包方案</a>
-<a href=/posts/telepresence/ class=next rel=next title=Telepresence——本地调试k8s服务利器>Telepresence——本地调试k8s服务利器<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.
-</noscript></div></article></div></main><footer class=footer>
-<div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
+</span></span></code></pre></td></tr></table></div></div><p>由于实验系统根挂载点是<code>MS_SHARED</code>类型，新建子挂载点的默认类型为<code>MS_SHARED</code>，因此container内的挂载会共享到host。</p><p>解决办法有两种:</p><ul><li>如代码展示那样，加入<code>Unshareflags=syscall.CLONE_NEWNS</code> 参考 <a href=https://go-review.googlesource.com/c/go/+/38471 target=_blank rel="noopener noreffer">issue-38471</a>。</li><li>指定根挂载为<code>MS_PRIVATE</code>类型，如<code>must(syscall.Mount("", "/", "", syscall.MS_PRIVATE|syscall.MS_REC, ""))</code>。</li></ul><h3 id=unshare>Unshare</h3><p>Linux <code>unshare</code> 指令可以新建namespace，并在namespace中运行程序，支持的命名空间类型有：</p><ul><li>Mount namespace，默认使用<strong>private</strong>传播类型。</li><li>UTS namespace</li><li>IPC namespace</li><li>Network namespace</li><li>Pid namespace</li><li>User namespace</li></ul><p>欲达到上述的隔离效果，可以通过如下命令来进行：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ sudo unshare --fork --pid --mount-proc --uts /bin/bash
+</span></span></code></pre></td></tr></table></div></div><ul><li><code>--pid</code>声明了pid namespace隔离。</li><li><code>--mount-proc</code>挂载了proc，并声明了mount namespace隔离。</li><li><code>--uts</code>声明了uts namespace隔离。</li></ul><h2 id=参考文献>参考文献</h2><ul><li><a href=https://github.com/lizrice/containers-from-scratch target=_blank rel="noopener noreffer">containers-from-scratch</a></li><li><a href=https://cloud.tencent.com/developer/article/1531989 target=_blank rel="noopener noreffer">挂载命名空间和共享子树</a></li><li><a href=https://man7.org/linux/man-pages/man1/unshare.1.html target=_blank rel="noopener noreffer">unshare(1)</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2021-09-27</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/container/>container</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/oras/ class=prev rel=prev title=私有化交付下的应用打包方案><i class="fas fa-angle-left fa-fw"></i>私有化交付下的应用打包方案</a>
+<a href=/posts/telepresence/ class=next rel=next title=Telepresence——本地调试k8s服务利器>Telepresence——本地调试k8s服务利器<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span><span class=icp-splitter>&nbsp;|&nbsp;</span><br class=icp-br><span class=icp><a href=http://beian.miit.gov.cn/>京ICP备2021034884号-1</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
