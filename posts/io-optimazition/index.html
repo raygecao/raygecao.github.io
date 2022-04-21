@@ -1,0 +1,423 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Golang应用中的一些IO优化 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Golang应用中的一些IO优化"><meta property="og:description" content="Go Writer 和 Reader接口的设计遵循了Unix的输入和输出，一个程序的输出可以是另外一个程序的输入，与之类比，Reader将流中的数据写进缓冲中，是一种数据的流入；Writer将缓冲的数据写至流，是一种数据的流出。"><meta property="og:type" content="article"><meta property="og:url" content="https://raygecao.github.io/posts/io-optimazition/"><meta property="og:image" content="https://raygecao.github.io/posts/io-optimazition/featured-image.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2022-04-20T13:02:27+08:00"><meta property="article:modified_time" content="2022-04-20T13:02:27+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://raygecao.github.io/posts/io-optimazition/featured-image.png"><meta name=twitter:title content="Golang应用中的一些IO优化"><meta name=twitter:description content="Go Writer 和 Reader接口的设计遵循了Unix的输入和输出，一个程序的输出可以是另外一个程序的输入，与之类比，Reader将流中的数据写进缓冲中，是一种数据的流入；Writer将缓冲的数据写至流，是一种数据的流出。"><meta name=application-name content="拾遗之途"><meta name=apple-mobile-web-app-title content="拾遗之途"><meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/io-optimazition/><link rel=prev href=https://raygecao.github.io/posts/go-modules/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Golang应用中的一些IO优化","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/io-optimazition\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/io-optimazition\/featured-image.png","width":1606,"height":636}],"genre":"posts","keywords":"go","wordcount":3611,"url":"https:\/\/raygecao.github.io\/posts\/io-optimazition\/","datePublished":"2022-04-20T13:02:27+08:00","dateModified":"2022-04-20T13:02:27+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":''==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:''==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Golang应用中的一些IO优化</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2022-04-20>2022-04-20</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 3611 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 8 分钟&nbsp;<span id=/posts/io-optimazition/ class=leancloud_visitors data-flag-title=Golang应用中的一些IO优化>
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/io-optimazition/featured-image.png data-srcset="/posts/io-optimazition/featured-image.png, /posts/io-optimazition/featured-image.png 1.5x, /posts/io-optimazition/featured-image.png 2x" data-sizes=auto alt=/posts/io-optimazition/featured-image.png title=/posts/io-optimazition/featured-image.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#问题背景>问题背景</a></li><li><a href=#问题分析>问题分析</a></li><li><a href=#io优化>IO优化</a><ul><li><a href=#使用osfile来替代bytesbuffer>使用<code>os.File</code>来替代<code>bytes.Buffer</code></a></li><li><a href=#使用ioteereader实现双写>使用<code>io.TeeReader</code>实现双写</a></li><li><a href=#使用iopipe实现读写管道>使用io.Pipe实现读写管道</a></li></ul></li><li><a href=#一坑多踩>一坑多踩</a></li><li><a href=#经验总结>经验总结</a></li></ul></nav></div></div><div class=content id=content><p>Go Writer 和 Reader接口的设计遵循了Unix的输入和输出，一个程序的输出可以是另外一个程序的输入，与之类比，Reader将流中的数据写进缓冲中，是一种数据的流入；Writer将缓冲的数据写至流，是一种数据的流出。</p><h2 id=问题背景>问题背景</h2><p>ToB的业务场景中的一种常见模式是私有云部署。对于一些保密性质的机关单位，应用只能在私有网络下部署，因此将数据包、镜像等部署所需的<strong>artifact</strong>克隆到用户现场便成为私有化交付中重要的一环。</p><p>完整流程大致如下：</p><ul><li>解析对应的应用编排包及依赖，并下载所需的镜像及数据包（<strong>artifact</strong>）</li><li>将artifacts（可能需要压缩）、编排包pack成tar包</li><li>将tar包通过离线存储设备带到现场</li><li>在现场网络环境下将tar包load到私有化集群中</li></ul><p>项目中采用virtual FS来实现封包/解包函数，借助两个helper函数：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// ArchiveFS 将fs封包成tar并写到buf中
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>func</span> <span class=nf>ArchiveFS</span><span class=p>(</span><span class=nx>buf</span> <span class=nx>io</span><span class=p>.</span><span class=nx>Writer</span><span class=p>,</span> <span class=nx>files</span> <span class=nx>fs</span><span class=p>.</span><span class=nx>FS</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>tw</span> <span class=o>:=</span> <span class=nx>tar</span><span class=p>.</span><span class=nf>NewWriter</span><span class=p>(</span><span class=nx>buf</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>err</span> <span class=o>:=</span> <span class=nx>fs</span><span class=p>.</span><span class=nf>WalkDir</span><span class=p>(</span><span class=nx>files</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>,</span> <span class=kd>func</span><span class=p>(</span><span class=nx>path</span> <span class=kt>string</span><span class=p>,</span> <span class=nx>entry</span> <span class=nx>fs</span><span class=p>.</span><span class=nx>DirEntry</span><span class=p>,</span> <span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>path</span> <span class=o>==</span> <span class=s>&#34;.git&#34;</span> <span class=o>||</span> <span class=nx>path</span> <span class=o>==</span> <span class=s>&#34;.idea&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>filepath</span><span class=p>.</span><span class=nx>SkipDir</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// don&#39;t put &#34;&#34; into tar, since it can&#39;t be parsed
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>if</span> <span class=nx>path</span> <span class=o>==</span> <span class=s>&#34;&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=nx>file</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>files</span><span class=p>.</span><span class=nf>Open</span><span class=p>(</span><span class=nx>path</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>defer</span> <span class=nx>file</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>		<span class=nx>info</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>entry</span><span class=p>.</span><span class=nf>Info</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=nx>hdr</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>tar</span><span class=p>.</span><span class=nf>FileInfoHeader</span><span class=p>(</span><span class=nx>info</span><span class=p>,</span> <span class=s>&#34;&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=nx>hdr</span><span class=p>.</span><span class=nx>Name</span> <span class=p>=</span> <span class=nf>normalizeFilepathSeparator</span><span class=p>(</span><span class=nx>path</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>info</span><span class=p>.</span><span class=nf>IsDir</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=nx>hdr</span><span class=p>.</span><span class=nx>Mode</span> <span class=p>=</span> <span class=mi>0</span><span class=nx>o755</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=nx>hdr</span><span class=p>.</span><span class=nx>Mode</span> <span class=p>=</span> <span class=mi>0</span><span class=nx>o644</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>tw</span><span class=p>.</span><span class=nf>WriteHeader</span><span class=p>(</span><span class=nx>hdr</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=c1>// dir must be writen to tar header for index files within it
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>if</span> <span class=nx>info</span><span class=p>.</span><span class=nf>IsDir</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>tw</span><span class=p>,</span> <span class=nx>file</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl>	<span class=p>})</span>
+</span></span><span class=line><span class=cl>	<span class=nx>tw</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// LoadArchive 将tar解包到memory fs中
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>func</span> <span class=nf>LoadArchive</span><span class=p>(</span><span class=nx>r</span> <span class=nx>io</span><span class=p>.</span><span class=nx>Reader</span><span class=p>)</span> <span class=p>(</span><span class=nx>afero</span><span class=p>.</span><span class=nx>Fs</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>t</span> <span class=o>:=</span> <span class=nx>tar</span><span class=p>.</span><span class=nf>NewReader</span><span class=p>(</span><span class=nx>r</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>fs</span> <span class=o>:=</span> <span class=nx>afero</span><span class=p>.</span><span class=nf>NewMemMapFs</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>hdr</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>t</span><span class=p>.</span><span class=nf>Next</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>==</span> <span class=nx>io</span><span class=p>.</span><span class=nx>EOF</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>break</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=kc>nil</span><span class=p>,</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>hdr</span><span class=p>.</span><span class=nf>FileInfo</span><span class=p>().</span><span class=nf>IsDir</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=nx>path</span> <span class=o>:=</span> <span class=nx>hdr</span><span class=p>.</span><span class=nx>Name</span>
+</span></span><span class=line><span class=cl>			<span class=nx>fs</span><span class=p>.</span><span class=nf>MkdirAll</span><span class=p>(</span><span class=nx>path</span><span class=p>,</span> <span class=mi>0</span><span class=nx>o755</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>			<span class=nx>fs</span><span class=p>.</span><span class=nf>Chtimes</span><span class=p>(</span><span class=nx>path</span><span class=p>,</span> <span class=nx>time</span><span class=p>.</span><span class=nf>Now</span><span class=p>(),</span> <span class=nx>time</span><span class=p>.</span><span class=nf>Now</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>			<span class=k>continue</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>		<span class=kd>var</span> <span class=nx>buf</span> <span class=nx>bytes</span><span class=p>.</span><span class=nx>Buffer</span>
+</span></span><span class=line><span class=cl>		<span class=nx>size</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>buf</span><span class=p>.</span><span class=nf>ReadFrom</span><span class=p>(</span><span class=nx>t</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=nb>panic</span><span class=p>(</span><span class=s>&#34;tarfs: reading from tar:&#34;</span> <span class=o>+</span> <span class=nx>err</span><span class=p>.</span><span class=nf>Error</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>size</span> <span class=o>!=</span> <span class=nx>hdr</span><span class=p>.</span><span class=nx>Size</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=nb>panic</span><span class=p>(</span><span class=s>&#34;tarfs: size mismatch&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>		<span class=nx>afero</span><span class=p>.</span><span class=nf>WriteFile</span><span class=p>(</span><span class=nx>fs</span><span class=p>,</span> <span class=nx>hdr</span><span class=p>.</span><span class=nx>Name</span><span class=p>,</span> <span class=nx>buf</span><span class=p>.</span><span class=nf>Bytes</span><span class=p>(),</span> <span class=mi>0</span><span class=nx>o644</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=nx>fs</span><span class=p>,</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>起初，这两个函数只是作为编排包（几KB）的封包/解包helper。后来引入了带artifact的全量打包，为了方便就复用了这两个helper函数。最终在测试时发现在模拟现场加载tar包时出现OOM的问题。</p><h2 id=问题分析>问题分析</h2><p>上述两个helper的Reader/Writer的入参是<code>bytes.Buffer</code>，virtual FS都是memory FS。这样就导致每调用一次helper函数时，都会在内存中新增一份全量包的拷贝。对于应用编排包而言，其大小不过几KB，完全可以忽略掉内存的变化。而当引入了镜像及数据包这类size比较大的artifact时，pack出的全量包一度达到20+GB。即使在内存中完整存在一份全量包，都可能引入OOM的风险。因此我们考虑通过对IO进行优化，避免将全量包加载到内存。</p><p>经过分析，我们的处理流程中有以下部分可以优化：</p><ul><li>Artifact的下载都是通过http call，通过<code>ioutil.ReadAll(resp.Body)</code>copy到<code>bytes.Buffer</code>中。可以考虑将artifact下载到<code>os.File</code>中，借助磁盘节省内存。</li><li>内存里维护memory FS存放各类artifacts，可以考虑通过物理文件系统来维护相应的结构。</li><li>FS的打包是通过上述<code>ArchiveFS</code> helper将FS以tar的形式写到bytes.Buffer中，可以考虑直接写到<code>os.File</code>中。</li><li>Artifact的上传是通过http.Post形式发送大文件，可以改造成流式传输。</li></ul><p>FS的优化比较简单，可以直接通过tempDir来构造物理文件系统替换掉memory FS，下面着重讨论相应的IO优化。</p><h2 id=io优化>IO优化</h2><p>选用<code>bytes.Buffer</code>的好处是其实现了<code>io.Reader</code>与<code>io.Writer</code>方法，可以灵活地读写。此外，其可以很方便地获取到完整的字节流，便于额外构造一个新的reader，这对于我们既要将reader写入文件，也要通过reader算md5的场景提供了便利。</p><h3 id=使用osfile来替代bytesbuffer>使用<code>os.File</code>来替代<code>bytes.Buffer</code></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>file</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>os</span><span class=p>.</span><span class=nf>Create</span><span class=p>(</span><span class=nx>tempPath</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>defer</span> <span class=nx>file</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=nx>resp</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>http</span><span class=p>.</span><span class=nf>Get</span><span class=p>(</span><span class=nx>url</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>// ignoring handle err
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>defer</span> <span class=nx>resp</span><span class=p>.</span><span class=nx>Body</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=c1>// file作为writer，放置下载后的artifact
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>file</span><span class=p>,</span> <span class=nx>resp</span><span class=p>.</span><span class=nx>Body</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// file作为reader，计算MD5
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>hash</span> <span class=o>:=</span> <span class=nx>md5</span><span class=p>.</span><span class=nf>New</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>hash</span><span class=p>,</span> <span class=nx>file</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>// ... other logic
+</span></span></span></code></pre></td></tr></table></div></div><p>上述会将artifact下载到<code>tempPath</code>下，但是<strong>计算出的md5值总为空内容的md5</strong>。</p><p>究其原因，<code>os.File</code>写完后不能直接读，其在write后会将offset置为写入末尾处，<strong>需要手动将offset seek到文件开头才能读取完整的文件</strong>。举个例子：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>a</span> <span class=o>:=</span> <span class=s>&#34;text.txt&#34;</span>
+</span></span><span class=line><span class=cl><span class=nx>file</span><span class=p>,</span> <span class=nx>_</span> <span class=o>:=</span> <span class=nx>os</span><span class=p>.</span><span class=nf>Create</span><span class=p>(</span><span class=nx>a</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>file</span><span class=p>.</span><span class=nf>WriteString</span><span class=p>(</span><span class=s>&#34;test&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// file.Seek(0, io.SeekStart)
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>buf</span> <span class=o>:=</span> <span class=nb>new</span><span class=p>(</span><span class=nx>bytes</span><span class=p>.</span><span class=nx>Buffer</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>buf</span><span class=p>.</span><span class=nf>ReadFrom</span><span class=p>(</span><span class=nx>file</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>fmt</span><span class=p>.</span><span class=nf>Println</span><span class=p>(</span><span class=nx>buf</span><span class=p>.</span><span class=nf>String</span><span class=p>())</span>
+</span></span></code></pre></td></tr></table></div></div><p>输出结果为<code>""</code>，去掉第5行注释的话，输出的结果便是<code>test</code>。</p><h3 id=使用ioteereader实现双写>使用<code>io.TeeReader</code>实现双写</h3><p>我们的案例中存在两种双写的场景：</p><ul><li>将下载的内容写入到文件，同时计算md5</li><li>由于某种artifact存储方式为content-addressable，下载到文件的同时需要写入本地文件系统某个缓存目录（类比docker）</li></ul><p>使用<code>bytes.Buffer</code>可以方便地获取到内容，从而构建另一个reader，完成独立的两次写入。除此之外，<code>io</code> package为我们提供了专门的双写方法：<code>io.TeeReader</code>，其实现十分简单：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=nf>TeeReader</span><span class=p>(</span><span class=nx>r</span> <span class=nx>Reader</span><span class=p>,</span> <span class=nx>w</span> <span class=nx>Writer</span><span class=p>)</span> <span class=nx>Reader</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=o>&amp;</span><span class=nx>teeReader</span><span class=p>{</span><span class=nx>r</span><span class=p>,</span> <span class=nx>w</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>teeReader</span><span class=p>)</span> <span class=nf>Read</span><span class=p>(</span><span class=nx>p</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>)</span> <span class=p>(</span><span class=nx>n</span> <span class=kt>int</span><span class=p>,</span> <span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>n</span><span class=p>,</span> <span class=nx>err</span> <span class=p>=</span> <span class=nx>t</span><span class=p>.</span><span class=nx>r</span><span class=p>.</span><span class=nf>Read</span><span class=p>(</span><span class=nx>p</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=nx>n</span> <span class=p>&gt;</span> <span class=mi>0</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>n</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>t</span><span class=p>.</span><span class=nx>w</span><span class=p>.</span><span class=nf>Write</span><span class=p>(</span><span class=nx>p</span><span class=p>[:</span><span class=nx>n</span><span class=p>]);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>n</span><span class=p>,</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>teeReader</code>内部wrap了一个writer，在进行read时，同时会将读出来的内容write到内部的writer中。在我们的场景下，以计算md5并写入文件为例：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// reader comes from http.Body
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>hash</span> <span class=o>:=</span> <span class=nx>md5</span><span class=p>.</span><span class=nf>New</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=nx>reader</span> <span class=o>:=</span> <span class=nx>io</span><span class=p>.</span><span class=nf>TeeReader</span><span class=p>(</span><span class=nx>reader</span><span class=p>,</span> <span class=nx>hash</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>writer</span><span class=p>,</span> <span class=nx>reader</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>   <span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>hashsum</span> <span class=o>:=</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;%x&#34;</span><span class=p>,</span> <span class=nx>hash</span><span class=p>.</span><span class=nf>Sum</span><span class=p>(</span><span class=kc>nil</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=c1>// handle hashsum
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=使用iopipe实现读写管道>使用io.Pipe实现读写管道</h3><p><code>io.Pipe</code>是native go的一种实现，<strong>类似于生产者消费者模式</strong>，主要靠channel实现。在使用中，读写需要是异步的，否则会出现死锁的情况。在我们的案例中，加载全量包时会以http post的形式发送大文件。通常我们会在内存中构建body：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// bytes.Buffer构造post body
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>buf</span> <span class=o>:=</span> <span class=nb>new</span><span class=p>(</span><span class=nx>bytes</span><span class=p>.</span><span class=nx>Buffer</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>writer</span> <span class=o>:=</span> <span class=nx>multipart</span><span class=p>.</span><span class=nf>NewWriter</span><span class=p>(</span><span class=nx>buf</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>defer</span> <span class=nx>writer</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=nx>part</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>writer</span><span class=p>.</span><span class=nf>CreateFormFile</span><span class=p>(</span><span class=s>&#34;upload&#34;</span><span class=p>,</span> <span class=nx>fn</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>err</span> <span class=p>=</span> <span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>part</span><span class=p>,</span> <span class=nx>file</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>err</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=nx>http</span><span class=p>.</span><span class=nf>Post</span><span class=p>(</span><span class=nx>url</span><span class=p>,</span> <span class=nx>writer</span><span class=p>.</span><span class=nf>FormDataContentType</span><span class=p>(),</span> <span class=nx>buf</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>当<code>file</code>的size很大时（我们场景会是GB量级），body占用的内存会增大，增加了OOM的风险，因此我们采用io.Pipe进行内存优化：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>r</span><span class=p>,</span> <span class=nx>w</span> <span class=o>:=</span> <span class=nx>io</span><span class=p>.</span><span class=nf>Pipe</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=nx>m</span> <span class=o>:=</span> <span class=nx>multipart</span><span class=p>.</span><span class=nf>NewWriter</span><span class=p>(</span><span class=nx>w</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=c1>// 异步写入，否则会出现死锁
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>go</span> <span class=kd>func</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>defer</span> <span class=nx>w</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>defer</span> <span class=nx>m</span><span class=p>.</span><span class=nf>Close</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=nx>part</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>m</span><span class=p>.</span><span class=nf>CreateFormFile</span><span class=p>(</span><span class=s>&#34;upload&#34;</span><span class=p>,</span> <span class=nx>fn</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>err</span> <span class=p>=</span> <span class=nx>io</span><span class=p>.</span><span class=nf>Copy</span><span class=p>(</span><span class=nx>part</span><span class=p>,</span> <span class=nx>file</span><span class=p>);</span> <span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}()</span>
+</span></span><span class=line><span class=cl><span class=nx>http</span><span class=p>.</span><span class=nf>Post</span><span class=p>(</span><span class=nx>url</span><span class=p>,</span> <span class=nx>m</span><span class=p>.</span><span class=nf>FormDataContentType</span><span class=p>(),</span> <span class=nx>r</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>观察<code>io.Pipe</code>的核心实现，主要依赖于一个数据channel流式地进行数据传递：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>func</span> <span class=nf>Pipe</span><span class=p>()</span> <span class=p>(</span><span class=o>*</span><span class=nx>PipeReader</span><span class=p>,</span> <span class=o>*</span><span class=nx>PipeWriter</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>p</span> <span class=o>:=</span> <span class=o>&amp;</span><span class=nx>pipe</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>wrCh</span><span class=p>:</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>		<span class=nx>rdCh</span><span class=p>:</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kt>int</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>		<span class=nx>done</span><span class=p>:</span> <span class=nb>make</span><span class=p>(</span><span class=kd>chan</span> <span class=kd>struct</span><span class=p>{}),</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=o>&amp;</span><span class=nx>PipeReader</span><span class=p>{</span><span class=nx>p</span><span class=p>},</span> <span class=o>&amp;</span><span class=nx>PipeWriter</span><span class=p>{</span><span class=nx>p</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>p</span> <span class=o>*</span><span class=nx>pipe</span><span class=p>)</span> <span class=nf>write</span><span class=p>(</span><span class=nx>b</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>)</span> <span class=p>(</span><span class=nx>n</span> <span class=kt>int</span><span class=p>,</span> <span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// ignore some control logic
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>for</span> <span class=nx>once</span> <span class=o>:=</span> <span class=kc>true</span><span class=p>;</span> <span class=nx>once</span> <span class=o>||</span> <span class=nb>len</span><span class=p>(</span><span class=nx>b</span><span class=p>)</span> <span class=p>&gt;</span> <span class=mi>0</span><span class=p>;</span> <span class=nx>once</span> <span class=p>=</span> <span class=kc>false</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>select</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// wrCh是数据channel
+</span></span></span><span class=line><span class=cl><span class=c1></span>		<span class=k>case</span> <span class=nx>p</span><span class=p>.</span><span class=nx>wrCh</span> <span class=o>&lt;-</span> <span class=nx>b</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>      <span class=c1>// rdCh是读写计数channel
+</span></span></span><span class=line><span class=cl><span class=c1></span>			<span class=nx>nw</span> <span class=o>:=</span> <span class=o>&lt;-</span><span class=nx>p</span><span class=p>.</span><span class=nx>rdCh</span>
+</span></span><span class=line><span class=cl>			<span class=nx>b</span> <span class=p>=</span> <span class=nx>b</span><span class=p>[</span><span class=nx>nw</span><span class=p>:]</span>
+</span></span><span class=line><span class=cl>			<span class=nx>n</span> <span class=o>+=</span> <span class=nx>nw</span>
+</span></span><span class=line><span class=cl>		<span class=k>case</span> <span class=o>&lt;-</span><span class=nx>p</span><span class=p>.</span><span class=nx>done</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>n</span><span class=p>,</span> <span class=nx>p</span><span class=p>.</span><span class=nf>writeCloseError</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=nx>n</span><span class=p>,</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>p</span> <span class=o>*</span><span class=nx>pipe</span><span class=p>)</span> <span class=nf>read</span><span class=p>(</span><span class=nx>b</span> <span class=p>[]</span><span class=kt>byte</span><span class=p>)</span> <span class=p>(</span><span class=nx>n</span> <span class=kt>int</span><span class=p>,</span> <span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=c1>// ignore some control logic
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=k>select</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>case</span> <span class=nx>bw</span> <span class=o>:=</span> <span class=o>&lt;-</span><span class=nx>p</span><span class=p>.</span><span class=nx>wrCh</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=nx>nr</span> <span class=o>:=</span> <span class=nb>copy</span><span class=p>(</span><span class=nx>b</span><span class=p>,</span> <span class=nx>bw</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=nx>p</span><span class=p>.</span><span class=nx>rdCh</span> <span class=o>&lt;-</span> <span class=nx>nr</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=nx>nr</span><span class=p>,</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl>	<span class=k>case</span> <span class=o>&lt;-</span><span class=nx>p</span><span class=p>.</span><span class=nx>done</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=mi>0</span><span class=p>,</span> <span class=nx>p</span><span class=p>.</span><span class=nf>readCloseError</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=一坑多踩>一坑多踩</h2><p>除了OOM的问题，在开发过程中经常出现<strong>unexpected EOF</strong>的报错。此类问题排查的切入点比较模糊，经过深入地单步调试才得以定位：项目中使用了<code>tar.Writer</code>进行封包，在使用<code>tar.Reader</code>解包时报EOF错误。这意味着这个tar包不是一个合法的tar包，使用tar命令去操作此tar包也会有类似的报错。</p><p>究其原因，tar会在封包结束后，通过<code>Close()</code>方法<strong>在包尾部加入一层padding</strong>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// Flush is called by tw.Close()
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kd>func</span> <span class=p>(</span><span class=nx>tw</span> <span class=o>*</span><span class=nx>Writer</span><span class=p>)</span> <span class=nf>Flush</span><span class=p>()</span> <span class=kt>error</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=nx>tw</span><span class=p>.</span><span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=nx>tw</span><span class=p>.</span><span class=nx>err</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=nx>nb</span> <span class=o>:=</span> <span class=nx>tw</span><span class=p>.</span><span class=nx>curr</span><span class=p>.</span><span class=nf>logicalRemaining</span><span class=p>();</span> <span class=nx>nb</span> <span class=p>&gt;</span> <span class=mi>0</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Errorf</span><span class=p>(</span><span class=s>&#34;archive/tar: missed writing %d bytes&#34;</span><span class=p>,</span> <span class=nx>nb</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>tw</span><span class=p>.</span><span class=nx>err</span> <span class=p>=</span> <span class=nx>tw</span><span class=p>.</span><span class=nx>w</span><span class=p>.</span><span class=nf>Write</span><span class=p>(</span><span class=nx>zeroBlock</span><span class=p>[:</span><span class=nx>tw</span><span class=p>.</span><span class=nx>pad</span><span class=p>]);</span> <span class=nx>tw</span><span class=p>.</span><span class=nx>err</span> <span class=o>!=</span> <span class=kc>nil</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=nx>tw</span><span class=p>.</span><span class=nx>err</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=nx>tw</span><span class=p>.</span><span class=nx>pad</span> <span class=p>=</span> <span class=mi>0</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>我们在封包时，没有调用<code>Close()</code>，也就不会再尾部添加padding。在解包时，如果没有在尾部发现这个padding，就无法定位此tar包结束的位置，因此会认为此tar包是invalid，因此抛出<code>unexpected EOF</code></p><p>那么，为什么会多此踩到这个坑呢？</p><p>除了使用了tar进行封包，我们还是用了<code>zstd.Writer</code>对artifact进行了压缩，同样忘记了调用<code>Close()</code>方法。在此总结出一条经验教训：对于<code>ReadCloser</code>以及<code>WriteCloser</code>的实现，在读/写完一定要记得调用<code>Close()</code>方法，否则对于前者读而言，存在内存泄露的风险；对于后者写而言，存在因缺失尾部标识而导致包格式错误。</p><h2 id=经验总结>经验总结</h2><p>本文描述了与<strong>io相关的OOM问题及unexpected EOF问题</strong>，总结了如下经验：</p><ul><li>当待处理的内容足够大时，避免使用<code>bytes.Buffer</code>加载到内存中进行处理，<strong>借助磁盘或管道减少内存占用</strong></li><li><code>os.File</code>写入后直接读，需要将offset重置到起始处</li><li>使用http.Post传大文件时，可以使用<code>io.Pipe</code>构建body，减少内存占用</li><li>对于所有的<code>WriteCloser</code>的实现，写完记得调用<code>Close()</code>以防写出的格式不完整</li></ul><hr><p>配图引自 <a href=https://medium.com/learning-the-go-programming-language/streaming-io-in-go-d93507931185 target=_blank rel="noopener noreffer">https://medium.com/learning-the-go-programming-language/streaming-io-in-go-d93507931185</a></p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2022-04-20</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/go/>go</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/go-modules/ class=prev rel=prev title="Go modules要点梳理"><i class="fas fa-angle-left fa-fw"></i>Go modules要点梳理</a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
