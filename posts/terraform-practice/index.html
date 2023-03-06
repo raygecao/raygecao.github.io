@@ -1,0 +1,249 @@
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Terraform实践 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="Terraform实践"><meta property="og:description" content="本文简述Terraform HCL语言；提供基于Docker与AWS平台供应基础设施的demo；并对多环境管理进行探索。"><meta property="og:type" content="article"><meta property="og:url" content="https://raygecao.github.io/posts/terraform-practice/"><meta property="og:image" content="https://raygecao.github.io/posts/terraform-practice/featured-image.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2023-03-05T10:23:12+08:00"><meta property="article:modified_time" content="2023-03-05T10:23:12+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://raygecao.github.io/posts/terraform-practice/featured-image.png"><meta name=twitter:title content="Terraform实践"><meta name=twitter:description content="本文简述Terraform HCL语言；提供基于Docker与AWS平台供应基础设施的demo；并对多环境管理进行探索。"><meta name=application-name content="拾遗之途"><meta name=apple-mobile-web-app-title content="拾遗之途"><meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/terraform-practice/><link rel=prev href=https://raygecao.github.io/posts/iac-intro/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Terraform实践","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/terraform-practice\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/terraform-practice\/featured-image.png","width":2400,"height":870}],"genre":"posts","keywords":"IaC","wordcount":5039,"url":"https:\/\/raygecao.github.io\/posts\/terraform-practice\/","datePublished":"2023-03-05T10:23:12+08:00","dateModified":"2023-03-05T10:23:12+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":""==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:""==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Terraform实践</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%8E%A2%E7%B4%A2%E4%B8%8E%E5%AE%9E%E6%88%98/><i class="far fa-folder fa-fw"></i>探索与实战</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2023-03-05>2023-03-05</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5039 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;<span id=/posts/terraform-practice/ class=leancloud_visitors data-flag-title=Terraform实践>
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/terraform-practice/featured-image.png data-srcset="/posts/terraform-practice/featured-image.png, /posts/terraform-practice/featured-image.png 1.5x, /posts/terraform-practice/featured-image.png 2x" data-sizes=auto alt=/posts/terraform-practice/featured-image.png title=/posts/terraform-practice/featured-image.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#模板引擎>模板引擎</a><ul><li><a href=#文件结构>文件结构</a></li><li><a href=#hcl语法>HCL语法</a></li><li><a href=#隐式依赖>隐式依赖</a></li><li><a href=#模块>模块</a></li></ul></li><li><a href=#terraform-in-docker>Terraform in Docker</a></li><li><a href=#terraform-in-aws>Terraform in AWS</a></li><li><a href=#多环境管理>多环境管理</a><ul><li><a href=#基于terraform-workspace管理>基于Terraform workspace管理</a></li><li><a href=#基于多分支管理>基于多分支管理</a></li><li><a href=#基于terragrunt管理>基于Terragrunt管理</a></li><li><a href=#三种环境管理方式的比较>三种环境管理方式的比较</a></li><li><a href=#多环境与devops>多环境与Devops</a></li></ul></li><li><a href=#使用terraform-cloud实现自动化部署>使用Terraform Cloud实现自动化部署</a></li><li><a href=#参考文档>参考文档</a></li></ul></nav></div></div><div class=content id=content><p>本文简述Terraform HCL语言；提供基于Docker与AWS平台供应基础设施的demo；并对多环境管理进行探索。</p><h2 id=模板引擎>模板引擎</h2><h3 id=文件结构>文件结构</h3><p>Terraform识别以下几类特殊文件：</p><ul><li><code>*.tf</code> ：资源声明文件，用于声明所要创建的资源。</li><li><code>*_override.tf</code>：资源后处理文件，用于覆盖已存在资源的某些部分。</li><li><code>.terraform.lock.hcl</code>：锁定provider的版本。</li><li><code>terraform.tfvars</code>：给定已声明变量一组特定值。</li></ul><h3 id=hcl语法>HCL语法</h3><p><a href=https://developer.hashicorp.com/terraform/language target=_blank rel="noopener noreffer">HCL</a>全称为<strong>HashiCorp Configure Language</strong>，是由HashiCorp专门为Terraform设计的声明式配置语言，用来描述如何管理一组的基础设施。</p><p>HCL通用语法块为：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>&lt;块类型&gt; &#34;&lt;资源类型&gt;&#34; &#34;&lt;资源名&gt;&#34; {
+</span></span><span class=line><span class=cl>  # Block body
+</span></span><span class=line><span class=cl>  &lt;属性名&gt; = &lt;属性值&gt; # Argument
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><p>其中</p><ul><li><p>块类型包含以下几种常见类型：</p><table><thead><tr><th>块类型</th><th>作用</th></tr></thead><tbody><tr><td>terraform</td><td>声明provider版本及来源</td></tr><tr><td>provider</td><td>配置provider</td></tr><tr><td>resource</td><td>定义并配置资源对象</td></tr><tr><td>data</td><td>获取外部资源</td></tr><tr><td>variable</td><td>定义模块输入变量</td></tr><tr><td>output</td><td>定义模块输出变量</td></tr><tr><td>locals</td><td>定义本地变量</td></tr><tr><td>module</td><td>定义模块引用</td></tr></tbody></table></li><li><p>资源类型及Arguments由provider定义。</p></li><li><p>资源名由用户自定义，用来在引用模块内资源，因而避免相同资源同名的问题。并非所有块类型都需要额外的资源名（如variable、output、provider、locals等）</p></li></ul><p>以创建一个redis docker container为例体验一下HCL：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl># 声明docker provider
+</span></span><span class=line><span class=cl>terraform {
+</span></span><span class=line><span class=cl>  required_providers {
+</span></span><span class=line><span class=cl>    docker = {
+</span></span><span class=line><span class=cl>      source = &#34;kreuzwerker/docker&#34;
+</span></span><span class=line><span class=cl>      version = &#34;~&gt; 3.0.1&#34;
+</span></span><span class=line><span class=cl>    }
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 配置provider，必需，即使没有arguments
+</span></span><span class=line><span class=cl>provider &#34;docker&#34; {}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 创建redis docker image resource
+</span></span><span class=line><span class=cl>resource &#34;docker_image&#34; &#34;redis&#34; {
+</span></span><span class=line><span class=cl>  name         = &#34;redis:5.0.5-alpine&#34;
+</span></span><span class=line><span class=cl>  keep_locally = true
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># 创建redis docker container resource，引用上一步创建的docker image id
+</span></span><span class=line><span class=cl>resource &#34;docker_container&#34; &#34;redis&#34; {
+</span></span><span class=line><span class=cl>  name = &#34;storage&#34;
+</span></span><span class=line><span class=cl>  image = docker_image.redis.image_id
+</span></span><span class=line><span class=cl>  command = [&#34;--requirepass&#34;, &#34;dea1452fe9133ea28e60b25f70fa93c43bcfeca9648d0cb470a473f563c91af6&#34;]
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><h3 id=隐式依赖>隐式依赖</h3><p>HCL中通过资源引用来声明隐式依赖，即<code>R1</code>的某些输入参数通过引用<code>R2</code>资源的输出结果建立起了<code>R1</code>对<code>R2</code>的隐式依赖。Terraform在进行资源创建时，会先创建<code>R2</code>再去创建<code>R1</code>，删除顺序与创建顺序相反。</p><p>上例中<code>docker_container.redis.image</code>引用了<code>docker_image.redis.image_id</code>，即<code>docker_container.redis</code>依赖于<code>docker_image.redis</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ terraform apply --auto-approve
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># ...... some resource plan output ......</span>
+</span></span><span class=line><span class=cl>docker_image.redis: Creating...
+</span></span><span class=line><span class=cl>docker_image.redis: Creation <span class=nb>complete</span> after 0s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>sha256:ed7d2ff5a6232b43bdc89a2220ed989f532c3794422aa2a86823b8bc62e71447redis:5.0.5-alpine<span class=o>]</span>
+</span></span><span class=line><span class=cl>docker_container.redis: Creating...
+</span></span><span class=line><span class=cl>docker_container.redis: Creation <span class=nb>complete</span> after 1s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>583c145b78d31bc28d8c993087c9bbd077be2dd6c60f51da6f78299880958ae7<span class=o>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>$ terraform destroy --auto-approve
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># ...... some resource plan output ......</span>
+</span></span><span class=line><span class=cl>docker_container.redis: Destroying... <span class=o>[</span><span class=nv>id</span><span class=o>=</span>583c145b78d31bc28d8c993087c9bbd077be2dd6c60f51da6f78299880958ae7<span class=o>]</span>
+</span></span><span class=line><span class=cl>docker_container.redis: Destruction <span class=nb>complete</span> after 1s
+</span></span><span class=line><span class=cl>docker_image.redis: Destroying... <span class=o>[</span><span class=nv>id</span><span class=o>=</span>sha256:ed7d2ff5a6232b43bdc89a2220ed989f532c3794422aa2a86823b8bc62e71447redis:5.0.5-alpine<span class=o>]</span>
+</span></span><span class=line><span class=cl>docker_image.redis: Destruction <span class=nb>complete</span> after 0s
+</span></span></code></pre></td></tr></table></div></div><h3 id=模块>模块</h3><p>为了增强功能块复用，Terraform提供了强大的模块化能力。</p><p>模块通常包含一组一起使用的资源，通常在一个目录下定义多个<code>tf</code>文件以实现一个模块。</p><p>模块通常分为两类：</p><ul><li>根模块：在工作目录（执行terraform CLI时所在的目录）下的模块。</li><li>子模块：被其他模块引用的模块，子模块可以是自定义的本地模块，也可以使用registry中第三方提供的模块。模块引用可以嵌套，但嵌套深度不应过深。</li></ul><p>模块之间的交互主要有两种方式：</p><ul><li>父模块通过配置子模块属性向子模块传递input variables。</li><li>子模块通过output variables向父模块返回相关的配置值供其引用。</li></ul><h2 id=terraform-in-docker>Terraform in Docker</h2><p>Terraform可以构建、修改及移除Docker基础设施。<a href=https://registry.terraform.io/providers/kreuzwerker/docker/3.0.1 target=_blank rel="noopener noreffer">Docker provider</a>提供了network、volume、image、container等资源，以提供对Docker操作的完整支持。</p><p><a href=https://developer.hashicorp.com/terraform/tutorials/docker-get-started target=_blank rel="noopener noreffer">Terraform Docker Tutorial</a>详细描述了如何部署一个nginx docker container，配置与上例类似。</p><p>我们以部署一个带存储后端（redis）的留言板（guestbook）为例，探索使用Terraform部署两个具有依赖关系的docker container。</p><p>该场景资源依赖关系可以描述为下图：</p><figure><a class=lightgallery href=/posts/terraform-practice/dep.png title=/posts/terraform-practice/dep.png data-thumbnail=/posts/terraform-practice/dep.png data-sub-html="<h2>docker资源的依赖关系图</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=dep.png data-srcset="/posts/terraform-practice/dep.png, dep.png 1.5x, /posts/terraform-practice/dep.png 2x" data-sizes=auto alt=/posts/terraform-practice/dep.png height=400 width=800></a><figcaption class=image-caption>docker资源的依赖关系图</figcaption></figure><p>具体实现可参考<a href=https://github.com/raygecao/terraform-demo/tree/19dad1f72369e72c4bdb5e6ff81107a492dca542/docker target=_blank rel="noopener noreffer">示例代码</a>，工作方式与docker compose极为相似。</p><p>然而Docker资源属于上层组件，Terraform并不具备管理优势，其核心价值在于公有云基础设施供应。</p><h2 id=terraform-in-aws>Terraform in AWS</h2><p>通常，云提供商为了满足多样的商业需求，会提供与计算、存储、网络相关的多种功能服务。这些厂商提供了易用的UI界面及api供用户管理相关的资源，但存在以下问题：</p><ul><li>服务种类众多，每个服务又包含数十种配置，给用户带来大量的学习成本。</li><li>流程繁杂，用户需要按顺序地配置、启动服务，并进行资源关联，易错且低效。</li></ul><p>单从创建一个强隔离性的nginx ec2 instance而言，用户不得不手动创建vpc、subnet、internet gateway、route table等网络服务以及ec2、security group、key-pair等计算资源。构建过程需要对这些资源手动创建并正确配置，清理过程同样需要手动移除各个服务。如果考虑在云上维护多个环境，那管理成本无法估量。</p><p>Terraform将我们从繁杂的基础设施管理中解救出来：</p><ul><li>声明式配置简化我们在界面上点点点的操作，并降低出错的概率。</li><li>资源按依赖顺序并发构建，大幅提升基础设施的部署速度。</li><li>模块化供应屏蔽了大量内部细节，比如<code>aws_vpc</code> module将vpc、subnet、internet gateway、route table等资源封装起来。</li></ul><p><a href=https://github.com/raygecao/terraform-demo/tree/b4aa280b4b8fe34fce418e0c3ca7acecee508641/aws/single target=_blank rel="noopener noreffer">示例代码</a>展示了构建一个guestbook ec2 instance的方法，并将相应的公网ip输出出来。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ terraform apply --auto-approve
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># ..... some resource plan output ......</span>
+</span></span><span class=line><span class=cl>aws_key_pair.ssh: Creating...
+</span></span><span class=line><span class=cl>aws_vpc.my-vpc: Creating...
+</span></span><span class=line><span class=cl>aws_key_pair.ssh: Creation <span class=nb>complete</span> after 1s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>dev_instance_key<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_vpc.my-vpc: Creation <span class=nb>complete</span> after 3s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>vpc-04f4f4619c774d27d<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_internet_gateway.my-igw: Creating...
+</span></span><span class=line><span class=cl>aws_subnet.my-subnet: Creating...
+</span></span><span class=line><span class=cl>aws_security_group.my-sg: Creating...
+</span></span><span class=line><span class=cl>aws_internet_gateway.my-igw: Creation <span class=nb>complete</span> after 0s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>igw-00d00c50080474895<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_subnet.my-subnet: Creation <span class=nb>complete</span> after 0s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>subnet-060ff42389821a4e4<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_route_table.my-route-table: Creating...
+</span></span><span class=line><span class=cl>aws_route_table.my-route-table: Creation <span class=nb>complete</span> after 2s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>rtb-0c150344ed47e3c8b<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_route_table_association.a-rtb-subnet: Creating...
+</span></span><span class=line><span class=cl>aws_route_table_association.a-rtb-subnet: Creation <span class=nb>complete</span> after 1s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>rtbassoc-0c8c6b265e4333216<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_security_group.my-sg: Creation <span class=nb>complete</span> after 4s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>sg-0ace2bfadd865994b<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_instance.my-server: Creating...
+</span></span><span class=line><span class=cl>aws_instance.my-server: Still creating... <span class=o>[</span>10s elapsed<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_instance.my-server: Still creating... <span class=o>[</span>20s elapsed<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_instance.my-server: Still creating... <span class=o>[</span>30s elapsed<span class=o>]</span>
+</span></span><span class=line><span class=cl>aws_instance.my-server: Creation <span class=nb>complete</span> after 35s <span class=o>[</span><span class=nv>id</span><span class=o>=</span>i-0fee61317795aab3b<span class=o>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Apply complete! Resources: <span class=m>8</span> added, <span class=m>0</span> changed, <span class=m>0</span> destroyed.
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Outputs:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>server-ip <span class=o>=</span> <span class=s2>&#34;13.231.202.24&#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>通过<code>curl 13.231.202.24:3000</code>可以访问留言板应用。</p><h2 id=多环境管理>多环境管理</h2><p>一般的产品迭代过程分为需求研发、质量测试、功能上线等阶段。在不同的阶段，我们通常需要维护一套独立的环境以达到当前阶段的目的，比如通常我们需要维护dev、stage、prod三个环境。Terraform可以帮助我们简化多环境管理，越来越多的<a href=https://blog.gruntwork.io/how-to-manage-multiple-environments-with-terraform-32c7bc5d692 target=_blank rel="noopener noreffer">多环境管理的最佳实践</a>被提了出来。</p><h3 id=基于terraform-workspace管理>基于Terraform workspace管理</h3><p>Terraform workspace用于描述存放在同一backend的state文件。某些backend支持存放多个state文件，因此支持通过多个workspace进行环境管理。</p><p>Terraform支持workspace子命令，用以列举、创建、切换workspace。一个workspace对应着一个环境，环境的切换对应于workspace的切换，初始仅存在一个<strong>default</strong> workspace。</p><p>为支持多环境使用不同的配置，Terraform提供了特殊的插值表达式<code>terraform.workspace</code>，Terraform在解析配置文件时，会将此标识替换成当前的workspace名字。下例展示了两种常见的用法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>resource &#34;aws_instance&#34; &#34;my-server&#34; {
+</span></span><span class=line><span class=cl>  ami                         = data.aws_ami.amazon-linux-image.id
+</span></span><span class=line><span class=cl>  instance_type               = &#34;t2.micro&#34;
+</span></span><span class=line><span class=cl>  associate_public_ip_address = true
+</span></span><span class=line><span class=cl>  subnet_id                   = aws_subnet.my-subnet.id
+</span></span><span class=line><span class=cl>  vpc_security_group_ids      = [aws_security_group.my-sg.id]
+</span></span><span class=line><span class=cl>  availability_zone			  = var.available_zone
+</span></span><span class=line><span class=cl>  key_name = aws_key_pair.ssh.key_name
+</span></span><span class=line><span class=cl>  tags = {
+</span></span><span class=line><span class=cl>    # 使用workspace区分实例标识
+</span></span><span class=line><span class=cl>    Name = &#34;${terraform.workspace}-inst&#34;   
+</span></span><span class=line><span class=cl>  }
+</span></span><span class=line><span class=cl>  # 使用workspace切换执行脚本
+</span></span><span class=line><span class=cl>  user_data = file(terraform.workspace == &#34;dev&#34; ? &#34;guest1.sh&#34; : &#34;guest2.sh&#34;) 
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><p><a href=https://github.com/raygecao/terraform-demo/tree/b2da2aebfe625e2cd624945b761724a25aaa6321/aws/single target=_blank rel="noopener noreffer">示例代码</a>展示了使用多个workspace创建不同的ec2实例，每个workspace管理的基础设施相互独立。（此例workspace并未提交到VCS中，workspace管理于local backend）</p><p>使用workspace对多环境管理可以最大程度上复用配置代码，并且是Terraform官方提供的特性。</p><div class="details admonition warning open"><div class="details-summary admonition-title"><i class="icon fas fa-exclamation-triangle fa-fw"></i>workspace的局限性<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content>workspace管理的多环境必须共用同一backend，并不是所有backend都可以用workspace进行管理。官方提供了<a href=https://developer.hashicorp.com/terraform/language/state/workspaces#backends-supporting-multiple-workspaces target=_blank rel="noopener noreffer">支持多workspace的backend</a>。此外workspace不适用于存在证书、接入控制隔离要求的环境管理。</div></div></div><h3 id=基于多分支管理>基于多分支管理</h3><p>基于git branch对多环境管理是十分常见的策略，大量企业使用不同的release分支管理产品的版本。这最大程度上保证了版本的隔离性，避免不同版本的特性相互污染。但另一方面放弃了代码复用的能力，尤其是当维护的分支规模较大时，一个通用的bugfix会引起cherry-pick风暴。</p><p>为支持不同环境使用不同的配置，通常将不变的内容以模板的形式存放在Terraform配置文件中，将可变的配置声明在<code>variable.tf</code>中，不同分支通过维护一组特殊的配置值（记录在<code>terraform.tfvars</code>中）来控制环境的配置。</p><p><a href=https://github.com/raygecao/terraform-demo target=_blank rel="noopener noreffer">示例仓库</a>创建了<a href=https://github.com/raygecao/terraform-demo/tree/dev/docker target=_blank rel="noopener noreffer">dev分支</a>与<a href=https://github.com/raygecao/terraform-demo/tree/prod/docker target=_blank rel="noopener noreffer">prod分支</a>分别管理dev环境与prod环境，二者的区别在于对服务监听端口及应用镜像的tag配置不同。</p><div class="details admonition info open"><div class="details-summary admonition-title"><i class="icon fas fa-info-circle fa-fw"></i>如何提升复用能力？<i class="details-icon fas fa-angle-right fa-fw"></i></div><div class=details-content><div class=admonition-content>使用分支进行多环境管理本质上是对配置文件进行版本控制，可以通过配置与模板分开管理以提升代码复用能力。</div></div></div><h3 id=基于terragrunt管理>基于Terragrunt管理</h3><p>Terragrunt是由<a href=https://gruntwork.io/ target=_blank rel="noopener noreffer"><strong>Gruntwork.io</strong></a>开发的Terraform代码管理工具，其核心宗旨是提供一层thin wrapper实现DRY(Don&rsquo;t Repeat Yourself)。其核心思想是将<strong>不变的配置模板与可变的配置值分开管理</strong>，以维护多环境的特异性配置，在设计上与<a href=https://kustomize.io/ target=_blank rel="noopener noreffer">kustomize</a>异曲同工。</p><p>使用Terragrunt通常将配置模板和配置值放到不同的目录进行管理，如分别在modules、live目录下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>live
+</span></span><span class=line><span class=cl>├── dev
+</span></span><span class=line><span class=cl>│   └── docker
+</span></span><span class=line><span class=cl>│       └── terragrunt.hcl
+</span></span><span class=line><span class=cl>└── prod
+</span></span><span class=line><span class=cl>    └── docker
+</span></span><span class=line><span class=cl>        └── terragrunt.hcl
+</span></span><span class=line><span class=cl>modules
+</span></span><span class=line><span class=cl>└── docker
+</span></span><span class=line><span class=cl>    ├── main.tf
+</span></span><span class=line><span class=cl>    ├── output.tf
+</span></span><span class=line><span class=cl>    └── variable.tf
+</span></span></code></pre></td></tr></table></div></div><p>在配置模板中，声明所需的输入变量：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>$ cat modules/docker/variable.tf
+</span></span><span class=line><span class=cl>variable <span class=s2>&#34;external_port&#34;</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>description</span> <span class=o>=</span> <span class=s2>&#34;External port for expose guestbook service&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=nb>type</span> <span class=o>=</span> number
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>variable <span class=s2>&#34;guestbook_image_tag&#34;</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>  <span class=nv>description</span> <span class=o>=</span> <span class=s2>&#34;The tag for the guestbook image&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=nb>type</span> <span class=o>=</span> string
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>在patch文件中，通过维护不同的参数文件来控制环境的配置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>terraform {
+</span></span><span class=line><span class=cl>  source = &#34;../../../modules/docker&#34;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>inputs = {
+</span></span><span class=line><span class=cl>  external_port = 14000
+</span></span><span class=line><span class=cl>  guestbook_image_tag = &#34;v2&#34;
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></td></tr></table></div></div><p>在相应的配置目录下执行<code>terragrunt apply</code>即可实现对应环境的部署。参考完整<a href=https://github.com/raygecao/terraform-demo/tree/terragrunt target=_blank rel="noopener noreffer">示例代码</a>。</p><p>Terragrunt CLI本质是将分离的配置与模板组合在一起，再去执行对应的Terraform CLI，这也是Terragrunt会被定位为Terraform的<strong>thin wrapper</strong>的原因。</p><p>Terragrunt 结合了workspace与multi-branch管理的优势并解决了二者存在的问题。但是其作为一个外部工具引入了额外的学习成本，并且目前在Terraform Cloud中无法使用。</p><h3 id=三种环境管理方式的比较>三种环境管理方式的比较</h3><table><thead><tr><th></th><th>Workspaces</th><th>Branches</th><th>Terragrunt</th></tr></thead><tbody><tr><td>Minimize code duplication</td><td>■■■■■</td><td>□□□□□</td><td>■■■■□</td></tr><tr><td>See and navigate environments</td><td>□□□□□</td><td>■■■□□</td><td>■■■■■</td></tr><tr><td>Different settings in each environment</td><td>■■■■■</td><td>■■■■□</td><td>■■■■■</td></tr><tr><td>Different backends for each environment</td><td>□□□□□</td><td>■■■■□</td><td>■■■■■</td></tr><tr><td>Easy to manage multiple backends</td><td>□□□□□</td><td>■■■■□</td><td>■■■■■</td></tr><tr><td>Different versions in each environment</td><td>□□□□□</td><td>■■□□□</td><td>■■■■■</td></tr><tr><td>Share data between modules</td><td>■■□□□</td><td>■■□□□</td><td>■■■■■</td></tr><tr><td>Work with multiple modules concurrently</td><td>□□□□□</td><td>□□□□□</td><td>■■■■■</td></tr><tr><td>No extra tooling to learn or use</td><td>■■■■■</td><td>■■■■■</td><td>□□□□□</td></tr><tr><td>Works with Terraform Cloud</td><td>■■■■■</td><td>■■■■■</td><td>■□□□□</td></tr></tbody></table><p>黑块越多表示越具优势。引自 <a href=https://blog.gruntwork.io/how-to-manage-multiple-environments-with-terraform-32c7bc5d692 target=_blank rel="noopener noreffer">https://blog.gruntwork.io/how-to-manage-multiple-environments-with-terraform-32c7bc5d692</a></p><h3 id=多环境与devops>多环境与Devops</h3><p>在DevOps的实践领域中，一种高度自动化的方式是通过pipeline贯穿多个环境，从而实现<strong>代码直接上线</strong>的能力。</p><p>比如下面的<a href=https://medium.com/@kief/https-medium-com-kief-using-pipelines-to-manage-environments-with-infrastructure-as-code-b37285a1cbf5 target=_blank rel="noopener noreffer">案例</a>中，一套代码控制多个环境使用，但通过一条pipeline将环境连接起来，从而实现自动化部署、测试、上线的能力。这依赖了Terraform基础设施构建的一致性。</p><figure><a class=lightgallery href=/posts/terraform-practice/stages.png title=/posts/terraform-practice/stages.png data-thumbnail=/posts/terraform-practice/stages.png data-sub-html="<h2>pipeline横贯多个环境</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=stages.png data-srcset="/posts/terraform-practice/stages.png, stages.png 1.5x, /posts/terraform-practice/stages.png 2x" data-sizes=auto alt=/posts/terraform-practice/stages.png height=400 width=800></a><figcaption class=image-caption>pipeline横贯多个环境</figcaption></figure><p>具体的工作流如下：</p><ul><li>向VCS提交代码。</li><li>通过CI将VCS中的模块拷贝发布到制品仓库中。</li><li>CD检测到有新版本的制品发布，会应用到测试环境，并执行自动化测试。</li><li>测试通过后，自动地（或人工触发）应用到线上环境。</li></ul><figure><a class=lightgallery href=/posts/terraform-practice/workflow.png title=/posts/terraform-practice/workflow.png data-thumbnail=/posts/terraform-practice/workflow.png data-sub-html="<h2>infra自动化上线流程</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=workflow.png data-srcset="/posts/terraform-practice/workflow.png, workflow.png 1.5x, /posts/terraform-practice/workflow.png 2x" data-sizes=auto alt=/posts/terraform-practice/workflow.png height=400 width=800></a><figcaption class=image-caption>infra自动化上线流程</figcaption></figure><h2 id=使用terraform-cloud实现自动化部署>使用Terraform Cloud实现自动化部署</h2><p>Terraform Cloud是Hashicorp为支持Terraform工作流的平台，提供自动化管理基础设施的能力。其具备权限控制、密钥管理、托管状态文件等能力。</p><p>Terraform Cloud使用流程如下：</p><ul><li><p>接入VCS provider，核心是向VCS中注入TC webhook。</p></li><li><p>创建workspace，可以指定具体的触发条件。</p></li><li><p>配置变量。包括<code>tf</code>文件中声明variable，Access Token相关的环境变量。</p></li><li><p>首次运行。<a href=https://developer.hashicorp.com/terraform/cloud-docs/vcs/troubleshooting target=_blank rel="noopener noreffer">官方</a>明确指出：<strong>A workspace with no runs will not accept new runs from a VCS webhook. You must queue at least one run manually</strong>。</p></li></ul><p>之后， 便可以根据workspace创建的触发条件完成自动化部署。</p><figure><a class=lightgallery href=/posts/terraform-practice/runs.png title=/posts/terraform-practice/runs.png data-thumbnail=/posts/terraform-practice/runs.png data-sub-html="<h2>运行状态列表</h2>"><img class=lazyload src=/svg/loading.min.svg data-src=runs.png data-srcset="/posts/terraform-practice/runs.png, runs.png 1.5x, /posts/terraform-practice/runs.png 2x" data-sizes=auto alt=/posts/terraform-practice/runs.png height=400 width=800></a><figcaption class=image-caption>运行状态列表</figcaption></figure><h2 id=参考文档>参考文档</h2><ul><li><a href=https://developer.hashicorp.com/terraform/tutorials/configuration-language target=_blank rel="noopener noreffer">Terraform config language tutorial</a></li><li><a href=https://developer.hashicorp.com/terraform/tutorials/docker-get-started target=_blank rel="noopener noreffer">Terraform docker tutorial</a></li><li><a href=https://developer.hashicorp.com/terraform/tutorials/aws-get-started target=_blank rel="noopener noreffer">Terraform aws tutorial</a></li><li><a href=https://registry.terraform.io/providers/kreuzwerker/docker/3.0.1 target=_blank rel="noopener noreffer">Terraform docker provider</a></li><li><a href=https://registry.terraform.io/providers/hashicorp/aws/latest target=_blank rel="noopener noreffer">Terraform aws provider</a></li><li><a href=https://blog.gruntwork.io/how-to-manage-multiple-environments-with-terraform-32c7bc5d692 target=_blank rel="noopener noreffer">How to manage multiple environments with Terraform</a></li><li><a href=https://terragrunt.gruntwork.io/ target=_blank rel="noopener noreffer">Terragrunt</a></li><li><a href=https://zhuanlan.zhihu.com/p/38424955 target=_blank rel="noopener noreffer">kubernetes kustomize 初体验</a></li><li><a href=https://medium.com/@kief/https-medium-com-kief-using-pipelines-to-manage-environments-with-infrastructure-as-code-b37285a1cbf5 target=_blank rel="noopener noreffer">Using Pipelines to Manage Environments with Infrastructure as Code</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2023-03-05</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/iac/>iac</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/iac-intro/ class=prev rel=prev title="基础设施即代码 (IaC)"><i class="fas fa-angle-left fa-fw"></i>基础设施即代码 (IaC)</a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
