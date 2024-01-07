@@ -1,0 +1,1434 @@
+<!doctype html><html lang=zh-CN><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=X-UA-Compatible content="IE=edge, chrome=1"><title>React前端快速构建 - 拾遗之途</title><meta name=Description content><meta property="og:title" content="React前端快速构建">
+<meta property="og:description" content="Next.js + NextAuth.js + Material UI + Materio template"><meta property="og:type" content="article"><meta property="og:url" content="https://raygecao.github.io/posts/frontend-practice/"><meta property="og:image" content="https://raygecao.github.io/posts/frontend-practice/featured-image.png"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-01-07T12:50:34+08:00"><meta property="article:modified_time" content="2024-01-07T12:50:34+08:00"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://raygecao.github.io/posts/frontend-practice/featured-image.png"><meta name=twitter:title content="React前端快速构建"><meta name=twitter:description content="Next.js + NextAuth.js + Material UI + Materio template"><meta name=application-name content="拾遗之途"><meta name=apple-mobile-web-app-title content="拾遗之途"><meta name=google-site-verification content="OzXJ6LYRvjcbIN3W9Dn7TA7in9F1AYZjd2pciC8sexc"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://raygecao.github.io/posts/frontend-practice/><link rel=prev href=https://raygecao.github.io/posts/scheduler/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"React前端快速构建","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/raygecao.github.io\/posts\/frontend-practice\/"},"image":[{"@type":"ImageObject","url":"https:\/\/raygecao.github.io\/posts\/frontend-practice\/featured-image.png","width":1514,"height":404}],"genre":"posts","keywords":"platform","wordcount":5490,"url":"https:\/\/raygecao.github.io\/posts\/frontend-practice\/","datePublished":"2024-01-07T12:50:34+08:00","dateModified":"2024-01-07T12:50:34+08:00","publisher":{"@type":"Organization","name":"raygecao"},"author":{"@type":"Person","name":"raygecao"},"description":""}</script></head><body header-desktop header-mobile><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":""==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:""==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i>
+</a><span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i>
+</span></span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=拾遗之途>拾遗之途</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i>
+</a><a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i>
+</a><span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class="toc-content always-active" id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">React前端快速构建</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=/ title=Author rel=author class=author><i class="fas fa-user-circle fa-fw"></i>raygecao</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E5%B7%A5%E4%BD%9C%E9%A1%B9%E7%9B%AE/><i class="far fa-folder fa-fw"></i>工作项目</a>&nbsp;<a href=/categories/%E5%89%8D%E7%AB%AF/><i class="far fa-folder fa-fw"></i>前端</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2024-01-07>2024-01-07</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 5490 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 11 分钟&nbsp;<span id=/posts/frontend-practice/ class=leancloud_visitors data-flag-title=React前端快速构建>
+<i class="far fa-eye fa-fw"></i>&nbsp;<span class=leancloud-visitors-count></span>&nbsp;次阅读
+</span>&nbsp;</div></div><div class=featured-image><img class=lazyload src=/svg/loading.min.svg data-src=/posts/frontend-practice/featured-image.png data-srcset="/posts/frontend-practice/featured-image.png, /posts/frontend-practice/featured-image.png 1.5x, /posts/frontend-practice/featured-image.png 2x" data-sizes=auto alt=/posts/frontend-practice/featured-image.png title=/posts/frontend-practice/featured-image.png></div><div class="details toc" id=toc-static kept><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#nextjs>Next.js</a><ul><li><a href=#全栈式解决方案>全栈式解决方案</a></li><li><a href=#客户端渲染--服务端渲染>客户端渲染 + 服务端渲染</a></li><li><a href=#中间件>中间件</a></li><li><a href=#目录结构的router>目录结构的Router</a></li><li><a href=#proxy>Proxy</a></li></ul></li><li><a href=#nextauthjs>NextAuth.js</a><ul><li><a href=#添加providers>添加Providers</a></li><li><a href=#身份认证>身份认证</a></li><li><a href=#服务端认证>服务端认证</a></li><li><a href=#前端统一认证跳转>前端统一认证跳转</a></li><li><a href=#访问外部服务>访问外部服务</a></li></ul></li><li><a href=#material-ui>Material UI</a><ul><li><a href=#常用组件>常用组件</a></li></ul></li><li><a href=#踩坑记录>踩坑记录</a></li><li><a href=#references>References</a></li></ul></nav></div></div><div class=content id=content><p>Next.js + NextAuth.js + Material UI + Materio template</p><h2 id=nextjs>Next.js</h2><p><a href=https://nextjs.org/ target=_blank rel="noopener noreffer">Next.js</a> 是 Vercel 推出的 React Web 框架，提供全栈应用构建的快速解决方案，官方描述其包含 <strong>Routing、Rending、Data Fetching、Styling、Optimizations、Typescripts</strong> 等核心 features。下面根据我们的实践经验描述几个核心特性。</p><h3 id=全栈式解决方案>全栈式解决方案</h3><p>官方脚手架构建出的 Next.js 项目包含前后端代码，可以单独启动前/后端服务，也可以同时启动前后端服务。</p><p>后端服务使用 Node.js 编写，前端使用 JavaScript/TypeScript 编写，前后端代码在一个项目中管理，避免了前后端分开维护带来的困难。</p><p>我们之前为了解决 monorepo 前后端代码跨域访问的问题，做了大量 proxy 及 API endpoints 合并的工作。而该框架使前后端 API 在同一个域内，完美解决跨域访问的问题。</p><h3 id=客户端渲染--服务端渲染>客户端渲染 + 服务端渲染</h3><p>单页应用（SPA）在 React 开发中流行了很长一段时间，此类应用组件渲染完全发生在客户端，使用上更灵活，也更加易于调试，但其存在首屏加载速度慢，不利于 SEO 等问题。</p><p>客户端渲染（CSR）模式下，客户端需要请求页面、js/css 文件、动态数据等内容进行渲染，无论是网络请求还是渲染开销都比较大，导致首屏加载速度变慢。另外客户端渲染通常挂一个空的 html 元素，将动态数据渲染到此元素中，从网页源码中无法获取到网站内容，因此不利于 SEO。</p><p>服务端渲染（SSR）很好地解决了上述两个问题，服务端将首屏的 html 文件发给客户端，客户端直接展示就可以，这大大减少了首屏加载慢的问题。另外客户端获取到的是静态 html 文件，易于获取网页内容进行 SEO。但其也存在耗费后端资源，与前端耦合度较高的问题。所以<strong>通常情况下首屏加载选择 SSR，之后建议使用CSR</strong>。</p><p>CSR 与 SSR 在使用时要注意 JavaScript 与 Node.js 支持的库的差异，比如 React 相关库，浏览器相关 API 只能在客户端渲染使用，filesystem 等只能在服务端渲染中使用。</p><p>Next.js 将 CSR 与 SSR 巧妙地结合起来，对于静态内容（如首屏展示内容等）采用SSR，对于用户交互采用CSR。</p><p>Next.js 包含两种模式，一种是旧版本的 Page Router 模式，另一种是新版本主推的 App Router 模式。二者使用上最大的差异在于如何声明不同的渲染方式：</p><ul><li>App Router 默认都是服务端渲染，如果需要使用客户端渲染，需要显式指定 <code>use client</code>。</li><li>Page Router 通过 <code>getServerSideProps</code> 等函数声明服务端渲染所需的请求，函数外部全部为客户端渲染。</li></ul><h3 id=中间件>中间件</h3><p>Next.js 提供了<a href=https://nextjs.org/docs/pages/building-your-application/routing/middleware target=_blank rel="noopener noreffer">中间件</a>，对 HTTP Request 进行预处理/后处理。在实践中，我们使用中间件实现了后端鉴权功能，以保证所有到后端的请求都带上 Authorization Header。</p><p>另一个比较常见的使用中间件场景是认证。当用户未登录访问安全限制页面时，会跳转到相应的登录页，如 <a href=https://next-auth.js.org/tutorials/securing-pages-and-api-routes#nextjs-middleware target=_blank rel="noopener noreffer">NextAuth Middleware</a>。</p><p>Next.js 中间件最大的坑在于<strong>不支持原生的链式中间件</strong>，我们无法（至少无法很直观地）添加多个中间件以同时支持以上两个预处理功能，真乃大坑也。</p><h3 id=目录结构的router>目录结构的Router</h3><p>Next.js 支持 App Router 和 Page Router 两种方式，用户可以任选一种进行开发。每一种定义了一组目录路由规则，相比于 <code>react-dom</code> 更直观易用。</p><p>除了 Page Router 前端页面路由的功能以外，<a href=https://nextjs.org/docs/pages/building-your-application/routing/api-routes target=_blank rel="noopener noreffer">API Routes</a> 将后端 API path 按照目录结构统一了起来，进一步提升了框架的易用性。</p><h3 id=proxy>Proxy</h3><p>Next.js 支持通过 <code>next.config.js</code> 配置 redirects 与 rewrites 实现前端请求代理转发的能力。由于前端请求的 API 可能有一部分是由外部服务（external service）提供的，如果直接访问会出现跨域问题，将对应的 API rewrite 到相应的 external API 可以解决此问题。</p><p>使用 proxy 遇到一个坑：当 proxy 一个下载文件的 request 时，由于下载的文件会很大，proxy 不知在哪里加了个 30s timeout，无法使下载顺利完成。翻了翻配置源码找到 <code>ExperimentalConfig.proxyTimeout</code>，但并未按预期生效。</p><h2 id=nextauthjs>NextAuth.js</h2><p><a href=https://next-auth.js.org/ target=_blank rel="noopener noreffer">NextAuth.js</a> 是专门为 Next.js 应用提供认证的工具，具备灵活、易用、安全等特点。后文以 Next.js 的 Page Router 为例说明 NextAuth.js 的用法。</p><h3 id=添加providers>添加Providers</h3><p>通常的认证有两种方式，一种是自行维护登录名和密码的 basic auth 方式，另一种是借助第三方认证系统的 oauth 方式。对于常用的认证方式，NextAuth.js 提供了相应的 provider，因此集成 NextAuth.js 的第一步就是根据特定的方式选择 providers，如选择支持 facebook 与 google 的第三方认证，可以通过以下方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=nx>NextAuth</span> <span class=kr>from</span> <span class=s1>&#39;next-auth&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>FacebookProvider</span> <span class=kr>from</span> <span class=s1>&#39;next-auth/providers/facebook&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>GoogleProvider</span> <span class=kr>from</span> <span class=s1>&#39;next-auth/providers/google&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>NextAuth</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>providers</span><span class=o>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=c1>// OAuth authentication providers...
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>FacebookProvider</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>clientId</span>: <span class=kt>process.env.FACEBOOK_ID</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>clientSecret</span>: <span class=kt>process.env.FACEBOOK_SECRET</span>
+</span></span><span class=line><span class=cl>    <span class=p>}),</span>
+</span></span><span class=line><span class=cl>    <span class=nx>GoogleProvider</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>clientId</span>: <span class=kt>process.env.GOOGLE_ID</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>clientSecret</span>: <span class=kt>process.env.GOOGLE_SECRET</span>
+</span></span><span class=line><span class=cl>    <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span></code></pre></td></tr></table></div></div><p>不同 provider 需要做不同的配置，常见的 provider 分为三类：</p><ul><li><a href=https://next-auth.js.org/configuration/providers/oauth target=_blank rel="noopener noreffer">Oauth Provider</a>： 通常需要声明第三方提供的 ID 与 Secret。</li><li><a href=https://next-auth.js.org/configuration/providers/email target=_blank rel="noopener noreffer">Email Provider</a>： 通常需要添加 email server。</li><li><a href=https://next-auth.js.org/configuration/providers/credentials target=_blank rel="noopener noreffer">Credentials Provider</a>：通常需要配置用户名、密码等用户填入的信息，以及相关的验证逻辑。</li></ul><h3 id=身份认证>身份认证</h3><p>NextAuth.js 支持客户端和服务端的身份认证。</p><h4 id=客户端认证>客户端认证</h4><p>客户端认证使用 <a href=https://next-auth.js.org/getting-started/client#usesession target=_blank rel="noopener noreffer">useSession()</a> 方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=c1>// 前端组件
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>import</span> <span class=p>{</span> <span class=nx>useSession</span><span class=p>,</span> <span class=nx>signIn</span><span class=p>,</span> <span class=nx>signOut</span> <span class=p>}</span> <span class=nx>from</span> <span class=s2>&#34;next-auth/react&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=kd>function</span> <span class=nx>Component</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>{</span> <span class=nx>data</span><span class=o>:</span> <span class=nx>session</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>useSession</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=nx>session</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=o>&lt;&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=nx>Signed</span> <span class=k>in</span> <span class=nx>as</span> <span class=p>{</span><span class=nx>session</span><span class=p>.</span><span class=nx>user</span><span class=p>.</span><span class=nx>email</span><span class=p>}</span> <span class=o>&lt;</span><span class=nx>br</span> <span class=o>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=o>&lt;</span><span class=nx>button</span> <span class=nx>onClick</span><span class=o>=</span><span class=p>{()</span> <span class=p>=&gt;</span> <span class=nx>signOut</span><span class=p>()}</span><span class=o>&gt;</span><span class=nx>Sign</span> <span class=nx>out</span><span class=o>&lt;</span><span class=err>/button&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=o>&lt;</span><span class=err>/&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=o>&lt;&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=nx>Not</span> <span class=nx>signed</span> <span class=k>in</span> <span class=o>&lt;</span><span class=nx>br</span> <span class=o>/&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=o>&lt;</span><span class=nx>button</span> <span class=nx>onClick</span><span class=o>=</span><span class=p>{()</span> <span class=p>=&gt;</span> <span class=nx>signIn</span><span class=p>()}</span><span class=o>&gt;</span><span class=nx>Sign</span> <span class=k>in</span><span class=o>&lt;</span><span class=err>/button&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=o>&lt;</span><span class=err>/&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>使用前需要在 <code>pages/_app.tsx</code> 中添加 SessionProvider：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>SessionProvider</span> <span class=p>}</span> <span class=nx>from</span> <span class=s2>&#34;next-auth/react&#34;</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=kd>function</span> <span class=nx>App</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>Component</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pageProps</span><span class=o>:</span> <span class=p>{</span> <span class=nx>session</span><span class=p>,</span> <span class=p>...</span><span class=nx>pageProps</span> <span class=p>},</span>
+</span></span><span class=line><span class=cl><span class=p>})</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=o>&lt;</span><span class=nx>SessionProvider</span> <span class=nx>session</span><span class=o>=</span><span class=p>{</span><span class=nx>session</span><span class=p>}</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=o>&lt;</span><span class=nx>Component</span> <span class=p>{...</span><span class=nx>pageProps</span><span class=p>}</span> <span class=o>/&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=o>&lt;</span><span class=err>/SessionProvider&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=服务端认证>服务端认证</h3><p>服务端认证使用 <a href=https://next-auth.js.org/configuration/nextjs#getserversession target=_blank rel="noopener noreffer">getServerSession()</a> 方法：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-javascript data-lang=javascript><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>getServerSession</span> <span class=p>}</span> <span class=nx>from</span> <span class=s2>&#34;next-auth/next&#34;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>authOptions</span> <span class=p>}</span> <span class=nx>from</span> <span class=s2>&#34;./auth/[...nextauth]&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=kr>async</span> <span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>)</span> <span class=p>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>session</span> <span class=o>=</span> <span class=kr>await</span> <span class=nx>getServerSession</span><span class=p>(</span><span class=nx>req</span><span class=p>,</span> <span class=nx>res</span><span class=p>,</span> <span class=nx>authOptions</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=nx>session</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>content</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;This is protected content. You can access this content because you are signed in.&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>res</span><span class=p>.</span><span class=nx>send</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>error</span><span class=o>:</span> <span class=s2>&#34;You must be signed in to view the protected content on this page.&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果使用 JWT 进行认证，服务端认证也可以使用 <a href=https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken target=_blank rel="noopener noreffer">getToken()</a> 方法获取 token 来确认用户身份。</p><h3 id=前端统一认证跳转>前端统一认证跳转</h3><p>我们应用的场景中，所有前端页面需要用户认证后才可以访问，如果每个页面加一个 <code>useSession()</code> 判断，则工作量太大，因此希望可以添加<strong>前端页面未认证自动跳转到登录界面</strong>的功能，上文提到了 NextAuth 中间件可以做到这件事，但我们使用了中间件来添加 Authorization Header。因此选择在 <code>_app.tsx</code> 添加一个强制性认证的 HOC：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// pages/_app.tsx
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>const</span> <span class=nx>App</span> <span class=o>=</span> <span class=p>(</span><span class=nx>props</span>: <span class=kt>ExtendedAppProps</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// ...
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>    
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>SessionProvider</span> <span class=na>session</span><span class=o>=</span><span class=p>{</span><span class=nx>session</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Auth</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>SettingsProvider</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>&lt;</span><span class=nt>SettingsConsumer</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>              <span class=p>{({</span> <span class=nx>settings</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=p>&lt;</span><span class=nt>ThemeComponent</span> <span class=na>settings</span><span class=o>=</span><span class=p>{</span><span class=nx>settings</span><span class=p>}&gt;{</span><span class=nx>getLayout</span><span class=p>(&lt;</span><span class=nt>Component</span> <span class=p>{</span><span class=na>...restProps</span><span class=p>}</span> <span class=p>/&gt;)}&lt;/</span><span class=nt>ThemeComponent</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>              <span class=p>}}</span>
+</span></span><span class=line><span class=cl>            <span class=p>&lt;/</span><span class=nt>SettingsConsumer</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>SettingsProvider</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Auth</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>SessionProvider</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>Auth</span> <span class=o>=</span> <span class=p>({</span> <span class=nx>children</span> <span class=p>}</span><span class=o>:</span> <span class=p>{</span> <span class=nx>children</span>: <span class=kt>React.ReactElement</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// if `{ required: true }` is supplied, `status` can only be &#34;loading&#34; or &#34;authenticated&#34;
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=kr>const</span> <span class=p>{</span> <span class=nx>status</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>useSession</span><span class=p>({</span> <span class=nx>required</span>: <span class=kt>true</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=nx>status</span> <span class=o>===</span> <span class=s1>&#39;loading&#39;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>&lt;</span><span class=nt>Loading</span><span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>children</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>App</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=访问外部服务>访问外部服务</h3><p>上文说过 NextAuth.js 在前后端提供了获取解码后的 JWT 的方法，而我们的应用中，大量后端 API 在另一个应用（external backend）中提供，因此我们需要通过 Raw JWT 来与 external backend 交互以验证用户身份。</p><p><a href=https://next-auth.js.org/tutorials/securing-pages-and-api-routes#using-gettoken target=_blank rel="noopener noreffer">getTokn()</a> 提供了 <code>raw: true</code> 属性标识获取Raw JWT。我们可以在访问由 external backend 提供的 API 时，使用 Next.js 中间件添加 Authorization Header 的预处理。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// middleware.ts
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>import</span> <span class=p>{</span> <span class=nx>NextResponse</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;next/server&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=kr>type</span> <span class=p>{</span> <span class=nx>NextRequest</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;next/server&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>getToken</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;next-auth/jwt&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>secret</span> <span class=o>=</span> <span class=nx>process</span><span class=p>.</span><span class=nx>env</span><span class=p>.</span><span class=nx>NEXTAUTH_SECRET</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// This function can be marked `async` if using `await` inside
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>export</span> <span class=kr>async</span> <span class=kd>function</span> <span class=nx>middleware</span><span class=p>(</span><span class=nx>request</span>: <span class=kt>NextRequest</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>jwt</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>getToken</span><span class=p>({</span> <span class=nx>req</span>: <span class=kt>request</span><span class=p>,</span> <span class=nx>secret</span>: <span class=kt>secret</span><span class=p>,</span> <span class=nx>raw</span>: <span class=kt>true</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>jwt</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nx>NextResponse</span><span class=p>.</span><span class=nx>next</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>requestHeaders</span> <span class=o>=</span> <span class=k>new</span> <span class=nx>Headers</span><span class=p>(</span><span class=nx>request</span><span class=p>.</span><span class=nx>headers</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=nx>requestHeaders</span><span class=p>.</span><span class=kr>set</span><span class=p>(</span><span class=s1>&#39;Authorization&#39;</span><span class=p>,</span> <span class=sb>`Bearer </span><span class=si>${</span><span class=nx>jwt</span><span class=si>}</span><span class=sb>`</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>NextResponse</span><span class=p>.</span><span class=nx>next</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>    <span class=nx>request</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>headers</span>: <span class=kt>requestHeaders</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>config</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>matcher</span><span class=o>:</span> <span class=s1>&#39;/api/v1/external/:path*&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>由于 NextAuth.js JWT 默认使用 JWE 的编码方式，与 external backend 解析的方式不一致，因此需要<a href=https://next-auth.js.org/configuration/options#override-jwt-encode-and-decode-methods target=_blank rel="noopener noreffer">自定义jwt编解码</a>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=c1>// pages/api/[...nextauth].ts
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>authOptions</span>: <span class=kt>AuthOptions</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=c1>//...
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=nx>jwt</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>encode</span>: <span class=kt>async</span> <span class=nx>params</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=kr>const</span> <span class=nx>code</span> <span class=o>=</span> <span class=k>await</span> <span class=k>new</span> <span class=nx>SignJWT</span><span class=p>(</span><span class=nx>params</span><span class=p>.</span><span class=nx>token</span> <span class=o>??</span> <span class=p>{})</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=nx>setProtectedHeader</span><span class=p>({</span> <span class=nx>alg</span><span class=o>:</span> <span class=s1>&#39;HS256&#39;</span> <span class=p>})</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=nx>setExpirationTime</span><span class=p>(</span><span class=s1>&#39;1d&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>.</span><span class=nx>sign</span><span class=p>(</span><span class=k>new</span> <span class=nx>TextEncoder</span><span class=p>().</span><span class=nx>encode</span><span class=p>(</span><span class=nx>params</span><span class=p>.</span><span class=nx>secret</span><span class=p>.</span><span class=nx>toString</span><span class=p>()))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=nx>code</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nx>decode</span>: <span class=kt>async</span> <span class=nx>params</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=kr>const</span> <span class=p>{</span> <span class=nx>token</span><span class=p>,</span> <span class=nx>secret</span> <span class=p>}</span> <span class=o>=</span> <span class=nx>params</span>
+</span></span><span class=line><span class=cl>      <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>token</span><span class=p>)</span> <span class=k>return</span> <span class=kc>null</span>
+</span></span><span class=line><span class=cl>      <span class=kr>const</span> <span class=p>{</span> <span class=nx>payload</span> <span class=p>}</span> <span class=o>=</span> <span class=k>await</span> <span class=nx>jwtVerify</span><span class=p>(</span><span class=nx>token</span><span class=p>,</span> <span class=k>new</span> <span class=nx>TextEncoder</span><span class=p>().</span><span class=nx>encode</span><span class=p>(</span><span class=nx>secret</span><span class=p>.</span><span class=nx>toString</span><span class=p>()))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=p>{</span> <span class=nx>accessToken</span><span class=o>:</span> <span class=s1>&#39;&#39;</span><span class=p>,</span> <span class=p>...</span><span class=nx>payload</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=material-ui>Material UI</h2><p><a href=https://mui.com/material-ui/ target=_blank rel="noopener noreffer">Material UI</a> 是 Google 推出的 React 组件库，其设计方式简洁扁平，相比 <a href=https://ant-design.antgroup.com/index-cn target=_blank rel="noopener noreffer">Ant Design</a> 更加轻量，提供更灵活的 CSS 定义方式，适合技术平台的前端开发。</p><p>Material UI 的灵魂在于定制化，涵盖 theme，component 等方面。尤其是在定制化组件时，提供了 Base UI, styled components 等手段，为构建组件提供了便捷。</p><p>为了快速搭建起一个前端框架，模板是必不可少的，我们使用了开源的 <a href=https://github.com/themeselection/materio-mui-react-nextjs-admin-template-free target=_blank rel="noopener noreffer">materio</a> 模板，该模板采用 Next.js 12 + Material UI v5 搭建，提供登录、表格、卡片、表单等页面。</p><h3 id=常用组件>常用组件</h3><p>下面记录几个技术平台常用的组件。</p><h4 id=代码diff组件>代码Diff组件</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=nx>React</span> <span class=kr>from</span> <span class=s1>&#39;react&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>createPatch</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;diff&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=o>*</span> <span class=kr>as</span> <span class=nx>Diff2Html</span> <span class=kr>from</span> <span class=s1>&#39;diff2html&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=s1>&#39;diff2html/bundles/css/diff2html.min.css&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>CodeDiff</span>: <span class=kt>React.FC</span><span class=o>&lt;</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>fileName</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>oldStr</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>newStr</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>fullContent?</span>: <span class=kt>boolean</span>
+</span></span><span class=line><span class=cl>  <span class=nx>oldHeader?</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>newHeader?</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=o>&gt;</span> <span class=o>=</span> <span class=p>({</span> <span class=nx>fileName</span><span class=p>,</span> <span class=nx>oldStr</span><span class=p>,</span> <span class=nx>newStr</span><span class=p>,</span> <span class=nx>fullContent</span><span class=p>,</span> <span class=nx>oldHeader</span><span class=p>,</span> <span class=nx>newHeader</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>patch</span> <span class=o>=</span> <span class=nx>createPatch</span><span class=p>(</span><span class=nx>fileName</span><span class=p>,</span> <span class=nx>oldStr</span><span class=p>,</span> <span class=nx>newStr</span><span class=p>,</span> <span class=nx>oldHeader</span><span class=p>,</span> <span class=nx>newHeader</span><span class=p>,</span> <span class=nx>fullContent</span> <span class=o>?</span> <span class=p>{</span> <span class=nx>context</span>: <span class=kt>9999</span> <span class=p>}</span> <span class=o>:</span> <span class=kc>undefined</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>diffHtml</span> <span class=o>=</span> <span class=nx>Diff2Html</span><span class=p>.</span><span class=nx>html</span><span class=p>(</span><span class=nx>patch</span><span class=p>,</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>renderNothingWhenEmpty</span>: <span class=kt>true</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>matching</span><span class=o>:</span> <span class=s1>&#39;lines&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>&lt;</span><span class=nt>div</span> <span class=na>id</span><span class=o>=</span><span class=s>&#39;code-diff&#39;</span> <span class=na>dangerouslySetInnerHTML</span><span class=o>=</span><span class=p>{{</span> <span class=nx>__html</span>: <span class=kt>diffHtml</span> <span class=p>}}&gt;&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>CodeDiff</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=markdown展示组件>Markdown展示组件</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span><span class=lnt>156
+</span><span class=lnt>157
+</span><span class=lnt>158
+</span><span class=lnt>159
+</span><span class=lnt>160
+</span><span class=lnt>161
+</span><span class=lnt>162
+</span><span class=lnt>163
+</span><span class=lnt>164
+</span><span class=lnt>165
+</span><span class=lnt>166
+</span><span class=lnt>167
+</span><span class=lnt>168
+</span><span class=lnt>169
+</span><span class=lnt>170
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=nx>React</span> <span class=kr>from</span> <span class=s1>&#39;react&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Typography</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Typography&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>styled</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/styles&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Divider</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Divider&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Link</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Link&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Checkbox</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Checkbox&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Table</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Table&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>TableBody</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/TableBody&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>TableCell</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/TableCell&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>TableContainer</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/TableContainer&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>TableHead</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/TableHead&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>TableRow</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/TableRow&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>ReactMarkdown</span> <span class=kr>from</span> <span class=s1>&#39;marked-react&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>CodeBoard</span> <span class=kr>from</span> <span class=s1>&#39;./CodeBoard&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Paper</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Paper&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>Wrapper</span> <span class=o>=</span> <span class=nx>styled</span><span class=p>(</span><span class=s1>&#39;div&#39;</span><span class=p>)({</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; .MuiTypography-h4&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginTop</span><span class=o>:</span> <span class=s1>&#39;0.2em&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; .MuiTypography-h5&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginTop</span><span class=o>:</span> <span class=s1>&#39;1.5em&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginBottom</span><span class=o>:</span> <span class=s1>&#39;1em&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; .MuiTypography-h6&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginTop</span><span class=o>:</span> <span class=s1>&#39;1.5em&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginBottom</span><span class=o>:</span> <span class=s1>&#39;1em&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; p&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginBottom</span><span class=o>:</span> <span class=s1>&#39;0.4em&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; .MuiDivider-root&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginBottom</span><span class=o>:</span> <span class=s1>&#39;0.4em&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; code&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>fontSize</span><span class=o>:</span> <span class=s1>&#39;0.9em&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>genKey</span> <span class=o>=</span> <span class=p>(</span><span class=nx>e</span>: <span class=kt>unknown</span><span class=p>)</span><span class=o>:</span> <span class=kt>string</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>ee</span> <span class=o>=</span> <span class=nx>e</span> <span class=kr>as</span> <span class=p>{</span> <span class=nx>elementId</span>: <span class=kt>number</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=sb>`markdown-</span><span class=si>${</span><span class=nx>ee</span><span class=p>.</span><span class=nx>elementId</span><span class=si>}</span><span class=sb>`</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>fixLang</span> <span class=o>=</span> <span class=p>(</span><span class=nx>lang?</span>: <span class=kt>string</span><span class=p>)</span><span class=o>:</span> <span class=kt>string</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=nx>lang</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=s1>&#39;text&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=nx>lang</span><span class=p>.</span><span class=nx>split</span><span class=p>(</span><span class=s1>&#39; &#39;</span><span class=p>)[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>renderer</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=nx>Parameters</span><span class=p>&lt;</span><span class=nt>typeof</span> <span class=na>ReactMarkdown</span><span class=p>&gt;[</span><span class=mi>0</span><span class=p>][</span><span class=s1>&#39;renderer&#39;</span><span class=p>]</span> <span class=o>=</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>code</span><span class=p>(</span><span class=nx>snippet</span><span class=p>,</span> <span class=nx>lang</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Paper</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;outlined&#39;</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>m</span>: <span class=kt>1</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>CodeBoard</span> <span class=na>code</span><span class=o>=</span><span class=p>{</span><span class=nx>snippet</span> <span class=kr>as</span> <span class=kt>string</span><span class=p>}</span> <span class=na>language</span><span class=o>=</span><span class=p>{</span><span class=nx>fixLang</span><span class=p>(</span><span class=nx>lang</span><span class=p>)}</span> <span class=na>title</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;&#39;</span><span class=p>}</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Paper</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>link</span><span class=p>(</span><span class=nx>href</span><span class=p>,</span> <span class=nx>text</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Link</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>target</span><span class=o>=</span><span class=s>&#39;_blank&#39;</span> <span class=na>rel</span><span class=o>=</span><span class=s>&#39;noopener&#39;</span> <span class=na>href</span><span class=o>=</span><span class=p>{</span><span class=nx>href</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span><span class=nx>text</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Link</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>paragraph</span><span class=p>(</span><span class=nx>children</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;body1&#39;</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>false</span><span class=p>}</span> <span class=na>paragraph</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>heading</span><span class=p>(</span><span class=nx>children</span><span class=p>,</span> <span class=nx>level</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>switch</span> <span class=p>(</span><span class=nx>level</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>case</span> <span class=nx>1</span>:
+</span></span><span class=line><span class=cl>        <span class=kt>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;h4&#39;</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span> <span class=na>component</span><span class=o>=</span><span class=s>&#39;h1&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>case</span> <span class=nx>2</span>:
+</span></span><span class=line><span class=cl>        <span class=kt>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;h5&#39;</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span> <span class=na>component</span><span class=o>=</span><span class=s>&#39;h2&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>case</span> <span class=nx>3</span>:
+</span></span><span class=line><span class=cl>        <span class=kt>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;h6&#39;</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span> <span class=na>component</span><span class=o>=</span><span class=s>&#39;h3&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>case</span> <span class=nx>4</span>:
+</span></span><span class=line><span class=cl>        <span class=kt>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;subtitle1&#39;</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span> <span class=na>component</span><span class=o>=</span><span class=s>&#39;h4&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>case</span> <span class=nx>5</span>:
+</span></span><span class=line><span class=cl>        <span class=kt>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;subtitle2&#39;</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span> <span class=na>component</span><span class=o>=</span><span class=s>&#39;h5&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span><span class=line><span class=cl>      <span class=k>default</span><span class=o>:</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;caption&#39;</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span> <span class=na>component</span><span class=o>=</span><span class=s>&#39;h6&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>image</span><span class=p>(</span><span class=nx>href</span><span class=p>,</span> <span class=nx>text</span><span class=p>,</span> <span class=nx>title</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>img</span>
+</span></span><span class=line><span class=cl>        <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span>
+</span></span><span class=line><span class=cl>        <span class=na>src</span><span class=o>=</span><span class=p>{</span><span class=nx>href</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=na>alt</span><span class=o>=</span><span class=p>{</span><span class=nx>text</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=na>title</span><span class=o>=</span><span class=p>{</span><span class=nx>title</span> <span class=o>===</span> <span class=kc>null</span> <span class=o>?</span> <span class=kc>undefined</span> <span class=o>:</span> <span class=nx>title</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=na>style</span><span class=o>=</span><span class=p>{{</span> <span class=nx>maxWidth</span><span class=o>:</span> <span class=s1>&#39;100%&#39;</span> <span class=p>}}</span>
+</span></span><span class=line><span class=cl>      <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>listItem</span><span class=p>(</span><span class=nx>children</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>gutterBottom</span><span class=o>=</span><span class=p>{</span><span class=kc>false</span><span class=p>}</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;body1&#39;</span> <span class=na>component</span><span class=o>=</span><span class=s>&#39;li&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>checkbox</span><span class=p>(</span><span class=nx>checked</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>&lt;</span><span class=nt>Checkbox</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=na>size</span><span class=o>=</span><span class=s>&#39;small&#39;</span> <span class=na>disabled</span><span class=o>=</span><span class=p>{</span><span class=kc>true</span><span class=p>}</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>p</span>: <span class=kt>0</span> <span class=p>}}</span> <span class=na>checked</span><span class=o>=</span><span class=p>{</span><span class=nx>checked</span> <span class=kr>as</span> <span class=kr>boolean</span><span class=p>}</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>table</span><span class=p>(</span><span class=nx>children</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>TableContainer</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Table</span> <span class=na>size</span><span class=o>=</span><span class=s>&#39;small&#39;</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>display</span><span class=o>:</span> <span class=s1>&#39;inline-block&#39;</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>{</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Table</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>TableContainer</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>tableHeader</span><span class=p>(</span><span class=nx>children</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>&lt;</span><span class=nt>TableHead</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}&gt;{</span><span class=nx>children</span><span class=p>}&lt;/</span><span class=nt>TableHead</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>tableBody</span><span class=p>(</span><span class=nx>children</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>&lt;</span><span class=nt>TableBody</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}&gt;{</span><span class=nx>children</span><span class=p>}&lt;/</span><span class=nt>TableBody</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>tableRow</span><span class=p>(</span><span class=nx>children</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>&lt;</span><span class=nt>TableRow</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}&gt;{</span><span class=nx>children</span><span class=p>}&lt;/</span><span class=nt>TableRow</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>tableCell</span><span class=p>(</span><span class=nx>children</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>&lt;</span><span class=nt>TableCell</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}&gt;{</span><span class=nx>children</span><span class=p>}&lt;/</span><span class=nt>TableCell</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nx>hr() {</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>&lt;</span><span class=nt>Divider</span> <span class=na>key</span><span class=o>=</span><span class=p>{</span><span class=nx>genKey</span><span class=p>(</span><span class=k>this</span><span class=p>)}</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>Markdown</span>: <span class=kt>React.FC</span><span class=o>&lt;</span><span class=p>{</span> <span class=nx>text</span>: <span class=kt>string</span> <span class=p>}</span><span class=o>&gt;</span> <span class=o>=</span> <span class=nx>props</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>Wrapper</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>ReactMarkdown</span> <span class=na>value</span><span class=o>=</span><span class=p>{</span><span class=nx>props</span><span class=p>.</span><span class=nx>text</span><span class=p>}</span> <span class=na>renderer</span><span class=o>=</span><span class=p>{</span><span class=nx>renderer</span><span class=p>()}</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>Wrapper</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>Markdown</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=搜索框>搜索框</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span><span class=lnt>77
+</span><span class=lnt>78
+</span><span class=lnt>79
+</span><span class=lnt>80
+</span><span class=lnt>81
+</span><span class=lnt>82
+</span><span class=lnt>83
+</span><span class=lnt>84
+</span><span class=lnt>85
+</span><span class=lnt>86
+</span><span class=lnt>87
+</span><span class=lnt>88
+</span><span class=lnt>89
+</span><span class=lnt>90
+</span><span class=lnt>91
+</span><span class=lnt>92
+</span><span class=lnt>93
+</span><span class=lnt>94
+</span><span class=lnt>95
+</span><span class=lnt>96
+</span><span class=lnt>97
+</span><span class=lnt>98
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=nx>React</span><span class=p>,</span> <span class=p>{</span> <span class=nx>useEffect</span><span class=p>,</span> <span class=nx>useState</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;react&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>styled</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/styles&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>InputBase</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/InputBase&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>SearchIcon</span> <span class=kr>from</span> <span class=s1>&#39;@mui/icons-material/Search&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>useRouter</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;next/router&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>Search</span> <span class=o>=</span> <span class=nx>styled</span><span class=p>(</span><span class=s1>&#39;div&#39;</span><span class=p>)(({</span> <span class=nx>theme</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>position</span><span class=o>:</span> <span class=s1>&#39;relative&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>borderRadius</span>: <span class=kt>theme.shape.borderRadius</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>backgroundColor</span>: <span class=kt>theme.palette.mode</span> <span class=o>===</span> <span class=s1>&#39;dark&#39;</span> <span class=o>?</span> <span class=s1>&#39;rgba(255,255,255,0.1)&#39;</span> <span class=o>:</span> <span class=s1>&#39;rgba(0,0,0,0.07)&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>marginLeft</span>: <span class=kt>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>marginRight</span>: <span class=kt>theme.spacing</span><span class=p>(</span><span class=mi>2</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>width</span><span class=o>:</span> <span class=s1>&#39;auto&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=p>[</span><span class=nx>theme</span><span class=p>.</span><span class=nx>breakpoints</span><span class=p>.</span><span class=nx>up</span><span class=p>(</span><span class=s1>&#39;sm&#39;</span><span class=p>)]</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginRight</span>: <span class=kt>theme.spacing</span><span class=p>(</span><span class=mi>1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=nx>marginLeft</span>: <span class=kt>theme.spacing</span><span class=p>(</span><span class=mi>1</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=nx>width</span><span class=o>:</span> <span class=s1>&#39;auto&#39;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>SearchIconWrapper</span> <span class=o>=</span> <span class=nx>styled</span><span class=p>(</span><span class=s1>&#39;div&#39;</span><span class=p>)(({</span> <span class=nx>theme</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>padding</span>: <span class=kt>theme.spacing</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>2</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>height</span><span class=o>:</span> <span class=s1>&#39;100%&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>position</span><span class=o>:</span> <span class=s1>&#39;absolute&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>pointerEvents</span><span class=o>:</span> <span class=s1>&#39;none&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>display</span><span class=o>:</span> <span class=s1>&#39;flex&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>alignItems</span><span class=o>:</span> <span class=s1>&#39;center&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>justifyContent</span><span class=o>:</span> <span class=s1>&#39;center&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>}))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>StyledInputBase</span> <span class=o>=</span> <span class=nx>styled</span><span class=p>(</span><span class=nx>InputBase</span><span class=p>)(({</span> <span class=nx>theme</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>color</span><span class=o>:</span> <span class=s1>&#39;inherit&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; .MuiInputBase-input&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>padding</span>: <span class=kt>theme.spacing</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// vertical padding + font size from searchIcon
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>paddingLeft</span><span class=o>:</span> <span class=sb>`calc(1em + </span><span class=si>${</span><span class=nx>theme</span><span class=p>.</span><span class=nx>spacing</span><span class=p>(</span><span class=mi>4</span><span class=p>)</span><span class=si>}</span><span class=sb>)`</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nx>transition</span>: <span class=kt>theme.transitions.create</span><span class=p>([</span><span class=s1>&#39;width&#39;</span><span class=p>,</span> <span class=s1>&#39;opacity&#39;</span><span class=p>]),</span>
+</span></span><span class=line><span class=cl>    <span class=nx>width</span><span class=o>:</span> <span class=s1>&#39;12ch&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>opacity</span>: <span class=kt>0.4</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; .MuiInputBase-input:focus&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>width</span><span class=o>:</span> <span class=s1>&#39;20ch&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>opacity</span>: <span class=kt>1</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>EmbeddedStyledInputBase</span> <span class=o>=</span> <span class=nx>styled</span><span class=p>(</span><span class=nx>InputBase</span><span class=p>)(({</span> <span class=nx>theme</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>color</span><span class=o>:</span> <span class=s1>&#39;inherit&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;&amp; .MuiInputBase-input&#39;</span><span class=o>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>padding</span>: <span class=kt>theme.spacing</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>0</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// vertical padding + font size from searchIcon
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>paddingLeft</span><span class=o>:</span> <span class=sb>`calc(1em + </span><span class=si>${</span><span class=nx>theme</span><span class=p>.</span><span class=nx>spacing</span><span class=p>(</span><span class=mi>4</span><span class=p>)</span><span class=si>}</span><span class=sb>)`</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1>// transition: theme.transitions.create([&#39;width&#39;, &#39;opacity&#39;]),
+</span></span></span><span class=line><span class=cl><span class=c1></span>    <span class=nx>width</span><span class=o>:</span> <span class=s1>&#39;12ch&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>opacity</span>: <span class=kt>0.4</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>SearchBar</span>: <span class=kt>React.FC</span><span class=o>&lt;</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onSearch</span><span class=o>:</span> <span class=p>(</span><span class=nx>_</span>: <span class=kt>string</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span>
+</span></span><span class=line><span class=cl>  <span class=nx>placeholder</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>value?</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>embedded?</span>: <span class=kt>boolean</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=o>&gt;</span> <span class=o>=</span> <span class=nx>props</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>search</span><span class=p>,</span> <span class=nx>setSearch</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>&lt;</span><span class=nt>null</span> <span class=err>|</span> <span class=na>string</span><span class=p>&gt;(</span><span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>handleSubmit</span> <span class=o>=</span> <span class=p>(</span><span class=nx>e</span>: <span class=kt>React.FormEvent</span><span class=p>&lt;</span><span class=nt>HTMLFormElement</span><span class=p>&gt;)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>e</span><span class=p>.</span><span class=nx>preventDefault</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=nx>e</span><span class=p>.</span><span class=nx>stopPropagation</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=nx>props</span><span class=p>.</span><span class=nx>onSearch</span><span class=p>(</span><span class=nx>search</span> <span class=o>===</span> <span class=kc>null</span> <span class=o>?</span> <span class=nx>props</span><span class=p>.</span><span class=nx>value</span> <span class=o>??</span> <span class=s1>&#39;&#39;</span> <span class=o>:</span> <span class=nx>search</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>handleSearchChange</span> <span class=o>=</span> <span class=p>(</span><span class=nx>evt</span>: <span class=kt>React.ChangeEvent</span><span class=p>&lt;</span><span class=nt>HTMLInputElement</span><span class=p>&gt;)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setSearch</span><span class=p>(</span><span class=nx>evt</span><span class=p>.</span><span class=nx>target</span><span class=p>.</span><span class=nx>value</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>useEffect</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setSearch</span><span class=p>(</span><span class=nx>props</span><span class=p>.</span><span class=nx>value</span> <span class=o>??</span> <span class=s1>&#39;&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span> <span class=p>[</span><span class=nx>props</span><span class=p>.</span><span class=nx>value</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>IBase</span> <span class=o>=</span> <span class=nx>props</span><span class=p>.</span><span class=nx>embedded</span> <span class=o>?</span> <span class=nx>EmbeddedStyledInputBase</span> : <span class=kt>StyledInputBase</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>Search</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>SearchIconWrapper</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>SearchIcon</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>SearchIconWrapper</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>form</span> <span class=na>onSubmit</span><span class=o>=</span><span class=p>{</span><span class=nx>handleSubmit</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>IBase</span> <span class=na>placeholder</span><span class=o>=</span><span class=p>{</span><span class=nx>props</span><span class=p>.</span><span class=nx>placeholder</span><span class=p>}</span> <span class=na>value</span><span class=o>=</span><span class=p>{</span><span class=nx>search</span> <span class=o>??</span> <span class=nx>props</span><span class=p>.</span><span class=nx>value</span><span class=p>}</span> <span class=na>onChange</span><span class=o>=</span><span class=p>{</span><span class=nx>handleSearchChange</span><span class=p>}</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>form</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>Search</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>SearchBar</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=确认对话框>确认对话框</h4><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Dialog</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Dialog&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>DialogTitle</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/DialogTitle&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>DialogContent</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/DialogContent&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Typography</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Typography&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>DialogActions</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/DialogActions&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Button</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Button&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>type</span> <span class=nx>confirmDialogOpts</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>open</span>: <span class=kt>boolean</span>
+</span></span><span class=line><span class=cl>  <span class=nx>title</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>content</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onConfirm</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=k>void</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onCancel</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=k>void</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>ConfirmDialog</span> <span class=o>=</span> <span class=p>({</span> <span class=nx>open</span><span class=p>,</span> <span class=nx>title</span><span class=p>,</span> <span class=nx>content</span><span class=p>,</span> <span class=nx>onConfirm</span><span class=p>,</span> <span class=nx>onCancel</span> <span class=p>}</span><span class=o>:</span> <span class=nx>confirmDialogOpts</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>Dialog</span> <span class=na>open</span><span class=o>=</span><span class=p>{</span><span class=nx>open</span><span class=p>}</span> <span class=na>fullWidth</span> <span class=na>onClose</span><span class=o>=</span><span class=p>{</span><span class=nx>onCancel</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>DialogTitle</span><span class=p>&gt;{</span><span class=nx>title</span><span class=p>}&lt;/</span><span class=nt>DialogTitle</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>DialogContent</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Typography</span><span class=p>&gt;{</span><span class=nx>content</span><span class=p>}&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>DialogContent</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>DialogActions</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Button</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;outlined&#39;</span> <span class=na>onClick</span><span class=o>=</span><span class=p>{</span><span class=nx>onCancel</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=err>取消</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Button</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Button</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;contained&#39;</span> <span class=na>onClick</span><span class=o>=</span><span class=p>{</span><span class=nx>onConfirm</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=err>确认</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Button</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>DialogActions</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>Dialog</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>ConfirmDialog</span>
+</span></span></code></pre></td></tr></table></div></div><h4 id=表单>表单</h4><p>表单的设计采用 <a href=https://react-hook-form.com/ target=_blank rel="noopener noreffer">react-hook-form</a>，并使用 <a href=https://zod.dev/ target=_blank rel="noopener noreffer">zod</a> 对用户填写的内容进行校验。示例中较为麻烦的是基于 AutoComplete 的多选输入。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span><span class=lnt>109
+</span><span class=lnt>110
+</span><span class=lnt>111
+</span><span class=lnt>112
+</span><span class=lnt>113
+</span><span class=lnt>114
+</span><span class=lnt>115
+</span><span class=lnt>116
+</span><span class=lnt>117
+</span><span class=lnt>118
+</span><span class=lnt>119
+</span><span class=lnt>120
+</span><span class=lnt>121
+</span><span class=lnt>122
+</span><span class=lnt>123
+</span><span class=lnt>124
+</span><span class=lnt>125
+</span><span class=lnt>126
+</span><span class=lnt>127
+</span><span class=lnt>128
+</span><span class=lnt>129
+</span><span class=lnt>130
+</span><span class=lnt>131
+</span><span class=lnt>132
+</span><span class=lnt>133
+</span><span class=lnt>134
+</span><span class=lnt>135
+</span><span class=lnt>136
+</span><span class=lnt>137
+</span><span class=lnt>138
+</span><span class=lnt>139
+</span><span class=lnt>140
+</span><span class=lnt>141
+</span><span class=lnt>142
+</span><span class=lnt>143
+</span><span class=lnt>144
+</span><span class=lnt>145
+</span><span class=lnt>146
+</span><span class=lnt>147
+</span><span class=lnt>148
+</span><span class=lnt>149
+</span><span class=lnt>150
+</span><span class=lnt>151
+</span><span class=lnt>152
+</span><span class=lnt>153
+</span><span class=lnt>154
+</span><span class=lnt>155
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>useEffect</span><span class=p>,</span> <span class=nx>useMemo</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;react&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>useForm</span><span class=p>,</span> <span class=nx>SubmitHandler</span><span class=p>,</span> <span class=nx>Controller</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;react-hook-form&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Button</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Button&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>TextField</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/TextField&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Box</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Box&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Grid</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Grid&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Typography</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Typography&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Autocomplete</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Autocomplete&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>z</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;zod&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=p>{</span> <span class=nx>zodResolver</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;@hookform/resolvers/zod&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>type</span> <span class=nx>CatalogForm</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>onSubmit</span>: <span class=kt>SubmitHandler</span><span class=p>&lt;</span><span class=nt>composeForm</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=nx>handleClose</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=k>void</span>
+</span></span><span class=line><span class=cl>  <span class=nx>plugins</span>: <span class=kt>string</span><span class=p>[]</span>
+</span></span><span class=line><span class=cl>  <span class=nx>version</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>name?</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>composeFormSchema</span> <span class=o>=</span> <span class=nx>z</span><span class=p>.</span><span class=kt>object</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>name</span>: <span class=kt>z.string</span><span class=p>().</span><span class=nx>min</span><span class=p>(</span><span class=mi>3</span><span class=p>,</span> <span class=p>{</span> <span class=nx>message</span><span class=o>:</span> <span class=s1>&#39;名称长度至少为3&#39;</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>description</span>: <span class=kt>z.string</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>plugins</span>: <span class=kt>z.array</span><span class=p>(</span><span class=nx>z</span><span class=p>.</span><span class=kt>string</span><span class=p>()).</span><span class=nx>min</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=p>{</span> <span class=nx>message</span><span class=o>:</span> <span class=s1>&#39;须选择至少一个插件&#39;</span> <span class=p>}),</span>
+</span></span><span class=line><span class=cl>  <span class=nx>version</span>: <span class=kt>z</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=kt>string</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=nx>regex</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>      <span class=sr>/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s1>&#39;version must meet the format of semver2&#39;</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>type</span> <span class=nx>composeForm</span> <span class=o>=</span> <span class=nx>z</span><span class=p>.</span><span class=k>infer</span><span class=p>&lt;</span><span class=nt>typeof</span> <span class=na>composeFormSchema</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>ComposeForm</span> <span class=o>=</span> <span class=p>({</span> <span class=nx>onSubmit</span><span class=p>,</span> <span class=nx>handleClose</span><span class=p>,</span> <span class=nx>plugins</span><span class=p>,</span> <span class=nx>version</span><span class=p>,</span> <span class=nx>name</span> <span class=p>}</span><span class=o>:</span> <span class=nx>CatalogForm</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>defaultValues</span> <span class=o>=</span> <span class=nx>useMemo</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>({</span>
+</span></span><span class=line><span class=cl>      <span class=nx>description</span><span class=o>:</span> <span class=s1>&#39;&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>name</span>: <span class=kt>name</span> <span class=o>??</span> <span class=s1>&#39;default&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>version</span>: <span class=kt>version</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=nx>plugins</span><span class=o>:</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=p>}),</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=nx>version</span><span class=p>,</span> <span class=nx>name</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>control</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>handleSubmit</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>reset</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>formState</span><span class=o>:</span> <span class=p>{</span> <span class=nx>errors</span><span class=p>,</span> <span class=nx>isSubmitSuccessful</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span> <span class=o>=</span> <span class=nx>useForm</span><span class=p>&lt;</span><span class=nt>composeForm</span><span class=p>&gt;({</span>
+</span></span><span class=line><span class=cl>    <span class=nx>defaultValues</span>: <span class=kt>defaultValues</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>resolver</span>: <span class=kt>zodResolver</span><span class=p>(</span><span class=nx>composeFormSchema</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>useEffect</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=nx>isSubmitSuccessful</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nx>reset</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span> <span class=p>[</span><span class=nx>isSubmitSuccessful</span><span class=p>,</span> <span class=nx>reset</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>useEffect</span><span class=p>(()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>reset</span><span class=p>(</span><span class=nx>defaultValues</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span> <span class=p>[</span><span class=nx>defaultValues</span><span class=p>,</span> <span class=nx>reset</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>form</span> <span class=na>onSubmit</span><span class=o>=</span><span class=p>{</span><span class=nx>handleSubmit</span><span class=p>(</span><span class=nx>onSubmit</span><span class=p>)}&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Grid</span> <span class=na>container</span> <span class=na>spacing</span><span class=o>=</span><span class=p>{</span><span class=mi>5</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Grid</span> <span class=na>item</span> <span class=na>xs</span><span class=o>=</span><span class=p>{</span><span class=mi>12</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Typography</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;body2&#39;</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>fontWeight</span>: <span class=kt>600</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=err>选择插件</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;/</span><span class=nt>Typography</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Grid</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Grid</span> <span class=na>item</span> <span class=na>xs</span><span class=o>=</span><span class=p>{</span><span class=mi>12</span><span class=p>}</span> <span class=na>sm</span><span class=o>=</span><span class=p>{</span><span class=mi>6</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Controller</span>
+</span></span><span class=line><span class=cl>            <span class=na>name</span><span class=o>=</span><span class=p>{</span><span class=sb>`plugins`</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>control</span><span class=o>=</span><span class=p>{</span><span class=nx>control</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>render</span><span class=o>=</span><span class=p>{({</span> <span class=nx>field</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>              <span class=p>&lt;</span><span class=nt>Autocomplete</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span><span class=na>...field</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>multiple</span>
+</span></span><span class=line><span class=cl>                <span class=na>renderInput</span><span class=o>=</span><span class=p>{</span><span class=nx>params</span> <span class=o>=&gt;</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>                  <span class=p>&lt;</span><span class=nt>TextField</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span><span class=na>...params</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span><span class=na>...field</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=na>label</span><span class=o>=</span><span class=s>&#39;选择插件&#39;</span>
+</span></span><span class=line><span class=cl>                    <span class=na>error</span><span class=o>=</span><span class=p>{</span><span class=o>!!</span><span class=nx>errors</span><span class=p>.</span><span class=nx>plugins</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                    <span class=na>helperText</span><span class=o>=</span><span class=p>{</span><span class=nx>errors</span><span class=p>.</span><span class=nx>plugins</span><span class=o>?</span><span class=p>.</span><span class=nx>message</span> <span class=o>??</span> <span class=s1>&#39;&#39;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                  <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>                <span class=p>)}</span>
+</span></span><span class=line><span class=cl>                <span class=na>options</span><span class=o>=</span><span class=p>{</span><span class=nx>plugins</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>onChange</span><span class=o>=</span><span class=p>{(</span><span class=nx>_</span><span class=p>,</span> <span class=nx>data</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=nx>field</span><span class=p>.</span><span class=nx>onChange</span><span class=p>(</span><span class=nx>data</span> <span class=o>??</span> <span class=s1>&#39;&#39;</span><span class=p>)}</span>
+</span></span><span class=line><span class=cl>              <span class=p>&gt;&lt;/</span><span class=nt>Autocomplete</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>)}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Grid</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Grid</span> <span class=na>item</span> <span class=na>xs</span><span class=o>=</span><span class=p>{</span><span class=mi>12</span><span class=p>}</span> <span class=na>sm</span><span class=o>=</span><span class=p>{</span><span class=mi>6</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Controller</span>
+</span></span><span class=line><span class=cl>            <span class=na>name</span><span class=o>=</span><span class=s>&#39;name&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=na>control</span><span class=o>=</span><span class=p>{</span><span class=nx>control</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>render</span><span class=o>=</span><span class=p>{({</span> <span class=nx>field</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>              <span class=p>&lt;</span><span class=nt>TextField</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span><span class=na>...field</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>label</span><span class=o>=</span><span class=s>&#39;名称&#39;</span>
+</span></span><span class=line><span class=cl>                <span class=na>fullWidth</span>
+</span></span><span class=line><span class=cl>                <span class=na>error</span><span class=o>=</span><span class=p>{</span><span class=o>!!</span><span class=nx>errors</span><span class=p>.</span><span class=nx>name</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>helperText</span><span class=o>=</span><span class=p>{</span><span class=nx>errors</span><span class=p>.</span><span class=nx>name</span><span class=o>?</span><span class=p>.</span><span class=nx>message</span> <span class=o>??</span> <span class=s1>&#39;&#39;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>required</span>
+</span></span><span class=line><span class=cl>              <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>)}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Grid</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Grid</span> <span class=na>item</span> <span class=na>xs</span><span class=o>=</span><span class=p>{</span><span class=mi>12</span><span class=p>}</span> <span class=na>sm</span><span class=o>=</span><span class=p>{</span><span class=mi>6</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Controller</span>
+</span></span><span class=line><span class=cl>            <span class=na>name</span><span class=o>=</span><span class=s>&#39;version&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=na>control</span><span class=o>=</span><span class=p>{</span><span class=nx>control</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>render</span><span class=o>=</span><span class=p>{({</span> <span class=nx>field</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>              <span class=p>&lt;</span><span class=nt>TextField</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span><span class=na>...field</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>label</span><span class=o>=</span><span class=s>&#39;版本&#39;</span>
+</span></span><span class=line><span class=cl>                <span class=na>fullWidth</span>
+</span></span><span class=line><span class=cl>                <span class=na>error</span><span class=o>=</span><span class=p>{</span><span class=o>!!</span><span class=nx>errors</span><span class=p>.</span><span class=nx>version</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>helperText</span><span class=o>=</span><span class=p>{</span><span class=nx>errors</span><span class=p>.</span><span class=nx>version</span><span class=o>?</span><span class=p>.</span><span class=nx>message</span> <span class=o>??</span> <span class=s1>&#39;&#39;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>required</span>
+</span></span><span class=line><span class=cl>              <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>)}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Grid</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Grid</span> <span class=na>item</span> <span class=na>xs</span><span class=o>=</span><span class=p>{</span><span class=mi>12</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=p>&lt;</span><span class=nt>Controller</span>
+</span></span><span class=line><span class=cl>            <span class=na>name</span><span class=o>=</span><span class=s>&#39;description&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=na>control</span><span class=o>=</span><span class=p>{</span><span class=nx>control</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>            <span class=na>render</span><span class=o>=</span><span class=p>{({</span> <span class=nx>field</span> <span class=p>})</span> <span class=o>=&gt;</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>              <span class=p>&lt;</span><span class=nt>TextField</span>
+</span></span><span class=line><span class=cl>                <span class=p>{</span><span class=na>...field</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>label</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;描述&#39;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>fullWidth</span>
+</span></span><span class=line><span class=cl>                <span class=na>error</span><span class=o>=</span><span class=p>{</span><span class=o>!!</span><span class=nx>errors</span><span class=p>.</span><span class=nx>description</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=na>helperText</span><span class=o>=</span><span class=p>{</span><span class=nx>errors</span><span class=p>.</span><span class=nx>description</span><span class=o>?</span><span class=p>.</span><span class=nx>message</span> <span class=o>??</span> <span class=s1>&#39;&#39;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>              <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>            <span class=p>)}</span>
+</span></span><span class=line><span class=cl>          <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Grid</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Grid</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>display</span><span class=o>:</span> <span class=s1>&#39;flex&#39;</span><span class=p>,</span> <span class=nx>justifyContent</span><span class=o>:</span> <span class=s1>&#39;flex-end&#39;</span><span class=p>,</span> <span class=nx>gap</span>: <span class=kt>4</span><span class=p>,</span> <span class=nx>mt</span>: <span class=kt>4</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Button</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;outlined&#39;</span> <span class=na>onClick</span><span class=o>=</span><span class=p>{</span><span class=nx>handleClose</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=err>取消</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Button</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Button</span> <span class=na>type</span><span class=o>=</span><span class=s>&#39;submit&#39;</span> <span class=na>variant</span><span class=o>=</span><span class=s>&#39;contained&#39;</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>          <span class=err>确定</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;/</span><span class=nt>Button</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>form</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>ComposeForm</span>
+</span></span></code></pre></td></tr></table></div></div><p>如果表单内容较多，在对排版要求不严格的情况下，建议使用 <a href=https://github.com/rjsf-team/react-jsonschema-form target=_blank rel="noopener noreffer">react-jsonschema-form</a> ，通过 json schema 自动创建表单。</p><h4 id=通知栏>通知栏</h4><p>使用 React Context 传递更改状态栏的方法，各个组件可以使用该方法显示状态栏。</p><ol><li>定义 Notification Context 和通知栏组件：</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl><span class=kr>import</span> <span class=nx>React</span><span class=p>,</span> <span class=p>{</span> <span class=nx>createContext</span><span class=p>,</span> <span class=nx>useContext</span><span class=p>,</span> <span class=nx>useState</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;react&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Snackbar</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Snackbar&#39;</span>
+</span></span><span class=line><span class=cl><span class=kr>import</span> <span class=nx>Alert</span><span class=p>,</span> <span class=p>{</span> <span class=nx>AlertColor</span> <span class=p>}</span> <span class=kr>from</span> <span class=s1>&#39;@mui/material/Alert&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>type</span> <span class=nx>Notification</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>severity</span>: <span class=kt>AlertColor</span>
+</span></span><span class=line><span class=cl>  <span class=nx>message</span>: <span class=kt>string</span>
+</span></span><span class=line><span class=cl>  <span class=nx>duration?</span>: <span class=kt>number</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>const</span> <span class=nx>NotificationCtx</span> <span class=o>=</span> <span class=nx>createContext</span><span class=o>&lt;</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>notification</span>: <span class=kt>Notification</span> <span class=o>|</span> <span class=kc>null</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setNotification</span><span class=o>:</span> <span class=p>(</span><span class=nx>n</span>: <span class=kt>Notification</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=k>void</span>
+</span></span><span class=line><span class=cl>  <span class=nx>hideNotification</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=k>void</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=o>&gt;</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>  <span class=nx>notification</span>: <span class=kt>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>setNotification</span><span class=o>:</span> <span class=p>(</span><span class=nx>_</span>: <span class=kt>Notification</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=nx>hideNotification</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=kc>null</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>NotificationCtxProvider</span>: <span class=kt>React.FC</span><span class=o>&lt;</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>children?</span>: <span class=kt>React.ReactNode</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=o>&gt;</span> <span class=o>=</span> <span class=p>(</span><span class=nx>props</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=p>[</span><span class=nx>notification</span><span class=p>,</span> <span class=nx>setNotification</span><span class=p>]</span> <span class=o>=</span> <span class=nx>useState</span><span class=p>&lt;</span><span class=nt>Notification</span> <span class=err>|</span> <span class=na>null</span><span class=p>&gt;(</span><span class=kc>null</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>context</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nx>notification</span>: <span class=kt>notification</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=nx>setNotification</span><span class=o>:</span> <span class=p>(</span><span class=nx>n</span>: <span class=kt>Notification</span><span class=p>)</span> <span class=o>=&gt;</span> <span class=nx>setNotification</span><span class=p>(</span><span class=nx>n</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>    <span class=nx>hideNotification</span><span class=o>:</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=nx>setNotification</span><span class=p>(</span><span class=kc>null</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>NotificationCtx.Provider</span> <span class=na>value</span><span class=o>=</span><span class=p>{</span><span class=nx>context</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>{</span><span class=nx>props</span><span class=p>.</span><span class=nx>children</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>NotificationCtx.Provider</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=kr>const</span> <span class=nx>NotificationComp</span>: <span class=kt>React.FC</span> <span class=o>=</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kr>const</span> <span class=nx>ctx</span> <span class=o>=</span> <span class=nx>useContext</span><span class=p>(</span><span class=nx>NotificationCtx</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>Snackbar</span>
+</span></span><span class=line><span class=cl>      <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>maxWidth</span><span class=o>:</span> <span class=s1>&#39;400px&#39;</span> <span class=p>}}</span>
+</span></span><span class=line><span class=cl>      <span class=na>open</span><span class=o>=</span><span class=p>{</span><span class=o>!!</span><span class=nx>ctx</span><span class=p>.</span><span class=nx>notification</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>autoHideDuration</span><span class=o>=</span><span class=p>{</span><span class=nx>ctx</span><span class=p>.</span><span class=nx>notification</span><span class=o>?</span><span class=p>.</span><span class=nx>duration</span> <span class=o>??</span> <span class=mi>5000</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>onClose</span><span class=o>=</span><span class=p>{</span><span class=nx>ctx</span><span class=p>.</span><span class=nx>hideNotification</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>message</span><span class=o>=</span><span class=p>{</span><span class=nx>ctx</span><span class=p>.</span><span class=nx>notification</span><span class=o>?</span><span class=p>.</span><span class=nx>message</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=na>anchorOrigin</span><span class=o>=</span><span class=p>{{</span> <span class=nx>vertical</span><span class=o>:</span> <span class=s1>&#39;top&#39;</span><span class=p>,</span> <span class=nx>horizontal</span><span class=o>:</span> <span class=s1>&#39;right&#39;</span> <span class=p>}}</span>
+</span></span><span class=line><span class=cl>    <span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Alert</span>
+</span></span><span class=line><span class=cl>        <span class=na>onClose</span><span class=o>=</span><span class=p>{</span><span class=nx>ctx</span><span class=p>.</span><span class=nx>hideNotification</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=na>severity</span><span class=o>=</span><span class=p>{</span><span class=nx>ctx</span><span class=p>.</span><span class=nx>notification</span><span class=o>?</span><span class=p>.</span><span class=nx>severity</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span><span class=nx>ctx</span><span class=p>.</span><span class=nx>notification</span><span class=o>?</span><span class=p>.</span><span class=nx>message</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Alert</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>Snackbar</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kr>export</span> <span class=k>default</span> <span class=nx>NotificationCtx</span>
+</span></span></code></pre></td></tr></table></div></div><ol start=2><li>将通知栏组件挂在顶层页面上：</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-typescript data-lang=typescript><span class=line><span class=cl>  <span class=p>&lt;</span><span class=nt>Router</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;</span><span class=nt>ThemeProvider</span> <span class=na>locale</span><span class=o>=</span><span class=p>{</span><span class=nx>i18n</span><span class=p>.</span><span class=nx>language</span><span class=p>}</span> <span class=na>themeOptions</span><span class=o>=</span><span class=p>{</span><span class=nx>makeTheme</span><span class=p>}&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;</span><span class=nt>Box</span> <span class=na>sx</span><span class=o>=</span><span class=p>{{</span> <span class=nx>display</span><span class=o>:</span> <span class=s1>&#39;flex&#39;</span> <span class=p>}}&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Nav</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>Main</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=p>&lt;</span><span class=nt>NotificationComp</span> <span class=p>/&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=p>&lt;/</span><span class=nt>Box</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>    <span class=p>&lt;/</span><span class=nt>ThemeProvider</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>&lt;/</span><span class=nt>Router</span><span class=p>&gt;</span>
+</span></span></code></pre></td></tr></table></div></div><ol start=3><li>相关组件从 context 中获取更改状态栏的函数并调用：</li></ol><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=k>export</span> <span class=k>const</span> <span class=n>SomeComponent</span> <span class=o>=</span> <span class=p>()</span> <span class=o>=&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>const</span> <span class=n>ctx</span> <span class=o>=</span> <span class=n>useContext</span><span class=p>(</span><span class=n>NotificationCtx</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=o>&lt;</span><span class=ne>Button</span>
+</span></span><span class=line><span class=cl>      <span class=n>onClick</span><span class=o>=</span><span class=p>{()</span> <span class=o>=&gt;</span>
+</span></span><span class=line><span class=cl>        <span class=n>ctx</span><span class=o>.</span><span class=n>setNotification</span><span class=p>({</span>
+</span></span><span class=line><span class=cl>          <span class=n>severity</span><span class=p>:</span> <span class=s1>&#39;error&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>          <span class=n>message</span><span class=p>:</span> <span class=s1>&#39;some message&#39;</span>
+</span></span><span class=line><span class=cl>        <span class=p>})</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>      <span class=n>Click</span> <span class=n>me</span>
+</span></span><span class=line><span class=cl>    <span class=o>&lt;/</span><span class=ne>Button</span><span class=o>&gt;</span>
+</span></span><span class=line><span class=cl>  <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=踩坑记录>踩坑记录</h2><ul><li>Next.js proxy 存在30s超时时间的设置，且不易溯源。</li><li>Next.js 除了通过环境变量文件声明，后端服务也可以直接使用系统环境变量，如果前端需要获取某个敏感变量时，可以借助后端 API Routes 传递。</li><li>NextAuth.js 自定义登录页时，Auth HoC 会引起页面循环重定向。</li><li>页面切换后，react-hook-form 需要显式执行 <code>reset()</code>，才能使得基于 state 的表单默认值发生变化。</li><li>不要将组件的 props 作为组件内 state 的 initial value，否则 props 变化后，state 不会发生变化。</li><li>React hook 使用之前不能有判断语句，state/props 使用上不符合预期时，优先考虑 <code>useEffect()</code> 能否解决。</li></ul><h2 id=references>References</h2><ul><li><a href=https://medium.com/@gautamkiran123/hydration-in-react-8e8dff384f93 target=_blank rel="noopener noreffer">hydration in React</a></li><li><a href=https://vhudyma-blog.eu/react-antipatterns-props-in-initial-state/ target=_blank rel="noopener noreffer">React Antipatterns: Props In Initial State</a></li><li><a href=https://next-auth.js.org/configuration/pages#examples target=_blank rel="noopener noreffer">NextAuth Pages</a></li><li><a href=https://github.com/nextauthjs/next-auth/issues/4340 target=_blank rel="noopener noreffer">Infinite redirection loop with wrapper when using custom sign-in page</a></li></ul></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2024-01-07</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md></div><div class=post-info-share><span></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/platform/>platform</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/scheduler/ class=prev rel=prev title=私有化交付平台——调度部署篇><i class="fas fa-angle-left fa-fw"></i>私有化交付平台——调度部署篇</a></div></div><div id=comments><div id=valine class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://valine.js.org/>Valine</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line><span class=author itemprop=copyrightHolder>&nbsp;<a href=/ target=_blank></a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/valine/valine.min.css><link rel=stylesheet href=/lib/lightgallery/lightgallery.min.css><script type=text/javascript src=/lib/valine/Valine.min.js></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/algoliasearch/algoliasearch-lite.umd.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/lightgallery/lightgallery.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-thumbnail.min.js></script><script type=text/javascript src=/lib/lightgallery/lg-zoom.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{valine:{appId:"9CFga5qIsIai65AeVF4i0mAH-gzGzoHsz",appKey:"WgXjMQASwreiUmnY5dHWWx0Y",avatar:"mp",el:"#valine",emojiCDN:"https://cdn.jsdelivr.net/npm/emoji-datasource-google@5.0.1/img/google/64/",emojiMaps:{100:"1f4af.png",alien:"1f47d.png",anger:"1f4a2.png",angry:"1f620.png",anguished:"1f627.png",astonished:"1f632.png",black_heart:"1f5a4.png",blue_heart:"1f499.png",blush:"1f60a.png",bomb:"1f4a3.png",boom:"1f4a5.png",broken_heart:"1f494.png",brown_heart:"1f90e.png",clown_face:"1f921.png",cold_face:"1f976.png",cold_sweat:"1f630.png",confounded:"1f616.png",confused:"1f615.png",cry:"1f622.png",crying_cat_face:"1f63f.png",cupid:"1f498.png",dash:"1f4a8.png",disappointed:"1f61e.png",disappointed_relieved:"1f625.png",dizzy:"1f4ab.png",dizzy_face:"1f635.png",drooling_face:"1f924.png",exploding_head:"1f92f.png",expressionless:"1f611.png",face_vomiting:"1f92e.png",face_with_cowboy_hat:"1f920.png",face_with_hand_over_mouth:"1f92d.png",face_with_head_bandage:"1f915.png",face_with_monocle:"1f9d0.png",face_with_raised_eyebrow:"1f928.png",face_with_rolling_eyes:"1f644.png",face_with_symbols_on_mouth:"1f92c.png",face_with_thermometer:"1f912.png",fearful:"1f628.png",flushed:"1f633.png",frowning:"1f626.png",ghost:"1f47b.png",gift_heart:"1f49d.png",green_heart:"1f49a.png",grimacing:"1f62c.png",grin:"1f601.png",grinning:"1f600.png",hankey:"1f4a9.png",hear_no_evil:"1f649.png",heart:"2764-fe0f.png",heart_decoration:"1f49f.png",heart_eyes:"1f60d.png",heart_eyes_cat:"1f63b.png",heartbeat:"1f493.png",heartpulse:"1f497.png",heavy_heart_exclamation_mark_ornament:"2763-fe0f.png",hole:"1f573-fe0f.png",hot_face:"1f975.png",hugging_face:"1f917.png",hushed:"1f62f.png",imp:"1f47f.png",innocent:"1f607.png",japanese_goblin:"1f47a.png",japanese_ogre:"1f479.png",joy:"1f602.png",joy_cat:"1f639.png",kiss:"1f48b.png",kissing:"1f617.png",kissing_cat:"1f63d.png",kissing_closed_eyes:"1f61a.png",kissing_heart:"1f618.png",kissing_smiling_eyes:"1f619.png",laughing:"1f606.png",left_speech_bubble:"1f5e8-fe0f.png",love_letter:"1f48c.png",lying_face:"1f925.png",mask:"1f637.png",money_mouth_face:"1f911.png",nauseated_face:"1f922.png",nerd_face:"1f913.png",neutral_face:"1f610.png",no_mouth:"1f636.png",open_mouth:"1f62e.png",orange_heart:"1f9e1.png",partying_face:"1f973.png",pensive:"1f614.png",persevere:"1f623.png",pleading_face:"1f97a.png",pouting_cat:"1f63e.png",purple_heart:"1f49c.png",rage:"1f621.png",relaxed:"263a-fe0f.png",relieved:"1f60c.png",revolving_hearts:"1f49e.png",right_anger_bubble:"1f5ef-fe0f.png",robot_face:"1f916.png",rolling_on_the_floor_laughing:"1f923.png",scream:"1f631.png",scream_cat:"1f640.png",see_no_evil:"1f648.png",shushing_face:"1f92b.png",skull:"1f480.png",skull_and_crossbones:"2620-fe0f.png",sleeping:"1f634.png",sleepy:"1f62a.png",slightly_frowning_face:"1f641.png",slightly_smiling_face:"1f642.png",smile:"1f604.png",smile_cat:"1f638.png",smiley:"1f603.png",smiley_cat:"1f63a.png",smiling_face_with_3_hearts:"1f970.png",smiling_imp:"1f608.png",smirk:"1f60f.png",smirk_cat:"1f63c.png",sneezing_face:"1f927.png",sob:"1f62d.png",space_invader:"1f47e.png",sparkling_heart:"1f496.png",speak_no_evil:"1f64a.png",speech_balloon:"1f4ac.png","star-struck":"1f929.png",stuck_out_tongue:"1f61b.png",stuck_out_tongue_closed_eyes:"1f61d.png",stuck_out_tongue_winking_eye:"1f61c.png",sunglasses:"1f60e.png",sweat:"1f613.png",sweat_drops:"1f4a6.png",sweat_smile:"1f605.png",thinking_face:"1f914.png",thought_balloon:"1f4ad.png",tired_face:"1f62b.png",triumph:"1f624.png",two_hearts:"1f495.png",unamused:"1f612.png",upside_down_face:"1f643.png",weary:"1f629.png",white_frowning_face:"2639-fe0f.png",white_heart:"1f90d.png",wink:"1f609.png",woozy_face:"1f974.png",worried:"1f61f.png",yawning_face:"1f971.png",yellow_heart:"1f49b.png",yum:"1f60b.png",zany_face:"1f92a.png",zipper_mouth_face:"1f910.png",zzz:"1f4a4.png"},enableQQ:!1,highlight:!0,lang:"zh-cn",pageSize:10,placeholder:"发表评论...",recordIP:!0,visitor:!0}},lightGallery:{actualSize:!1,exThumbImage:"data-thumbnail",hideBarsDelay:2e3,selector:".lightgallery",speed:400,thumbContHeight:80,thumbWidth:80,thumbnail:!0},search:{algoliaAppID:"LX1FO3SR9Q",algoliaIndex:"blog",algoliaSearchKey:"e313cef40f53bf69fe7e593c2369a811",highlightTag:"em",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"algolia"}}</script><script type=text/javascript src=/js/theme.min.js></script></body></html>
